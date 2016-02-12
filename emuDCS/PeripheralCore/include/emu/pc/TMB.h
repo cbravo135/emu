@@ -483,6 +483,7 @@ public:
   //
   //!Extract ALCT raw hits data from VME
   void ALCTRawhits();
+  void GEMRawhits();
   bool ResetALCTRAMAddress();
   bool CheckAlctFIFOBusy(int number_of_checks_before_aborting);
   //
