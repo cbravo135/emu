@@ -3747,6 +3747,64 @@ void TMB::DecodeTMBRawHitWord_(int address) {
     return;
 }
 //
+void TMB::GEMRawhits() {
+
+    // read gem raw hits
+
+    unsigned int ADR_GEM_RAW_HITS_CTRL = 0x30C; 
+    unsigned int ADR_GEM_RAW_HITS_DATA = 0x30E; 
+
+    unsigned short int status; 
+    uint16_t data; 
+
+    unsigned long long packet=0; 
+
+    for (int igem=0; igem<4; igem++) {
+        status = (unsigned short) ReadRegister(ADR_GEM_RAW_HITS_CTRL); 
+        status &= ~(0x3 << 3);                     
+        status |= (igem & 0x3) << 3;                
+        WriteRegister (ADR_GEM_RAW_HITS_CTRL, status); 
+
+    for (int ibx=0; ibx<16; ibx++) {
+        status = (unsigned short) ReadRegister(ADR_GEM_RAW_HITS_CTRL); 
+        status &= ~(0x7FF << 5);                   
+        status |= (ibx & 0x7FF) << 5;              
+        WriteRegister (ADR_GEM_RAW_HITS_CTRL, status); 
+
+        (*MyOutput_) << std::setfill(' ') << "gem" << igem << " bx" << std::dec << std::setw(3) << ibx << ": "; 
+        packet=0; 
+
+    for (int icluster=0; icluster<4; icluster++) {
+        status = (unsigned short) ReadRegister(ADR_GEM_RAW_HITS_CTRL); 
+        status &= ~(0x3 << 1);                    
+        status |= (icluster & 0x3) << 1;         
+        WriteRegister (ADR_GEM_RAW_HITS_CTRL, status); 
+
+
+        data = 0x3FFF & ReadRegister(ADR_GEM_RAW_HITS_DATA); 
+
+        unsigned short cluster_adr = (data >> 0) & 0x7FF; 
+        unsigned short cluster_cnt = (data >>11) & 0x7; 
+
+        packet = packet | (((uint64_t) data)<<(14*icluster)); 
+
+//      (*MyOutput_) << std::hex << std::setfill('0') << std::setw(4) << (0x3FFF & data) << " "; 
+        (*MyOutput_) << std::hex << std::setfill('0') << std::setw(1) << (cluster_cnt) << ":" << std::setw(3) << cluster_adr << " ";  
+    } // cluster
+    (*MyOutput_) << std::hex << std::setfill('0') << std::setw(14) << (packet) << " ";   
+    (*MyOutput_) << std::endl;
+    } // bx
+    (*MyOutput_) << std::endl;
+    } // gem
+
+    // manual reset fifo pointer to zero
+    tmb_get_reg (ADR_GEM_RAW_HITS_CTRL, &status);
+    status |= (0x1);
+    tmb_set_reg (ADR_GEM_RAW_HITS_CTRL, status);
+    status |= ~(0x1);
+    tmb_set_reg (ADR_GEM_RAW_HITS_CTRL, status);
+}
+//
 void TMB::PrintTMBRawHits() {
   //
   (*MyOutput_) << "Header 0:" << std::endl;
