@@ -360,19 +360,30 @@ static const unsigned long int mpc1_frame0_fifo_adr     = 0x000180;
 static const unsigned long int mpc1_frame1_fifo_adr     = 0x000182;
 static const unsigned long int mpc_frames_fifo_ctrl_adr = 0x000184;
 // config timers on OTMB
-static const unsigned long int tmb_mez_fpga_jtag_count_adr   = 0x000186;
-static const unsigned long int tmb_power_up_time_adr    = 0x000188;
-static const unsigned long int tmb_load_cfg_time_adr    = 0x00018A;
-static const unsigned long int alct_phaser_lock_time_adr= 0x00018C;
-static const unsigned long int alct_load_cfg_time_adr   = 0x00018E;
-static const unsigned long int gtx_phaser_lock_time_adr = 0x000190;
-static const unsigned long int gtx_sync_done_time_adr   = 0x000192;
+static const unsigned long int tmb_mez_fpga_jtag_count_adr = 0x000186;
+static const unsigned long int tmb_power_up_time_adr       = 0x000188;
+static const unsigned long int tmb_load_cfg_time_adr       = 0x00018A;
+static const unsigned long int alct_phaser_lock_time_adr   = 0x00018C;
+static const unsigned long int alct_load_cfg_time_adr      = 0x00018E;
+static const unsigned long int gtx_phaser_lock_time_adr    = 0x000190;
+static const unsigned long int gtx_sync_done_time_adr      = 0x000192;
 
 //GTX link control and monitoring for the GEM
 static const unsigned long int  gem_gtx_rx0_adr          = 0x000300;  //ADR_GEM_GTX_RX0
 static const unsigned long int  gem_gtx_rx1_adr          = 0x000302;  //ADR_GEM_GTX_RX1
 static const unsigned long int  gem_gtx_rx2_adr          = 0x000304;  //ADR_GEM_GTX_RX2
 static const unsigned long int  gem_gtx_rx3_adr          = 0x000306;  //ADR_GEM_GTX_RX3
+
+
+static const unsigned long int phaser_gem0_rxd_adr       = 0x000308; // Phaser 9  GEMA Phaser
+static const unsigned long int phaser_gem1_rxd_adr       = 0x00030a; // Phaser 10 GEMB Phaser
+
+static const unsigned long int gem_debug_fifo_ctrl_adr   = 0x00030c; // GEM Debug FIFO Control Address
+static const unsigned long int gem_debug_fifo_data_adr   = 0x00030e; // GEM Debug FIFO Data Address
+static const unsigned long int gem_tbins_adr             = 0x000310; // GEM Time Bin Readout Control Address
+static const unsigned long int gem_cfg_adr               = 0x000312; // GEM Configuration Address
+static const unsigned long int gem_cnt_ctrl_adr          = 0x000314; // GEM Counter Register Control Address
+static const unsigned long int gem_cnt_rdata_adr         = 0x000316; // GEM Counter Register Data Address
 
 //
 static const int LARGEST_VME_ADDRESS = badbits445_adr;

@@ -1903,10 +1903,19 @@ void TMB::PrintCounters(int counter){
   if (counter<0)                  (*MyOutput_) << "---              Counters                             --" << std::endl;
   if (counter<0)                  (*MyOutput_) << "--------------------------------------------------------" << std::endl;
   if (counter<0) {
-    for (int i=0; i < GetMaxCounter(); i++) 
-      (*MyOutput_) << std::dec << std::setw(4) << i << CounterName(i)  << FinalCounter[i] <<std::endl ;
-  } else {
-    (*MyOutput_) << std::dec << counter << CounterName(counter) << FinalCounter[counter] <<std::endl ;
+        for (int i=0; i < GetMaxCounter(); i++) 
+        (*MyOutput_) << std::dec << std::setw(4) << i << CounterName(i)  << FinalCounter[i] <<std::endl ;
+
+        // need check if GEM is used. How?
+        if (gem_enabled_) { 
+            (*MyOutput_) << std::endl; // put a blank line before GEMs 
+            for (int i=0; i < GetMaxGEMCounter(); i++) 
+                if (GEMCounterName(i)!="Not defined")
+                    (*MyOutput_) << std::dec << std::setw(4) << i << GEMCounterName(i) << FinalGEMCounter[i] << std::endl ;
+        }
+  } 
+  else { // print only a single counter
+        (*MyOutput_) << std::dec << counter << CounterName(counter) << FinalCounter[counter] <<std::endl ;
   }
   //
 }
@@ -2035,6 +2044,74 @@ std::string TMB::CounterName(int counter){
   return name;
 }
 //
+std::string TMB::GEMCounterName(int counter){
+    //
+    std::string name = "Not defined";
+    //
+    if (counter==0)  name = "GEM: GEM A Sync Error                                   ";
+    if (counter==1)  name = "GEM: GEM B Sync Error                                   ";
+    if (counter==2)  name = "GEM: Superchamber Sync Error                            ";
+                 
+    if (counter==3)  name = "GEM: GEM A Overflow                                     ";
+    if (counter==4)  name = "GEM: GEB B Overflow                                     ";
+
+    if (counter==5)  name = "GEM: gem A cluster0                                     ";
+    if (counter==6)  name = "GEM: gem A cluster1                                     ";
+    if (counter==7)  name = "GEM: gem A cluster2                                     ";
+    if (counter==8)  name = "GEM: gem A cluster3                                     ";
+    if (counter==9)  name = "GEM: gem A cluster4                                     ";
+    if (counter==10) name = "GEM: gem A cluster5                                     ";
+    if (counter==11) name = "GEM: gem A cluster6                                     ";
+    if (counter==12) name = "GEM: gem A cluster7                                     ";
+
+    if (counter==13) name = "GEM: gem B cluster0                                     ";
+    if (counter==14) name = "GEM: gem B cluster1                                     ";
+    if (counter==15) name = "GEM: gem B cluster2                                     ";
+    if (counter==16) name = "GEM: gem B cluster3                                     ";
+    if (counter==17) name = "GEM: gem B cluster4                                     ";
+    if (counter==18) name = "GEM: gem B cluster5                                     ";
+    if (counter==19) name = "GEM: gem B cluster6                                     ";
+    if (counter==20) name = "GEM: gem B cluster7                                     ";
+
+    if (counter==21) name = "GEM: Bx with at least 1 Copad Matched                   ";
+
+    if (counter==22) name = "GEM: Copad0 Matched                                     ";
+    if (counter==23) name = "GEM: Copad1 Matched                                     ";
+    if (counter==24) name = "GEM: Copad2 Matched                                     ";
+    if (counter==25) name = "GEM: Copad3 Matched                                     ";
+    if (counter==26) name = "GEM: Copad4 Matched                                     ";
+    if (counter==27) name = "GEM: Copad5 Matched                                     ";
+    if (counter==28) name = "GEM: Copad6 Matched                                     ";
+    if (counter==29) name = "GEM: Copad7 Matched                                     ";
+
+    if (counter==30) name = "GEM: Copad Match in Vfat0                               ";
+    if (counter==31) name = "GEM: Copad Match in Vfat1                               ";
+    if (counter==32) name = "GEM: Copad Match in Vfat2                               ";
+    if (counter==33) name = "GEM: Copad Match in Vfat3                               ";
+    if (counter==34) name = "GEM: Copad Match in Vfat4                               ";
+    if (counter==35) name = "GEM: Copad Match in Vfat5                               ";
+    if (counter==36) name = "GEM: Copad Match in Vfat6                               ";
+    if (counter==37) name = "GEM: Copad Match in Vfat7                               ";
+    if (counter==38) name = "GEM: Copad Match in Vfat8                               ";
+    if (counter==39) name = "GEM: Copad Match in Vfat9                               ";
+    if (counter==40) name = "GEM: Copad Match in Vfat10                              ";
+    if (counter==41) name = "GEM: Copad Match in Vfat11                              ";
+    if (counter==42) name = "GEM: Copad Match in Vfat12                              ";
+    if (counter==43) name = "GEM: Copad Match in Vfat13                              ";
+    if (counter==44) name = "GEM: Copad Match in Vfat14                              ";
+    if (counter==45) name = "GEM: Copad Match in Vfat15                              ";
+    if (counter==46) name = "GEM: Copad Match in Vfat16                              ";
+    if (counter==47) name = "GEM: Copad Match in Vfat17                              ";
+    if (counter==48) name = "GEM: Copad Match in Vfat18                              ";
+    if (counter==49) name = "GEM: Copad Match in Vfat19                              ";
+    if (counter==50) name = "GEM: Copad Match in Vfat20                              ";
+    if (counter==51) name = "GEM: Copad Match in Vfat21                              ";
+    if (counter==52) name = "GEM: Copad Match in Vfat22                              ";
+    if (counter==53) name = "GEM: Copad Match in Vfat23                              ";
+  //
+  return name;
+}
+//
 void TMB::ResetCounters(){
   //
   for(int i=0; i<GetMaxCounter(); i++) FinalCounter[i]=0;
@@ -2062,7 +2139,10 @@ int * TMB::NewCounters(){
   if(checkvme_fail()) return NULL;
   //
   // Take snapshot of current counter state
+  // 
   //
+  // here should write gem_counter setting to make sure snap is synchronous
+  // 
   write_later(cnt_ctrl_adr,0x22); //snap
   vme_delay(0x20);
   write_later(cnt_ctrl_adr,0x20); //unsnap
@@ -2103,6 +2183,25 @@ int * TMB::NewCounters(){
   buf2[2*GetMaxCounter()+17]=0;
   if( GetHardwareVersion() == 2)  buf2[2*GetMaxCounter()+18]=0;
   //
+
+  
+  // Extract GEM counter data whose picture has been taken
+  if (gem_enabled_) {
+    for (int counter=0; counter < GetMaxGEMCounter(); counter++) {
+        //
+        for (int odd_even=0; odd_even<2; odd_even++) {
+        //
+        int write_value = ((counter << 9) & 0xfe00) | ((odd_even << 8) & 0x0100) | 0x0020;
+        //
+        write_later(gem_cnt_ctrl_adr, write_value);
+        vme_delay(2);
+        //
+        read_later(gem_cnt_rdata_adr);
+        }
+    }   
+    read_now(gem_cnt_rdata_adr, (char *)FinalGEMCounter);
+  }
+
   return (int *)FinalCounter;
 }
 //
@@ -3751,37 +3850,34 @@ void TMB::GEMRawhits() {
 
     // read gem raw hits
 
-    unsigned int ADR_GEM_RAW_HITS_CTRL = 0x30C; 
-    unsigned int ADR_GEM_RAW_HITS_DATA = 0x30E; 
-
     unsigned short int status; 
     uint16_t data; 
 
     unsigned long long packet=0; 
 
     for (int igem=0; igem<4; igem++) {
-        status = (unsigned short) ReadRegister(ADR_GEM_RAW_HITS_CTRL); 
+        status = (unsigned short) ReadRegister(gem_debug_fifo_ctrl_adr); 
         status &= ~(0x3 << 3);                     
         status |= (igem & 0x3) << 3;                
-        WriteRegister (ADR_GEM_RAW_HITS_CTRL, status); 
+        WriteRegister (gem_debug_fifo_ctrl_adr, status); 
 
     for (int ibx=0; ibx<16; ibx++) {
-        status = (unsigned short) ReadRegister(ADR_GEM_RAW_HITS_CTRL); 
+        status = (unsigned short) ReadRegister(gem_debug_fifo_ctrl_adr); 
         status &= ~(0x7FF << 5);                   
         status |= (ibx & 0x7FF) << 5;              
-        WriteRegister (ADR_GEM_RAW_HITS_CTRL, status); 
+        WriteRegister (gem_debug_fifo_ctrl_adr, status); 
 
         (*MyOutput_) << std::setfill(' ') << "gem" << igem << " bx" << std::dec << std::setw(3) << ibx << ": "; 
         packet=0; 
 
     for (int icluster=0; icluster<4; icluster++) {
-        status = (unsigned short) ReadRegister(ADR_GEM_RAW_HITS_CTRL); 
+        status = (unsigned short) ReadRegister(gem_debug_fifo_ctrl_adr); 
         status &= ~(0x3 << 1);                    
         status |= (icluster & 0x3) << 1;         
-        WriteRegister (ADR_GEM_RAW_HITS_CTRL, status); 
+        WriteRegister (gem_debug_fifo_ctrl_adr, status); 
 
 
-        data = 0x3FFF & ReadRegister(ADR_GEM_RAW_HITS_DATA); 
+        data = 0x3FFF & ReadRegister(gem_debug_fifo_data_adr); 
 
         unsigned short cluster_adr = (data >> 0) & 0x7FF; 
         unsigned short cluster_cnt = (data >>11) & 0x7; 
@@ -3797,12 +3893,14 @@ void TMB::GEMRawhits() {
     (*MyOutput_) << std::endl;
     } // gem
 
-    // manual reset fifo pointer to zero
-    tmb_get_reg (ADR_GEM_RAW_HITS_CTRL, &status);
+    (*MyOutput_) << std::setfill(' '); 
+
+    // reset fifo to renable triggering
+    tmb_get_reg (gem_debug_fifo_ctrl_adr, &status);
     status |= (0x1);
-    tmb_set_reg (ADR_GEM_RAW_HITS_CTRL, status);
+    tmb_set_reg (gem_debug_fifo_ctrl_adr, status);
     status |= ~(0x1);
-    tmb_set_reg (ADR_GEM_RAW_HITS_CTRL, status);
+    tmb_set_reg (gem_debug_fifo_ctrl_adr, status);
 }
 //
 void TMB::PrintTMBRawHits() {
