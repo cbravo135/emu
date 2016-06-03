@@ -515,7 +515,7 @@ public:
 
   static const int MAX_GEM_FIBERS_ME11 = 4;
   inline int GetNGemEnabledLinks() {
-    if (GetGemEnabled()) return 1; //change this to MAX_GEM_FIBERS_ME11 when we get there
+    if (GetGemEnabled()) return MAX_GEM_FIBERS_ME11; 
     else return 0;} 
   //
   //!read the Firmware date from the TMB
@@ -614,6 +614,8 @@ public:
   void PrintCounters(int counter=-1);   /// print counter value (-1 means print all)
   std::string CounterName(int counter); /// return counter label
   inline int GetMaxCounter() { return MaxCounter; }
+  std::string GEMCounterName(int counter); /// return counter label
+  inline int GetMaxGEMCounter() { return MaxGEMCounter;}
   inline int GetALCTSentToTMBCounterIndex()  { return alct_sent_to_tmb_counter_index_;  }
   inline int GetECCTriggerPathOneErrorCounterIndex()  { return ecc_trigger_path_one_error_counter_index_;  }
   inline int GetECCTriggerPathTwoErrorsCounterIndex()  { return ecc_trigger_path_two_errors_counter_index_;  }
@@ -2708,7 +2710,9 @@ private:
   //
   // The following is actually the MaxCounter in TMB + 1 (i.e., they count from 0)
   static const int MaxCounter = 93;
+  static const int MaxGEMCounter = 54;
   int FinalCounter[MaxCounter+40];
+  int FinalGEMCounter[MaxGEMCounter+1];
   int alct_sent_to_tmb_counter_index_;
   int ecc_trigger_path_one_error_counter_index_;
   int ecc_trigger_path_two_errors_counter_index_;
