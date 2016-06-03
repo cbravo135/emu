@@ -6395,6 +6395,14 @@ void TMB::DefineTMBConfigurationRegisters_(){
   // Not put into xml file, but may want to enable scope for test runs...
   //  TMBConfigurationRegister.push_back(scp_ctrl_adr);         //0x98 scope control
   //
+
+  if(GetGemEnabled()) {
+  TMBConfigurationRegister.push_back(gem_tbins_adr) ;       // 0x310 GEM Readout Address
+  TMBConfigurationRegister.push_back(gem_cfg_adr) ;         // 0x312 GEM Config Address
+  TMBConfigurationRegister.push_back(phaser_gemA_rxd_adr) ; // 0x308 GEM Config Address
+  TMBConfigurationRegister.push_back(phaser_gemB_rxd_adr) ; // 0x30A GEM Config Address
+  }
+
   return;
 }
 //
@@ -6837,10 +6845,24 @@ void TMB::SetTMBRegisterDefaults() {
   //--------------------------------------------------------------
   //[0X16C] = ADR_PHASER8:  values in the xml file for cfeb6_rx or cfeb0123
   //--------------------------------------------------------------
-  cfeb6_rx_clock_delay_ = HasGroupedME11ABCFEBRxValues() == 1 ? cfeb456_rx_clock_delay_default : cfeb5_rx_clock_delay_default;
+  cfeb6_rx_clock_delay_ = HasGroupedME11ABCFEBRxValues() == 1 ? cfeb456_rx_clock_delay_default : cfeb6_rx_clock_delay_default;
   cfeb6_rx_posneg_      = HasGroupedME11ABCFEBRxValues() == 1 ? cfeb456_rx_posneg_default : cfeb6_rx_posneg_default     ;
   cfeb0123_rx_clock_delay_ = cfeb0123_rx_clock_delay_default;
   cfeb0123_rx_posneg_ = cfeb0123_rx_posneg_default; 
+  //
+  //--------------------------------------------------------------
+  //[0X308] = ADR_PHASER9:  values in the xml file for GEMA or GEM A+B
+  //--------------------------------------------------------------
+  gemA_rx_clock_delay_ = HasGroupedGemRxValues() == 1 ? gem_rx_clock_delay_default : gemA_rx_clock_delay_default;
+  gemA_rx_posneg_      = HasGroupedGemRxValues() == 1 ? gem_rx_posneg_default      : gemA_rx_posneg_default     ;
+  gem_rx_clock_delay_ = gem_rx_clock_delay_default;
+  gem_rx_posneg_      = gem_rx_posneg_default;
+  //
+  //--------------------------------------------------------------
+  //[0X30A] = ADR_PHASER10:  values in the xml file for GEMA or GEM A+B
+  //--------------------------------------------------------------
+  gemB_rx_clock_delay_ = HasGroupedGemRxValues() == 1 ? gem_rx_clock_delay_default : gemB_rx_clock_delay_default;
+  gemB_rx_posneg_      = HasGroupedGemRxValues() == 1 ? gem_rx_posneg_default      : gemB_rx_posneg_default     ;
   //
   //--------------------------------------------------------------
   // 0X11C = ADR_DELAY0_INT:  CFEB to TMB "interstage" delays
@@ -6912,6 +6934,24 @@ void TMB::SetTMBRegisterDefaults() {
       gem_gtx_rx_reset_[i] = gtx_rx_reset_default;
       gem_gtx_rx_prbs_test_enable_[i] = gtx_rx_prbs_test_enable_default;
     }
+
+  //-----------------------------------------------------------------------------
+  // 0X310 ADR_GEM_TBINS
+  //-----------------------------------------------------------------------------
+  
+  gem_fifo_tbins_          = gem_fifo_tbins_default;
+  gem_fifo_pretrig_        = gem_fifo_pretrig_default;
+  gem_fifo_decouple_       = gem_fifo_decouple_default;
+  gem_read_enable_         = gem_read_enable_default;
+  gem_zero_supress_enable_ = gem_zero_supress_enable_default;
+
+  //-----------------------------------------------------------------------------
+  // 0X312 ADR_GEM_CFG
+  //-----------------------------------------------------------------------------
+  
+  gemA_rxd_int_delay_    = gemA_rxd_int_delay_default;
+  gemB_rxd_int_delay_    = gemB_rxd_int_delay_default;
+  decouple_gem_rxd_int_delay_ = decouple_gem_rxd_int_delay_default;
 
   //defaults are pulled from the main parameter fields
   return;
@@ -7710,17 +7750,21 @@ void TMB::DecodeTMBRegister_(unsigned long int address, int data) {
     read_fifo_tbins_mini_   = ExtractValueFromData(data,fifo_tbins_mini_bitlo  ,fifo_tbins_mini_bithi  );
     read_fifo_pretrig_mini_ = ExtractValueFromData(data,fifo_pretrig_mini_bitlo,fifo_pretrig_mini_bithi);
     //
-  } else if ( address == phaser_alct_rxd_adr  ||
-	      address == phaser_alct_txd_adr  ||
-	      address == phaser_cfeb0_rxd_adr ||
-	      address == phaser_cfeb1_rxd_adr ||
-	      address == phaser_cfeb2_rxd_adr ||
-	      address == phaser_cfeb3_rxd_adr ||
-	      address == phaser_cfeb4_rxd_adr || 
-	      address == phaser_cfeb5_rxd_adr || 
-	      address == phaser_cfeb6_rxd_adr || 
-	      address == phaser_cfeb456_rxd_adr ||
-	      address == phaser_cfeb0123_rxd_adr) {    
+  } else if ( address == phaser_alct_rxd_adr     ||
+	          address == phaser_alct_txd_adr     ||
+	          address == phaser_cfeb0_rxd_adr    ||
+	          address == phaser_cfeb1_rxd_adr    ||
+	          address == phaser_cfeb2_rxd_adr    ||
+	          address == phaser_cfeb3_rxd_adr    ||
+	          address == phaser_cfeb4_rxd_adr    ||
+	          address == phaser_cfeb5_rxd_adr    ||
+	          address == phaser_cfeb6_rxd_adr    ||
+	          address == phaser_cfeb456_rxd_adr  ||
+	          address == phaser_cfeb0123_rxd_adr ||
+	          address == phaser_gemA_rxd_adr     ||
+	          address == phaser_gemB_rxd_adr     ||
+	          address == phaser_gem_rxd_adr      
+             ) {    
     //---------------------------------------------------------------------
     //(0X10E,0X110,0X112,0X114,0X116,0X118,0X11A) = ADR_PHASER[0-6]:  
     // digital phase shifter for... alct_rx,alct_tx,cfeb[0-4]_rx
@@ -7911,21 +7955,40 @@ void TMB::DecodeTMBRegister_(unsigned long int address, int data) {
     read_gtx_sync_done_time_ = ExtractValueFromData(data,0,15);
   } else if (address == gem_gtx_rx0_adr || address == gem_gtx_rx1_adr ||
       address == gem_gtx_rx2_adr || address == gem_gtx_rx3_adr) {
+
     //---------------------------------------------------------------------
     // 0X300 - 0X306 = ADR_GEM_GTX_RX[0-3]_GEM: GTX link control and monitoring for GEM
     //---------------------------------------------------------------------
+
     int inputNum = (address - gem_gtx_rx0_adr) / 2;
 
-    read_gem_gtx_rx_enable_[inputNum] = ExtractValueFromData(data,gtx_rx_enable_bitlo,gtx_rx_enable_bithi);
-    read_gem_gtx_rx_reset_[inputNum] = ExtractValueFromData(data,gtx_rx_reset_bitlo,gtx_rx_reset_bithi);
+    read_gem_gtx_rx_enable_[inputNum]           = ExtractValueFromData(data,gtx_rx_enable_bitlo,gtx_rx_enable_bithi);
+    read_gem_gtx_rx_reset_[inputNum]            = ExtractValueFromData(data,gtx_rx_reset_bitlo,gtx_rx_reset_bithi);
     read_gem_gtx_rx_prbs_test_enable_[inputNum] = ExtractValueFromData(data,gtx_rx_prbs_test_enable_bitlo,gtx_rx_prbs_test_enable_bithi);
-    read_gem_gtx_rx_ready_[inputNum] = ExtractValueFromData(data,gtx_rx_ready_bitlo,gtx_rx_ready_bithi);
-    read_gem_gtx_rx_link_good_[inputNum] = ExtractValueFromData(data,gtx_rx_link_good_bitlo,gtx_rx_link_good_bithi);
-    read_gem_gtx_rx_link_had_error_[inputNum] = ExtractValueFromData(data,gtx_rx_link_had_error_bitlo,gtx_rx_link_had_error_bithi);
-    read_gem_gtx_rx_link_bad_[inputNum] = ExtractValueFromData(data,gtx_rx_link_bad_bitlo,gtx_rx_link_bad_bithi);
-    read_gem_gtx_rx_pol_swap_[inputNum] = ExtractValueFromData(data,gtx_rx_pol_swap_bitlo,gtx_rx_pol_swap_bithi);
-    read_gem_gtx_rx_error_count_[inputNum] = ExtractValueFromData(data,gtx_rx_error_count_bitlo,gtx_rx_error_count_bithi);
+    read_gem_gtx_rx_ready_[inputNum]            = ExtractValueFromData(data,gtx_rx_ready_bitlo,gtx_rx_ready_bithi);
+    read_gem_gtx_rx_link_good_[inputNum]        = ExtractValueFromData(data,gtx_rx_link_good_bitlo,gtx_rx_link_good_bithi);
+    read_gem_gtx_rx_link_had_error_[inputNum]   = ExtractValueFromData(data,gtx_rx_link_had_error_bitlo,gtx_rx_link_had_error_bithi);
+    read_gem_gtx_rx_link_bad_[inputNum]         = ExtractValueFromData(data,gtx_rx_link_bad_bitlo,gtx_rx_link_bad_bithi);
+    read_gem_gtx_rx_pol_swap_[inputNum]         = ExtractValueFromData(data,gtx_rx_pol_swap_bitlo,gtx_rx_pol_swap_bithi);
+    read_gem_gtx_rx_error_count_[inputNum]      = ExtractValueFromData(data,gtx_rx_error_count_bitlo,gtx_rx_error_count_bithi);
 
+  } else if ( address == gem_tbins_adr ) {
+    //---------------------------------------------------------------------
+    // 0X310 = ADR_GEM_TBINS
+    //---------------------------------------------------------------------
+    read_gem_fifo_tbins_          = ExtractValueFromData (data , gem_fifo_tbins_bitlo          , gem_fifo_tbins_bithi          );
+    read_gem_fifo_pretrig_        = ExtractValueFromData (data , gem_fifo_pretrig_bitlo        , gem_fifo_pretrig_bithi        );
+    read_gem_fifo_decouple_       = ExtractValueFromData (data , gem_fifo_decouple_bitlo       , gem_fifo_decouple_bithi       );
+    read_gem_read_enable_         = ExtractValueFromData (data , gem_read_enable_bitlo         , gem_read_enable_bithi         );
+    read_gem_zero_supress_enable_ = ExtractValueFromData (data , gem_zero_supress_enable_bitlo , gem_zero_supress_enable_bithi );
+    //
+  } else if ( address == gem_cfg_adr ) {
+    //---------------------------------------------------------------------
+    // 0X310 = ADR_GEM_CFG
+    //---------------------------------------------------------------------
+    read_gemA_rxd_int_delay_    = ExtractValueFromData (data , gemA_rxd_int_delay_bitlo    , gemA_rxd_int_delay_bithi);
+    read_gemB_rxd_int_delay_    = ExtractValueFromData (data , gemB_rxd_int_delay_bitlo    , gemB_rxd_int_delay_bithi);
+    read_decouple_gem_rxd_int_delay_ = ExtractValueFromData (data , decouple_gem_rxd_int_delay_bitlo , decouple_gem_rxd_int_delay_bithi);
   }
   //
   // combinations of bits which say which trgmode_ we are using....
@@ -8807,6 +8870,34 @@ void TMB::PrintTMBRegister(unsigned long int address) {
       (*MyOutput_) << "    CFEB6 posneg    = " << std::dec << read_cfeb6_rx_posneg_ << std::endl;	
     }
     //
+  } else if ( address == phaser_gemA_rxd_adr ) {
+    //--------------------------------------------------------------
+    //[0X308] = ADR_PHASER9:  GEM A Rxd Phaser Address
+    //--------------------------------------------------------------
+    if (GetGemEnabled()) {
+        if (HasGroupedGemRxValues() == 1) {
+        (*MyOutput_) << " ->GEM A+B to TMB communication clock delay:" << std::endl;
+        (*MyOutput_) << "    GEM A+B rx clock delay    = " << std::dec << read_gem_rx_clock_delay_ << std::endl;
+        (*MyOutput_) << "    GEM A+B posneg    = " << std::dec << read_gem_rx_posneg_ << std::endl;	
+        } else {
+        (*MyOutput_) << " ->GEM A to TMB communication clock delay:" << std::endl;
+        (*MyOutput_) << "    GEM A rx clock delay    = " << std::dec << read_gemA_rx_clock_delay_ << std::endl;
+        (*MyOutput_) << "    GEM A posneg    = " << std::dec << read_gemA_rx_posneg_ << std::endl;	
+        }
+        //
+    }
+  } else if ( address == phaser_gemB_rxd_adr ) {
+    //--------------------------------------------------------------
+    //[0X30A] = ADR_PHASER10:  GEM B Rxd Phaser Address
+    //--------------------------------------------------------------
+    if (GetGemEnabled()) {
+        if (HasGroupedGemRxValues() == 0) {
+        (*MyOutput_) << " ->GEM B to TMB communication clock delay:" << std::endl;
+        (*MyOutput_) << "    GEM B rx clock delay    = " << std::dec << read_gemB_rx_clock_delay_ << std::endl;
+        (*MyOutput_) << "    GEM B posneg    = " << std::dec << read_gemB_rx_posneg_ << std::endl;	
+        }
+    }
+    //
   } else if ( address == cfeb0_3_interstage_adr ) {
     //--------------------------------------------------------------
     // 0X11C = ADR_DELAY0_INT:  CFEB to TMB "interstage" delays
@@ -8966,7 +9057,7 @@ void TMB::PrintTMBRegister(unsigned long int address) {
     //---------------------------------------------------------------------
     //Since this is more or less an outdated output section it will not be combined with the other GTX Register outputs
 
-    int NumOfGEMs = 1;
+    int NumOfGEMs = MAX_GEM_FIBERS_ME11;
     //When all 4 gems are added this section may be un-commented
 	//NumOfGEMs = 1;
     (*MyOutput_) << " ->GEM GTX optical input control and monitoring:" << std::endl;
@@ -9008,7 +9099,26 @@ void TMB::PrintTMBRegister(unsigned long int address) {
     for (int i=0; i < NumOfGEMs; i++) { (*MyOutput_) << read_gtx_rx_error_count_[i] << " "; }
     (*MyOutput_) << "]" << std::endl;
 
-    }else {
+    } else if ( address == gem_tbins_adr ) {
+    //---------------------------------------------------------------------
+    // 0X310 = ADR_GEM_TBINS
+    //---------------------------------------------------------------------
+    (*MyOutput_) << " ->GEM Readout Configuration:"                            << std::endl;
+    (*MyOutput_) << "    TMB gem_fifo_tbins                                = " << gem_fifo_tbins_          << std::endl;
+    (*MyOutput_) << "    TMB gem_fifo_pretrig                              = " << gem_fifo_pretrig_        << std::endl;
+    (*MyOutput_) << "    TMB gem_fifo_decouple                             = " << gem_fifo_decouple_       << std::endl;
+    (*MyOutput_) << "    TMB gem_read_enable                               = " << gem_read_enable_         << std::endl;
+    (*MyOutput_) << "    TMB gem Zero Supression Enabled                   = " << gem_zero_supress_enable_ << std::endl;
+
+    } else if ( address == gem_cfg_adr ) {
+    //---------------------------------------------------------------------
+    // 0X312 = ADR_CFG_ADR   
+    //---------------------------------------------------------------------
+    (*MyOutput_) << " ->GEM Bx Delay Configuration Register:"                  << std::endl;
+    (*MyOutput_) << "    TMB gem A rxd_int_delay                           = " << gemA_rxd_int_delay_    << std::endl;
+    (*MyOutput_) << "    TMB gem A rxd_int_delay                           = " << gemB_rxd_int_delay_    << std::endl;
+    (*MyOutput_) << "    TMB gem rxd_int_delays decoupled                  = " << decouple_gem_rxd_int_delay_ << std::endl;
+    } else {
     //
     (*MyOutput_) << " -> Unable to decode register: PLEASE DEFINE" << std::endl;
     //
@@ -9658,6 +9768,28 @@ int TMB::FillTMBRegister(unsigned long int address) {
       data_word = ConvertDigitalPhaseToVMERegisterValues_(cfeb0123_rx_clock_delay_,cfeb0123_rx_posneg_);
     }
     //
+  } else if ( address == phaser_gemA_rxd_adr ) {
+    //---------------------------------------------------------------------
+    //0X308 = ADR_PHASER9: digital phase shifter for gemA / gemA+B
+    //---------------------------------------------------------------------
+    if (HasGroupedGemRxValues() == 0){
+      data_word = ConvertDigitalPhaseToVMERegisterValues_(gemA_rx_clock_delay_,gemA_rx_posneg_);
+    }
+    else {
+      data_word = ConvertDigitalPhaseToVMERegisterValues_(gem_rx_clock_delay_,gem_rx_posneg_);
+    }
+    //
+  } else if ( address == phaser_gemB_rxd_adr ) {
+    //---------------------------------------------------------------------
+    //0X30A = ADR_PHASER10: digital phase shifter for gemB
+    //---------------------------------------------------------------------
+    if (HasGroupedGemRxValues() == 0){
+      data_word = ConvertDigitalPhaseToVMERegisterValues_(gemB_rx_clock_delay_,gemB_rx_posneg_);
+    }
+    else {
+      data_word = ConvertDigitalPhaseToVMERegisterValues_(gem_rx_clock_delay_,gem_rx_posneg_);
+    }
+    //
   } else if ( address == dcfeb_inj_seq_trig_adr ) {
     //------------------------------------------------------------------
     //0X17A = ADR_V6_EXTEND: ADR_CFEB_INJ:  CFEB Injector Control; ADR_SEQ_TRIG_EN: 
@@ -9682,6 +9814,24 @@ int TMB::FillTMBRegister(unsigned long int address) {
     InsertValueIntoDataWord(gem_gtx_rx_enable_[inputNum],gtx_rx_enable_bithi,gtx_rx_enable_bitlo,&data_word);
     InsertValueIntoDataWord(gem_gtx_rx_reset_[inputNum],gtx_rx_reset_bithi,gtx_rx_reset_bitlo,&data_word);
     InsertValueIntoDataWord(gem_gtx_rx_prbs_test_enable_[inputNum],gtx_rx_prbs_test_enable_bithi,gtx_rx_prbs_test_enable_bitlo,&data_word);
+    //
+  } else if ( address == gem_tbins_adr ) {
+    //---------------------------------------------------------------------
+    // 0X310 = ADR_GEM_TBINS
+    //---------------------------------------------------------------------
+    InsertValueIntoDataWord( gem_fifo_tbins_          , gem_fifo_tbins_bithi          , gem_fifo_tbins_bitlo          , &data_word);
+    InsertValueIntoDataWord( gem_fifo_pretrig_        , gem_fifo_pretrig_bithi        , gem_fifo_pretrig_bitlo        , &data_word);
+    InsertValueIntoDataWord( gem_fifo_decouple_       , gem_fifo_decouple_bithi       , gem_fifo_decouple_bitlo       , &data_word);
+    InsertValueIntoDataWord( gem_read_enable_         , gem_read_enable_bithi         , gem_read_enable_bitlo         , &data_word);
+    InsertValueIntoDataWord( gem_zero_supress_enable_ , gem_zero_supress_enable_bithi , gem_zero_supress_enable_bitlo , &data_word);
+    //
+  } else if ( address == gem_cfg_adr ) {
+    //---------------------------------------------------------------------
+    // 0X312 = ADR_GEM_CFG
+    //---------------------------------------------------------------------
+    InsertValueIntoDataWord( gemA_rxd_int_delay_         , gemA_rxd_int_delay_bithi         , gemA_rxd_int_delay_bitlo         , &data_word);
+    InsertValueIntoDataWord( gemB_rxd_int_delay_         , gemB_rxd_int_delay_bithi         , gemB_rxd_int_delay_bitlo         , &data_word);
+    InsertValueIntoDataWord( decouple_gem_rxd_int_delay_ , decouple_gem_rxd_int_delay_bithi , decouple_gem_rxd_int_delay_bitlo , &data_word);
     //
   } else {
     //
@@ -9794,6 +9944,15 @@ void TMB::ConvertVMERegisterValuesToDigitalPhases_(unsigned long int vme_address
     read_cfeb3_rx_clock_delay_ = read_digital_phase;
     read_cfeb0123_rx_posneg_      = posneg       ;
     read_cfeb0123_rx_clock_delay_ = read_digital_phase;
+    //
+  } else if ( vme_address == phaser_gem_rxd_adr ) {
+    //
+    read_gemA_rx_posneg_      = posneg       ;
+    read_gemA_rx_clock_delay_ = read_digital_phase;
+    read_gemB_rx_posneg_      = posneg       ;
+    read_gemB_rx_clock_delay_ = read_digital_phase;
+    read_gem_rx_posneg_       = posneg       ;
+    read_gem_rx_clock_delay_  = read_digital_phase;
     //
   }
   //
@@ -10338,6 +10497,44 @@ void TMB::CheckTMBConfiguration(int max_number_of_reads) {
       //      config_ok &= compareValues("TMB Enable CFEB56 n for injector trigger (not in xml)",read_cfeb_inj_en_sel_extend_        ,cfeb_inj_en_sel_extend_      , print_errors); 
       //      config_ok &= compareValues("TMB enableCLCTInputs_reg68 Extension"                 ,read_cfebs_enabled_extend_          ,cfebs_enabled_extend_expected, print_errors);
       //      config_ok &= compareValues("TMB enableCLCTInputs_reg68 Extension Readback"        ,read_cfebs_enabled_extend_readback_ ,cfebs_enabled_extend_expected, print_errors);
+    }
+    if (GetGemEnabled()) {
+        //---------------------------------------------------------------------
+        // 0X310 = ADR_GEM_TBINS
+        //---------------------------------------------------------------------
+        config_ok &= compareValues ("TMB gem_fifo_tbins"              , read_gem_fifo_tbins_          , gem_fifo_tbins_          , print_errors);
+        config_ok &= compareValues ("TMB gem_fifo_pretrig"            , read_gem_fifo_pretrig_        , gem_fifo_pretrig_        , print_errors);
+        config_ok &= compareValues ("TMB gem_fifo_decouple"           , read_gem_fifo_decouple_       , gem_fifo_decouple_       , print_errors);
+        config_ok &= compareValues ("TMB gem_read_enable"             , read_gem_read_enable_         , gem_read_enable_         , print_errors);
+        config_ok &= compareValues ("TMB gem Zero Supression Enabled" , read_gem_zero_supress_enable_ , gem_zero_supress_enable_ , print_errors);
+
+        //---------------------------------------------------------------------
+        // 0X312 = ADR_CFG_ADR   
+        //---------------------------------------------------------------------
+
+        config_ok &= compareValues ("TMB gem A rxd_int_delay"          , read_gemA_rxd_int_delay_    , gemA_rxd_int_delay_    , print_errors); 
+        config_ok &= compareValues ("TMB gem A rxd_int_delay"          , read_gemB_rxd_int_delay_    , gemB_rxd_int_delay_    , print_errors); 
+        config_ok &= compareValues ("TMB gem rxd_int_delays decoupled" , read_decouple_gem_rxd_int_delay_ , decouple_gem_rxd_int_delay_ , print_errors); 
+
+        if (HasGroupedGemRxValues()==1) {
+            //--------------------------------------------------------------
+            //[0X308] = ADR_PHASER9:  GEM A+B
+            //--------------------------------------------------------------
+            config_ok &= compareValues("TMB gem_delay"     , read_gem_rx_clock_delay_ , gem_rx_clock_delay_ , print_errors);
+            config_ok &= compareValues("TMB gem_rx_posneg" , read_gem_rx_posneg_      , gem_rx_posneg_      , print_errors);
+        }
+        else {
+            //--------------------------------------------------------------
+            //[0X308] = ADR_PHASER9:  GEM A
+            //--------------------------------------------------------------
+            config_ok &= compareValues("TMB gemA_delay"     , read_gemA_rx_clock_delay_ , gemA_rx_clock_delay_ , print_errors);
+            config_ok &= compareValues("TMB gemA_rx_posneg" , read_gemA_rx_posneg_      , gemA_rx_posneg_      , print_errors);
+            //--------------------------------------------------------------
+            //[0X30A] = ADR_PHASER10:  GEM B
+            //--------------------------------------------------------------
+            config_ok &= compareValues("TMB gemB_delay"     , read_gemB_rx_clock_delay_ , gemB_rx_clock_delay_ , print_errors);
+            config_ok &= compareValues("TMB gemB_rx_posneg" , read_gemB_rx_posneg_      , gemB_rx_posneg_      , print_errors);
+        }
     }
     //
   }

@@ -152,10 +152,10 @@ static const unsigned long int	vme_step_adr	        = 0x000020;
 static const unsigned long int	vme_led_adr	        = 0x000022;
 static const unsigned long int	vme_adc_adr	        = 0x000024;
 static const unsigned long int	vme_dsn_adr	        = 0x000026;
-static const unsigned long int	mod_cfg_adr	        = 0x000028;	
+static const unsigned long int	mod_cfg_adr	        = 0x000028;
 static const unsigned long int	ccb_cfg_adr	        = 0x00002A;
 static const unsigned long int	ccb_trig_adr	        = 0x00002C;
-static const unsigned long int	ccb_stat_adr	        = 0x00002E;	
+static const unsigned long int	ccb_stat_adr	        = 0x00002E;
 //
 static const unsigned long int	alct_cfg_adr	        = 0x000030;
 static const unsigned long int	alct_inj_adr	        = 0x000032;
@@ -329,7 +329,7 @@ static const unsigned long int  dcfeb_gtx_rx6_adr          = 0x000158;  //ADR_V6
 
 static const unsigned long int	v6_sysmon_adr	        = 0x00015A;  //ADR_V6_SYSMON
 
-// extra DCFEB Bad Bits on OTMB 
+// extra DCFEB Bad Bits on OTMB
 static const unsigned long int  dcfeb_badbits_ctrl_adr  = 0x00015C;  //DCFEB Bad Bit Control/Status extends Adr 122
 static const unsigned long int  badbits501_adr          = 0x00015E;  //ADR_V6_CFEB5_BADBITS_LY01
 static const unsigned long int  badbits523_adr          = 0x000160;  //ADR_V6_CFEB5_BADBITS_LY23
@@ -338,10 +338,10 @@ static const unsigned long int  badbits601_adr          = 0x000164;  //ADR_V6_CF
 static const unsigned long int  badbits623_adr          = 0x000166;  //ADR_V6_CFEB6_BADBITS_LY23
 static const unsigned long int  badbits645_adr          = 0x000168;  //ADR_V6_CFEB6_BADBITS_LY45
 
-static const unsigned long int  phaser_cfeb5_rxd_adr	= 0x00016A;  
+static const unsigned long int  phaser_cfeb5_rxd_adr	= 0x00016A;
 static const unsigned long int  phaser_cfeb6_rxd_adr    = 0x00016C;
 
-static const unsigned long int  phaser_cfeb456_rxd_adr	= 0x00016A;  
+static const unsigned long int  phaser_cfeb456_rxd_adr	= 0x00016A;
 static const unsigned long int  phaser_cfeb0123_rxd_adr = 0x00016C;
 
 // extra DCFEB Hot Channel Mask on OTMB
@@ -374,9 +374,9 @@ static const unsigned long int  gem_gtx_rx1_adr          = 0x000302;  //ADR_GEM_
 static const unsigned long int  gem_gtx_rx2_adr          = 0x000304;  //ADR_GEM_GTX_RX2
 static const unsigned long int  gem_gtx_rx3_adr          = 0x000306;  //ADR_GEM_GTX_RX3
 
-
-static const unsigned long int phaser_gem0_rxd_adr       = 0x000308; // Phaser 9  GEMA Phaser
-static const unsigned long int phaser_gem1_rxd_adr       = 0x00030a; // Phaser 10 GEMB Phaser
+static const unsigned long int  phaser_gem_rxd_adr  = 0x000308;  // ADR_GEM_PHASER
+static const unsigned long int  phaser_gemA_rxd_adr = 0x000308;  // ADR_GEMA_PHASER
+static const unsigned long int  phaser_gemB_rxd_adr = 0x00030A;  // ADR_GEMB_PHASER
 
 static const unsigned long int gem_debug_fifo_ctrl_adr   = 0x00030c; // GEM Debug FIFO Control Address
 static const unsigned long int gem_debug_fifo_data_adr   = 0x00030e; // GEM Debug FIFO Data Address
@@ -397,9 +397,9 @@ const int ECC_TRIGGER_PATH_TWO_ERRORS_COUNTER_INDEX           = 4;
 const int ECC_TRIGGER_PATH_MORE_THAN_TWO_ERRORS_COUNTER_INDEX = 5;
 const int ALCT_RAW_HITS_READOUT_COUNTER_INDEX                 = 10;
 const int CLCT_PRETRIGGER_COUNTER_INDEX                       = 13;
-const int LCT_SENT_TO_MPC_COUNTER_INDEX                       = 50; 
-const int LCT_ACCEPTED_BY_MPC_COUNTER_INDEX                   = 52; 
-const int L1A_IN_TMB_WINDOW_COUNTER_INDEX                     = 56; 
+const int LCT_SENT_TO_MPC_COUNTER_INDEX                       = 50;
+const int LCT_ACCEPTED_BY_MPC_COUNTER_INDEX                   = 52;
+const int L1A_IN_TMB_WINDOW_COUNTER_INDEX                     = 56;
 //
 //
 
@@ -417,7 +417,7 @@ static const unsigned OTMB_BPI_Timer_h = 0x28040;
 /////////////////////////////////////////////////////////////////////////////////////
 // Bit mappings for VME registers
 //  - includes default values for configuration registers (write bits)
-//  - includes expected values for registers which are checked 
+//  - includes expected values for registers which are checked
 /////////////////////////////////////////////////////////////////////////////////////
 //-----------------------------------------------------------------
 //0X70000 = ADR_BOOT:  Hardware Bootstrap Register
@@ -523,7 +523,7 @@ const int gtl_oe_bithi           =  9;
 //
 //
 //------------------------------------------------------------------
-//0X14 = ADR_DDDSM:  3D3444 State Machine Control + DCM Lock Status  
+//0X14 = ADR_DDDSM:  3D3444 State Machine Control + DCM Lock Status
 //------------------------------------------------------------------
 const int ddd_state_machine_start_vmereg              =  vme_dddsm_adr;
 const int ddd_state_machine_start_bitlo               =  0;
@@ -533,7 +533,7 @@ const int ddd_state_machine_start_default             =  0;
 const int ddd_state_machine_manual_vmereg             =  vme_dddsm_adr;
 const int ddd_state_machine_manual_bitlo              =  1;
 const int ddd_state_machine_manual_bithi              =  1;
-const int ddd_state_machine_manual_default            =  0; 
+const int ddd_state_machine_manual_default            =  0;
 //
 const int ddd_state_machine_latch_vmereg              =  vme_dddsm_adr;
 const int ddd_state_machine_latch_bitlo               =  2;
@@ -569,12 +569,12 @@ const int ddd_state_machine_verify_ok_expected        =  1;   //expect data to v
 const int ddd_state_machine_clock0_lock_vmereg        =  vme_dddsm_adr;
 const int ddd_state_machine_clock0_lock_bitlo         =  8;
 const int ddd_state_machine_clock0_lock_bithi         =  8;
-const int ddd_state_machine_clock0_lock_expected      =  1;   
+const int ddd_state_machine_clock0_lock_expected      =  1;
 //
 const int ddd_state_machine_clock0d_lock_vmereg       =  vme_dddsm_adr;
 const int ddd_state_machine_clock0d_lock_bitlo        =  9;
 const int ddd_state_machine_clock0d_lock_bithi        =  9;
-const int ddd_state_machine_clock0d_lock_expected     =  1 ;   
+const int ddd_state_machine_clock0d_lock_expected     =  1 ;
 //
 const int ddd_state_machine_clock1_lock_vmereg        =  vme_dddsm_adr;
 const int ddd_state_machine_clock1_lock_bitlo         = 10;
@@ -584,12 +584,12 @@ const int ddd_state_machine_clock1_lock_expected      =  1;
 const int ddd_state_machine_clock_alct_lock_vmereg    =  vme_dddsm_adr;
 const int ddd_state_machine_clock_alct_lock_bitlo     = 11;
 const int ddd_state_machine_clock_alct_lock_bithi     = 11;
-const int ddd_state_machine_clock_alct_lock_expected  =  1;  
+const int ddd_state_machine_clock_alct_lock_expected  =  1;
 //
 const int ddd_state_machine_clockd_alct_lock_vmereg   =  vme_dddsm_adr;
 const int ddd_state_machine_clockd_alct_lock_bitlo    = 12;
 const int ddd_state_machine_clockd_alct_lock_bithi    = 12;
-const int ddd_state_machine_clockd_alct_lock_expected =  1;  
+const int ddd_state_machine_clockd_alct_lock_expected =  1;
 //
 const int ddd_state_machine_clock_mpc_lock_vmereg     =  vme_dddsm_adr;
 const int ddd_state_machine_clock_mpc_lock_bitlo      = 13;
@@ -599,7 +599,7 @@ const int ddd_state_machine_clock_mpc_lock_expected   =  1;
 const int ddd_state_machine_clock_dcc_lock_vmereg     =  vme_dddsm_adr;
 const int ddd_state_machine_clock_dcc_lock_bitlo      = 14;
 const int ddd_state_machine_clock_dcc_lock_bithi      = 14;
-const int ddd_state_machine_clock_dcc_lock_expected   =  1;  
+const int ddd_state_machine_clock_dcc_lock_expected   =  1;
 //
 // this is not really the RPC lock. It actually checks if the RPC done bit is somehow a clock
 const int ddd_state_machine_clock_rpc_lock_vmereg     =  vme_dddsm_adr;
@@ -614,7 +614,7 @@ const int ddd_state_machine_clock_rpc_lock_expected   = 0;
 const int alct_tof_delay_vmereg       =  vme_ddd0_adr;
 const int alct_tof_delay_bitlo        =  0;
 const int alct_tof_delay_bithi        =  3;
-const int alct_tof_delay_default      =  0;               
+const int alct_tof_delay_default      =  0;
 //
 const int dmb_tx_delay_vmereg         =  vme_ddd0_adr;
 const int dmb_tx_delay_bitlo          =  8;
@@ -624,7 +624,7 @@ const int dmb_tx_delay_default        =  6;
 const int rat_tmb_delay_vmereg        =  vme_ddd0_adr;
 const int rat_tmb_delay_bitlo         = 12;
 const int rat_tmb_delay_bithi         = 15;
-const int rat_tmb_delay_default       =  9;          
+const int rat_tmb_delay_default       =  9;
 //
 //
 //------------------------------------------------------------------
@@ -837,56 +837,56 @@ const int internal_l1a_delay_vme_default =0x72;
 const int cfg_alct_ext_trig_en_vmereg    =  alct_cfg_adr;
 const int cfg_alct_ext_trig_en_bitlo     =  0;
 const int cfg_alct_ext_trig_en_bithi     =  0;
-const int cfg_alct_ext_trig_en_default   =  0;         //TMB documentation says this should be 1            
+const int cfg_alct_ext_trig_en_default   =  0;         //TMB documentation says this should be 1
 //
 const int cfg_alct_ext_inject_en_vmereg  =  alct_cfg_adr;
 const int cfg_alct_ext_inject_en_bitlo   =  1;
 const int cfg_alct_ext_inject_en_bithi   =  1;
-const int cfg_alct_ext_inject_en_default =  0;            
+const int cfg_alct_ext_inject_en_default =  0;
 //
 const int cfg_alct_ext_trig_vmereg       =  alct_cfg_adr;
 const int cfg_alct_ext_trig_bitlo        =  2;
 const int cfg_alct_ext_trig_bithi        =  2;
-const int cfg_alct_ext_trig_default      =  0;            
+const int cfg_alct_ext_trig_default      =  0;
 //
 const int cfg_alct_ext_inject_vmereg     =  alct_cfg_adr;
 const int cfg_alct_ext_inject_bitlo      =  3;
 const int cfg_alct_ext_inject_bithi      =  3;
-const int cfg_alct_ext_inject_default    =  0;            
+const int cfg_alct_ext_inject_default    =  0;
 //
 const int alct_seq_cmd_vmereg            =  alct_cfg_adr;
 const int alct_seq_cmd_bitlo             =  4;
 const int alct_seq_cmd_bithi             =  7;
-const int alct_seq_cmd_default           =  0;            
+const int alct_seq_cmd_default           =  0;
 //
-// Decode the ALCT sequencer commands.  
-const int NORMAL_MODE                        = 0x0; 
-const int SEND_EVENODD                       = 0x5;
-const int LOOPBACK_BITS_IN_ALCT_BANK_0       = 0x1;
-const int LOOPBACK_BITS_IN_ALCT_BANK_1       = 0x3;
-const int LOOPBACK_BITS_IN_ALCT_BANK_2       = 0x9;
-const int LOOPBACK_RANDOM                    = 0x4;
-const int SEND_RANDOM                        = 0xb; 
+// Decode the ALCT sequencer commands.
+const int NORMAL_MODE                  = 0x0;
+const int SEND_EVENODD                 = 0x5;
+const int LOOPBACK_BITS_IN_ALCT_BANK_0 = 0x1;
+const int LOOPBACK_BITS_IN_ALCT_BANK_1 = 0x3;
+const int LOOPBACK_BITS_IN_ALCT_BANK_2 = 0x9;
+const int LOOPBACK_RANDOM              = 0x4;
+const int SEND_RANDOM                  = 0xb;
 //
 const int alct_clock_en_use_ccb_vmereg   =  alct_cfg_adr;
 const int alct_clock_en_use_ccb_bitlo    =  8;
 const int alct_clock_en_use_ccb_bithi    =  8;
-const int alct_clock_en_use_ccb_default  =  1;            
+const int alct_clock_en_use_ccb_default  =  1;
 //
 const int alct_clock_en_use_vme_vmereg   =  alct_cfg_adr;
 const int alct_clock_en_use_vme_bitlo    =  9;
 const int alct_clock_en_use_vme_bithi    =  9;
-const int alct_clock_en_use_vme_default  =  0;            
+const int alct_clock_en_use_vme_default  =  0;
 //
 const int alct_muonic_vmereg             =  alct_cfg_adr;
 const int alct_muonic_bitlo              = 10;
 const int alct_muonic_bithi              = 10;
-const int alct_muonic_default            =  0;            
+const int alct_muonic_default            =  0;
 //
 const int cfeb_muonic_vmereg             =  alct_cfg_adr;
 const int cfeb_muonic_bitlo              = 11;
 const int cfeb_muonic_bithi              = 11;
-const int cfeb_muonic_default            =  0;            
+const int cfeb_muonic_default            =  0;
 //
 //
 //------------------------------------------------------------------
@@ -1093,7 +1093,7 @@ const int cfeb3_layer45_hotchannelmask_vmereg          = hcm345_adr;
 const int cfeb3_layer45_hotchannelmask_layer_map[16]   = { 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5};
 const int cfeb3_layer45_hotchannelmask_distrip_map[16] = {24,25,26,27,28,29,30,31,24,25,26,27,28,29,30,31};
 //
-// 
+//
 const int cfeb4_layer01_hotchannelmask_vmereg          = hcm401_adr;
 const int cfeb4_layer01_hotchannelmask_layer_map[16]   = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1};
 const int cfeb4_layer01_hotchannelmask_distrip_map[16] = {32,33,34,35,36,37,38,39,32,33,34,35,36,37,38,39};
@@ -1106,7 +1106,7 @@ const int cfeb4_layer45_hotchannelmask_vmereg          = hcm445_adr;
 const int cfeb4_layer45_hotchannelmask_layer_map[16]   = { 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5};
 const int cfeb4_layer45_hotchannelmask_distrip_map[16] = {32,33,34,35,36,37,38,39,32,33,34,35,36,37,38,39};
 //
-// 
+//
 const int cfeb5_layer01_hotchannelmask_vmereg          = hcm501_adr;
 const int cfeb5_layer01_hotchannelmask_layer_map[16]   = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1};
 const int cfeb5_layer01_hotchannelmask_distrip_map[16] = {40,41,42,43,44,45,46,47,40,41,42,43,44,45,46,47};
@@ -1119,7 +1119,7 @@ const int cfeb5_layer45_hotchannelmask_vmereg          = hcm545_adr;
 const int cfeb5_layer45_hotchannelmask_layer_map[16]   = { 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5};
 const int cfeb5_layer45_hotchannelmask_distrip_map[16] = {40,41,42,43,44,45,46,47,40,41,42,43,44,45,46,47};
 //
-// 
+//
 const int cfeb6_layer01_hotchannelmask_vmereg          = hcm601_adr;
 const int cfeb6_layer01_hotchannelmask_layer_map[16]   = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1};
 const int cfeb6_layer01_hotchannelmask_distrip_map[16] = {48,49,50,51,52,53,54,55,48,49,50,51,52,53,54,55};
@@ -1132,7 +1132,7 @@ const int cfeb6_layer45_hotchannelmask_vmereg          = hcm645_adr;
 const int cfeb6_layer45_hotchannelmask_layer_map[16]   = { 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5};
 const int cfeb6_layer45_hotchannelmask_distrip_map[16] = {48,49,50,51,52,53,54,55,48,49,50,51,52,53,54,55};
 //
-const int hot_channel_mask_default = ON; 
+const int hot_channel_mask_default = ON;
 //
 //------------------------------------------------------------------
 //0X68 = ADR_SEQ_TRIG_EN:  Sequencer Trigger Source Enables
@@ -1282,7 +1282,7 @@ const int hit_thresh_default        =  4;
 const int aff_thresh_vmereg         =  seq_clct_adr;
 const int aff_thresh_bitlo          =  7;
 const int aff_thresh_bithi          =  9;
-const int aff_thresh_default        =  4; 
+const int aff_thresh_default        =  4;
 //
 const int min_hits_pattern_vmereg   =  seq_clct_adr;
 const int min_hits_pattern_bitlo    = 10;
@@ -1888,7 +1888,7 @@ const int bx0_match_bitlo         = 10;
 const int bx0_match_bithi         = 10;
 //
 //-----------------------------------------------------------------------------
-//0XCC = ADR_NON_TRIG_RO:  Non-Triggering Event Enables + ME1/1A(1B) reversal 
+//0XCC = ADR_NON_TRIG_RO:  Non-Triggering Event Enables + ME1/1A(1B) reversal
 //-----------------------------------------------------------------------------
 const int tmb_allow_alct_nontrig_readout_vmereg    = non_trig_readout_adr ;
 const int tmb_allow_alct_nontrig_readout_bitlo     =  0;
@@ -1991,9 +1991,9 @@ const int jtag_state_machine_tck_fpga_ok_bitlo    =  7;
 const int jtag_state_machine_tck_fpga_ok_bithi    =  7;
 const int jtag_state_machine_tck_fpga_ok_expected =  1;   //expect FPGA tck OK
 //
-const int jtag_state_machine_vme_ready_vmereg     =  jtag_sm_ctrl_adr; 
-const int jtag_state_machine_vme_ready_bitlo      =  8; 
-const int jtag_state_machine_vme_ready_bithi      =  8; 
+const int jtag_state_machine_vme_ready_vmereg     =  jtag_sm_ctrl_adr;
+const int jtag_state_machine_vme_ready_bitlo      =  8;
+const int jtag_state_machine_vme_ready_bithi      =  8;
 const int jtag_state_machine_vme_ready_expected   =  1;   //expect VME ready
 //
 const int jtag_state_machine_ok_vmereg            =  jtag_sm_ctrl_adr;
@@ -2019,9 +2019,9 @@ const int jtag_state_machine_throttle_default     =  0;
 //------------------------------------------------------------------
 //0XD6 = ADR_JTAGSM1:  JTAG State Machine Word Count
 //------------------------------------------------------------------
-const int jtag_state_machine_word_count_vmereg =  jtag_sm_wdcnt_adr; 
-const int jtag_state_machine_word_count_bitlo  =  0; 
-const int jtag_state_machine_word_count_bithi  = 15; 
+const int jtag_state_machine_word_count_vmereg =  jtag_sm_wdcnt_adr;
+const int jtag_state_machine_word_count_bitlo  =  0;
+const int jtag_state_machine_word_count_bithi  = 15;
 //
 //
 //------------------------------------------------------------------
@@ -2140,7 +2140,7 @@ const int vme_state_machine_error_missing_data_end_marker_expected =  0; //expec
 const int vme_state_machine_error_missing_trailer_end_vmereg       =  vme_sm_cksum_adr;
 const int vme_state_machine_error_missing_trailer_end_bitlo        = 11;
 const int vme_state_machine_error_missing_trailer_end_bithi        = 11;
-const int vme_state_machine_error_missing_trailer_end_expected     =  0; //expect no error missing trailer end 
+const int vme_state_machine_error_missing_trailer_end_expected     =  0; //expect no error missing trailer end
 //
 const int vme_state_machine_error_word_count_overflow_vmereg       =  vme_sm_cksum_adr;
 const int vme_state_machine_error_word_count_overflow_bitlo        = 12;
@@ -2183,7 +2183,7 @@ const int rpc3_rat_delay_default =  0;
 //
 //---------------------------------------------------------------------
 //0XEA = ADR_BDSTATUS:  Board Status Summary (copy of raw-hits header)
-//N.B. these values are tied directly to the VME state machine and 
+//N.B. these values are tied directly to the VME state machine and
 //     JTAG state machine status words
 // greg, this needs jtag state-machine tck count added
 //---------------------------------------------------------------------
@@ -2220,7 +2220,7 @@ const int nt_crit_expected         =  1;    //expect "not critical" temperature 
 const int vsm_ok_vmereg            =  tmb_stat_adr;
 const int vsm_ok_bitlo             =  6;
 const int vsm_ok_bithi             =  6;
-const int vsm_ok_expected          =  vme_state_machine_ok_expected;  
+const int vsm_ok_expected          =  vme_state_machine_ok_expected;
 //
 const int vsm_aborted_vmereg       =  tmb_stat_adr;
 const int vsm_aborted_bitlo        =  7;
@@ -2270,12 +2270,12 @@ const int jsm_tck_fpga_ok_expected =  jtag_state_machine_tck_fpga_ok_expected;
 const int layer_trigger_en_vmereg   =  layer_trg_mode_adr;
 const int layer_trigger_en_bitlo    =  0;
 const int layer_trigger_en_bithi    =  0;
-const int layer_trigger_en_default  =  0; 
+const int layer_trigger_en_default  =  0;
 //
 const int layer_trig_thresh_vmereg  =  layer_trg_mode_adr;
 const int layer_trig_thresh_bitlo   =  1;
 const int layer_trig_thresh_bithi   =  3;
-const int layer_trig_thresh_default =  4; 
+const int layer_trig_thresh_default =  4;
 //
 const int number_layers_hit_vmereg  =  layer_trg_mode_adr;
 const int number_layers_hit_bitlo   =  4;
@@ -2284,7 +2284,7 @@ const int number_layers_hit_bithi   =  6;
 const int clct_throttle_vmereg      =  layer_trg_mode_adr;
 const int clct_throttle_bitlo       =  8;
 const int clct_throttle_bithi       = 15;
-const int clct_throttle_default     =  0; 
+const int clct_throttle_default     =  0;
 //
 //
 //---------------------------------------------------------------------
@@ -2293,22 +2293,22 @@ const int clct_throttle_default     =  0;
 const int clct_blanking_vmereg                     =  pattern_find_pretrg_adr;
 const int clct_blanking_bitlo                      =  0;
 const int clct_blanking_bithi                      =  0;
-const int clct_blanking_default                    =  1; 
+const int clct_blanking_default                    =  1;
 //
 const int clct_pattern_id_thresh_vmereg            =  pattern_find_pretrg_adr;
 const int clct_pattern_id_thresh_bitlo             =  2;
 const int clct_pattern_id_thresh_bithi             =  5;
-const int clct_pattern_id_thresh_default           =  0; 
+const int clct_pattern_id_thresh_default           =  0;
 //
 const int clct_pattern_id_thresh_postdrift_vmereg  =  pattern_find_pretrg_adr;
 const int clct_pattern_id_thresh_postdrift_bitlo   =  6;
 const int clct_pattern_id_thresh_postdrift_bithi   =  9;
-const int clct_pattern_id_thresh_postdrift_default =  0; 
+const int clct_pattern_id_thresh_postdrift_default =  0;
 //
 const int adjacent_cfeb_distance_vmereg            =  pattern_find_pretrg_adr;
 const int adjacent_cfeb_distance_bitlo             = 10;
 const int adjacent_cfeb_distance_bithi             = 15;
-const int adjacent_cfeb_distance_default           =  5; 
+const int adjacent_cfeb_distance_default           =  5;
 //
 //
 //---------------------------------------------------------------------
@@ -2317,23 +2317,23 @@ const int adjacent_cfeb_distance_default           =  5;
 const int clct_separation_src_vmereg               =  clct_separation_adr;
 const int clct_separation_src_bitlo                =  0;
 const int clct_separation_src_bithi                =  0;
-const int clct_separation_src_default              =  1; 
+const int clct_separation_src_default              =  1;
 //
 const int clct_separation_ram_write_enable_vmereg  =  clct_separation_adr;
 const int clct_separation_ram_write_enable_bitlo   =  1;
 const int clct_separation_ram_write_enable_bithi   =  1;
-const int clct_separation_ram_write_enable_default =  0; 
+const int clct_separation_ram_write_enable_default =  0;
 //
 const int clct_separation_ram_adr_vmereg           =  clct_separation_adr;
 const int clct_separation_ram_adr_bitlo            =  2;
 const int clct_separation_ram_adr_bithi            =  5;
-const int clct_separation_ram_adr_default          =  0; 
+const int clct_separation_ram_adr_default          =  0;
 //
 // greg, this needs bit-6 to add A or B separataion RAM data readback (or not?)
 const int min_clct_separation_vmereg               =  clct_separation_adr;
 const int min_clct_separation_bitlo                =  8;
 const int min_clct_separation_bithi                = 15;
-const int min_clct_separation_default              = 10; 
+const int min_clct_separation_default              = 10;
 //
 //
 // greg this needs 0xFA added (SEU error status) for 08/28/2008
@@ -2365,12 +2365,12 @@ const int ccb_qpll_lost_ever_bithi    =  3;
 const int l1a_allow_notmb_lookback_vmereg    =  l1a_lookback_adr;
 const int l1a_allow_notmb_lookback_bitlo     =  0;
 const int l1a_allow_notmb_lookback_bithi     = 10;
-const int l1a_allow_notmb_lookback_default   =128; 
+const int l1a_allow_notmb_lookback_default   =128;
 //
 const int inj_wrdata_msb_vmereg              =  l1a_lookback_adr;
 const int inj_wrdata_msb_bitlo               = 11;
 const int inj_wrdata_msb_bithi               = 12;
-const int inj_wrdata_msb_default             =  0; 
+const int inj_wrdata_msb_default             =  0;
 //
 const int inj_rdata_msb_vmereg               =  l1a_lookback_adr;
 const int inj_rdata_msb_bitlo                = 13;
@@ -2379,7 +2379,7 @@ const int inj_rdata_msb_bithi                = 14;
 const int l1a_priority_enable_vmereg         =  l1a_lookback_adr;
 const int l1a_priority_enable_bitlo          = 15;
 const int l1a_priority_enable_bithi          = 15;
-const int l1a_priority_enable_default        =  1; 
+const int l1a_priority_enable_default        =  1;
 //
 //
 //---------------------------------------------------------------------
@@ -2388,17 +2388,17 @@ const int l1a_priority_enable_default        =  1;
 const int alct_sync_rxdata_dly_vmereg        =  alct_sync_ctrl_adr;
 const int alct_sync_rxdata_dly_bitlo         =  0;
 const int alct_sync_rxdata_dly_bithi         =  3;
-const int alct_sync_rxdata_dly_default       =  0; 
+const int alct_sync_rxdata_dly_default       =  0;
 //
 const int alct_sync_tx_random_vmereg         =  alct_sync_ctrl_adr;
 const int alct_sync_tx_random_bitlo          =  4;
 const int alct_sync_tx_random_bithi          =  4;
-const int alct_sync_tx_random_default        =  0; 
+const int alct_sync_tx_random_default        =  0;
 //
 const int alct_sync_clear_errors_vmereg      =  alct_sync_ctrl_adr;
 const int alct_sync_clear_errors_bitlo       =  5;
 const int alct_sync_clear_errors_bithi       =  5;
-const int alct_sync_clear_errors_default     =  0; 
+const int alct_sync_clear_errors_default     =  0;
 //
 const int alct_sync_1st_error_vmereg         =  alct_sync_ctrl_adr;
 const int alct_sync_1st_error_bitlo          =  6;
@@ -2423,7 +2423,7 @@ const int alct_sync_2nd_error_latched_bithi  =  9;
 const int alct_sync_txdata_1st_vmereg        =  alct_sync_txdata_1st_adr;
 const int alct_sync_txdata_1st_bitlo         =  0;
 const int alct_sync_txdata_1st_bithi         =  9;
-const int alct_sync_txdata_1st_default       =  0; 
+const int alct_sync_txdata_1st_default       =  0;
 //
 //
 //---------------------------------------------------------------------
@@ -2432,7 +2432,7 @@ const int alct_sync_txdata_1st_default       =  0;
 const int alct_sync_txdata_2nd_vmereg        =  alct_sync_txdata_2nd_adr;
 const int alct_sync_txdata_2nd_bitlo         =  0;
 const int alct_sync_txdata_2nd_bithi         =  9;
-const int alct_sync_txdata_2nd_default       =  0; 
+const int alct_sync_txdata_2nd_default       =  0;
 //
 //
 //---------------------------------------------------------------------
@@ -2441,27 +2441,27 @@ const int alct_sync_txdata_2nd_default       =  0;
 const int miniscope_enable_vmereg       =  miniscope_adr;
 const int miniscope_enable_bitlo        =  0;
 const int miniscope_enable_bithi        =  0;
-const int miniscope_enable_default      =  1; 
+const int miniscope_enable_default      =  1;
 //
 const int mini_tbins_test_vmereg        =  miniscope_adr;
 const int mini_tbins_test_bitlo         =  1;
 const int mini_tbins_test_bithi         =  1;
-const int mini_tbins_test_default       =  0; 
+const int mini_tbins_test_default       =  0;
 //
 const int mini_tbins_word_vmereg        =  miniscope_adr;
 const int mini_tbins_word_bitlo         =  2;
 const int mini_tbins_word_bithi         =  2;
-const int mini_tbins_word_default       =  1; 
+const int mini_tbins_word_default       =  1;
 //
 const int fifo_tbins_mini_vmereg        =  miniscope_adr;
 const int fifo_tbins_mini_bitlo         =  3;
 const int fifo_tbins_mini_bithi         =  7;
-const int fifo_tbins_mini_default       = 22; 
+const int fifo_tbins_mini_default       = 22;
 //
 const int fifo_pretrig_mini_vmereg      =  miniscope_adr;
 const int fifo_pretrig_mini_bitlo       =  8;
 const int fifo_pretrig_mini_bithi       = 12;
-const int fifo_pretrig_mini_default     =  4; 
+const int fifo_pretrig_mini_default     =  4;
 //
 //
 //---------------------------------------------------------------------
@@ -2470,11 +2470,11 @@ const int fifo_pretrig_mini_default     =  4;
 //---------------------------------------------------------------------
 const int fire_phaser_bitlo                     =  0;
 const int fire_phaser_bithi                     =  0;
-const int fire_phaser_default                   =  0; 
+const int fire_phaser_default                   =  0;
 //
 const int reset_phase_bitlo                     =  1;
 const int reset_phase_bithi                     =  1;
-const int reset_phase_default                   =  0; 
+const int reset_phase_default                   =  0;
 //
 const int phaser_busy_bitlo                     =  2;
 const int phaser_busy_bithi                     =  2;
@@ -2499,9 +2499,9 @@ const int half_cycle_quadrant_select_bithi      = 15;
 //
 //
 // This is the total number of bins defined in the phase shifter in the FPGA
-const int number_of_available_bins_per_clock_cycle = 256;   
+const int number_of_available_bins_per_clock_cycle = 256;
 //
-// This is the granularity that the user wants to step within that 40MHz clock 
+// This is the granularity that the user wants to step within that 40MHz clock
 // (must be converted into phase shifter bins, above)
 const int maximum_number_of_phase_delay_values     = 25;
 
@@ -2511,77 +2511,98 @@ const int maximum_number_of_phase_delay_values     = 25;
 //--------------------------------------------------------------
 const int alct_rx_clock_delay_vmereg   =  phaser_alct_rxd_adr;
 const int alct_rx_clock_delay_default  =  3;                    //default value in nanoseconds (not the VME register values)
-const int alct_rx_posneg_default       =  0; 
+const int alct_rx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X110] = ADR_PHASER1:  values in the xml file for alct_tx
 //--------------------------------------------------------------
 const int alct_tx_clock_delay_vmereg   =  phaser_alct_txd_adr;
-const int alct_tx_clock_delay_default  =  3;                    //default value in nanoseconds (not the VME register values) 
-const int alct_tx_posneg_default       =  0; 
+const int alct_tx_clock_delay_default  =  3;                    //default value in nanoseconds (not the VME register values)
+const int alct_tx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X112] = ADR_PHASER2:  values in the xml file for cfeb0_rx
 //--------------------------------------------------------------
 const int cfeb0_rx_clock_delay_vmereg   =  phaser_cfeb0_rxd_adr;
-const int cfeb0_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values) 
-const int cfeb0_rx_posneg_default       =  0; 
+const int cfeb0_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values)
+const int cfeb0_rx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X114] = ADR_PHASER3:  values in the xml file for cfeb1_rx
 //--------------------------------------------------------------
 const int cfeb1_rx_clock_delay_vmereg   =  phaser_cfeb1_rxd_adr;
-const int cfeb1_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values) 
-const int cfeb1_rx_posneg_default       =  0; 
+const int cfeb1_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values)
+const int cfeb1_rx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X116] = ADR_PHASER4:  values in the xml file for cfeb2_rx
 //--------------------------------------------------------------
 const int cfeb2_rx_clock_delay_vmereg   =  phaser_cfeb2_rxd_adr;
-const int cfeb2_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values) 
-const int cfeb2_rx_posneg_default       =  0; 
+const int cfeb2_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values)
+const int cfeb2_rx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X118] = ADR_PHASER5:  values in the xml file for cfeb3_rx
 //--------------------------------------------------------------
 const int cfeb3_rx_clock_delay_vmereg   =  phaser_cfeb3_rxd_adr;
-const int cfeb3_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values) 
-const int cfeb3_rx_posneg_default       =  0; 
+const int cfeb3_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values)
+const int cfeb3_rx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X11A] = ADR_PHASER6:  values in the xml file for cfeb4_rx
 //--------------------------------------------------------------
 const int cfeb4_rx_clock_delay_vmereg   =  phaser_cfeb4_rxd_adr;
-const int cfeb4_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values) 
-const int cfeb4_rx_posneg_default       =  0; 
+const int cfeb4_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values)
+const int cfeb4_rx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X16A] = ADR_PHASER7:  values in the xml file for cfeb5_rx
 //--------------------------------------------------------------
 const int cfeb5_rx_clock_delay_vmereg   =  phaser_cfeb5_rxd_adr; // for compatibility, will be removed
-const int cfeb5_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values) 
-const int cfeb5_rx_posneg_default       =  0; 
+const int cfeb5_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values)
+const int cfeb5_rx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X16C] = ADR_PHASER8:  values in the xml file for cfeb6_rx
 //--------------------------------------------------------------
 const int cfeb6_rx_clock_delay_vmereg   =  phaser_cfeb6_rxd_adr; // for compatibility, will be removed
-const int cfeb6_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values) 
-const int cfeb6_rx_posneg_default       =  0; 
+const int cfeb6_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values)
+const int cfeb6_rx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X16C] = ADR_PHASER7:  values in the xml file for cfeb0123_rx
 //--------------------------------------------------------------
 const int cfeb0123_rx_clock_delay_vmereg   =  phaser_cfeb0123_rxd_adr;
-const int cfeb0123_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values) 
-const int cfeb0123_rx_posneg_default       =  0; 
+const int cfeb0123_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values)
+const int cfeb0123_rx_posneg_default       =  0;
 //
 //--------------------------------------------------------------
 //[0X16C] = ADR_PHASER8:  values in the xml file for cfeb456_rx
 //--------------------------------------------------------------
 const int cfeb456_rx_clock_delay_vmereg   =  phaser_cfeb456_rxd_adr;
-const int cfeb456_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values) 
-const int cfeb456_rx_posneg_default       =  0; 
+const int cfeb456_rx_clock_delay_default  =  3;                   //default value in nanoseconds (not the VME register values)
+const int cfeb456_rx_posneg_default       =  0;
+//
+//--------------------------------------------------------------
+//[0X308] = ADR_PHASER9:  values in the xml file for gem_rxd
+//--------------------------------------------------------------
+const int gem_rx_clock_delay_vmereg   =  phaser_gem_rxd_adr;
+const int gem_rx_clock_delay_default  =  3; // default value in nanoseconds (not the VME register values)
+const int gem_rx_posneg_default       =  0;
+//
+//--------------------------------------------------------------
+//[0X308] = ADR_PHASER9:  values in the xml file for gemA_rxd
+//--------------------------------------------------------------
+const int gemA_rx_clock_delay_vmereg   =  phaser_gemA_rxd_adr;
+const int gemA_rx_clock_delay_default  =  3; // default value in nanoseconds (not the VME register values)
+const int gemA_rx_posneg_default       =  0;
+//
+//--------------------------------------------------------------
+//[0X30A] = ADR_PHASER10:  values in the xml file for gemB_rxd
+//--------------------------------------------------------------
+const int gemB_rx_clock_delay_vmereg   =  phaser_gemB_rxd_adr;
+const int gemB_rx_clock_delay_default  =  3; // default value in nanoseconds (not the VME register values)
+const int gemB_rx_posneg_default       =  0;
 //
 //---------------------------------------------------------------------
 // 0X11C = ADR_DELAY0_INT:  CFEB to TMB "interstage" delays
@@ -2589,22 +2610,22 @@ const int cfeb456_rx_posneg_default       =  0;
 const int cfeb0_rxd_int_delay_vmereg  =  cfeb0_3_interstage_adr;
 const int cfeb0_rxd_int_delay_bitlo   =  0;
 const int cfeb0_rxd_int_delay_bithi   =  3;
-const int cfeb0_rxd_int_delay_default =  0; 
+const int cfeb0_rxd_int_delay_default =  0;
 //
 const int cfeb1_rxd_int_delay_vmereg  =  cfeb0_3_interstage_adr;
 const int cfeb1_rxd_int_delay_bitlo   =  4;
 const int cfeb1_rxd_int_delay_bithi   =  7;
-const int cfeb1_rxd_int_delay_default =  0; 
+const int cfeb1_rxd_int_delay_default =  0;
 //
 const int cfeb2_rxd_int_delay_vmereg  =  cfeb0_3_interstage_adr;
 const int cfeb2_rxd_int_delay_bitlo   =  8;
 const int cfeb2_rxd_int_delay_bithi   = 11;
-const int cfeb2_rxd_int_delay_default =  0; 
+const int cfeb2_rxd_int_delay_default =  0;
 //
 const int cfeb3_rxd_int_delay_vmereg  =  cfeb0_3_interstage_adr;
 const int cfeb3_rxd_int_delay_bitlo   = 12;
 const int cfeb3_rxd_int_delay_bithi   = 15;
-const int cfeb3_rxd_int_delay_default =  0; 
+const int cfeb3_rxd_int_delay_default =  0;
 //
 //---------------------------------------------------------------------
 // 0X11E = ADR_DELAY1_INT:  CFEB to TMB "interstage" delays
@@ -2612,27 +2633,27 @@ const int cfeb3_rxd_int_delay_default =  0;
 const int cfeb4_rxd_int_delay_vmereg  =  cfeb4_6_interstage_adr;
 const int cfeb4_rxd_int_delay_bitlo   =  0;
 const int cfeb4_rxd_int_delay_bithi   =  3;
-const int cfeb4_rxd_int_delay_default =  0; 
+const int cfeb4_rxd_int_delay_default =  0;
 //
 const int cfeb5_rxd_int_delay_vmereg  = cfeb4_6_interstage_adr;
 const int cfeb5_rxd_int_delay_bitlo   =  4;
 const int cfeb5_rxd_int_delay_bithi   =  7;
-const int cfeb5_rxd_int_delay_default =  0; 
+const int cfeb5_rxd_int_delay_default =  0;
 //
 const int cfeb456_rxd_int_delay_vmereg  =  dcfeb_me11ab_interstage_adr;
 const int cfeb456_rxd_int_delay_bitlo   =  4;
 const int cfeb456_rxd_int_delay_bithi   =  7;
-const int cfeb456_rxd_int_delay_default =  0; 
+const int cfeb456_rxd_int_delay_default =  0;
 //
 const int cfeb6_rxd_int_delay_vmereg  =  cfeb4_6_interstage_adr;
 const int cfeb6_rxd_int_delay_bitlo   =  8;
 const int cfeb6_rxd_int_delay_bithi   =  11;
-const int cfeb6_rxd_int_delay_default =  0; 
+const int cfeb6_rxd_int_delay_default =  0;
 //
 const int cfeb0123_rxd_int_delay_vmereg  =  dcfeb_me11ab_interstage_adr;
 const int cfeb0123_rxd_int_delay_bitlo   =  8;
 const int cfeb0123_rxd_int_delay_bithi   =  11;
-const int cfeb0123_rxd_int_delay_default =  0; 
+const int cfeb0123_rxd_int_delay_default =  0;
 //
 //
 //---------------------------------------------------------------------
@@ -2641,47 +2662,47 @@ const int cfeb0123_rxd_int_delay_default =  0;
 const int sync_err_reset_vmereg  =  sync_err_control_adr;
 const int sync_err_reset_bitlo   =  0;
 const int sync_err_reset_bithi   =  0;
-const int sync_err_reset_default =  0; 
+const int sync_err_reset_default =  0;
 //
 const int clct_bx0_sync_err_enable_vmereg  =  sync_err_control_adr;
 const int clct_bx0_sync_err_enable_bitlo   =  1;
 const int clct_bx0_sync_err_enable_bithi   =  1;
-const int clct_bx0_sync_err_enable_default =  1; 
+const int clct_bx0_sync_err_enable_default =  1;
 //
 const int alct_ecc_rx_sync_err_enable_vmereg    =  sync_err_control_adr;
 const int alct_ecc_rx_sync_err_enable_bitlo     =  2;
 const int alct_ecc_rx_sync_err_enable_bithi     =  2;
-const int alct_ecc_rx_sync_err_enable_default   =  0; 
+const int alct_ecc_rx_sync_err_enable_default   =  0;
 //
 const int alct_ecc_tx_sync_err_enable_vmereg    =  sync_err_control_adr;
 const int alct_ecc_tx_sync_err_enable_bitlo     =  3;
 const int alct_ecc_tx_sync_err_enable_bithi     =  3;
-const int alct_ecc_tx_sync_err_enable_default   =  0; 
+const int alct_ecc_tx_sync_err_enable_default   =  0;
 //
 const int bx0_match_sync_err_enable_vmereg      =  sync_err_control_adr;
 const int bx0_match_sync_err_enable_bitlo       =  4;
 const int bx0_match_sync_err_enable_bithi       =  4;
-const int bx0_match_sync_err_enable_default     =  0; 
+const int bx0_match_sync_err_enable_default     =  0;
 //
 const int clock_lock_lost_sync_err_enable_vmereg     =  sync_err_control_adr;
 const int clock_lock_lost_sync_err_enable_bitlo      =  5;
 const int clock_lock_lost_sync_err_enable_bithi      =  5;
-const int clock_lock_lost_sync_err_enable_default    =  0; 
+const int clock_lock_lost_sync_err_enable_default    =  0;
 //
 const int sync_err_blanks_mpc_enable_vmereg     =  sync_err_control_adr;
 const int sync_err_blanks_mpc_enable_bitlo      =  6;
 const int sync_err_blanks_mpc_enable_bithi      =  6;
-const int sync_err_blanks_mpc_enable_default    =  0; 
+const int sync_err_blanks_mpc_enable_default    =  0;
 //
 const int sync_err_stops_pretrig_enable_vmereg  =  sync_err_control_adr;
 const int sync_err_stops_pretrig_enable_bitlo   =  7;
 const int sync_err_stops_pretrig_enable_bithi   =  7;
-const int sync_err_stops_pretrig_enable_default =  0; 
+const int sync_err_stops_pretrig_enable_default =  0;
 //
 const int sync_err_stops_readout_enable_vmereg  =  sync_err_control_adr;
 const int sync_err_stops_readout_enable_bitlo   =  8;
 const int sync_err_stops_readout_enable_bithi   =  8;
-const int sync_err_stops_readout_enable_default =  0; 
+const int sync_err_stops_readout_enable_default =  0;
 //
 const int sync_err_vmereg             =  sync_err_control_adr;
 const int sync_err_bitlo              =  9;
@@ -2714,12 +2735,12 @@ const int clock_lock_lost_sync_err_bithi   = 14;
 const int cfeb_badbits_reset_vmereg   =  cfeb_badbits_ctrl_adr;
 const int cfeb_badbits_reset_bitlo    =  0;
 const int cfeb_badbits_reset_bithi    =  4;
-const int cfeb_badbits_reset_default  =  0; 
+const int cfeb_badbits_reset_default  =  0;
 //
 const int cfeb_badbits_block_vmereg   =  cfeb_badbits_ctrl_adr;
 const int cfeb_badbits_block_bitlo    =  5;
 const int cfeb_badbits_block_bithi    =  9;
-const int cfeb_badbits_block_default  =  0; 
+const int cfeb_badbits_block_default  =  0;
 //
 const int cfeb_badbits_found_vmereg   =  cfeb_badbits_ctrl_adr;
 const int cfeb_badbits_found_bitlo    = 10;
@@ -3149,6 +3170,59 @@ const int mpc_frames_fifo_ctrl_sditter_vmereg            = mpc_frames_fifo_ctrl_
 const int mpc_frames_fifo_ctrl_sditter_bitlo             = 8;
 const int mpc_frames_fifo_ctrl_sditter_bithi             = 8;
 const int mpc_frames_fifo_ctrl_sditter_default           = 0;
+
+//-----------------------------------------------------------------------------
+// 0X310 ADR_GEM_TBINS
+//-----------------------------------------------------------------------------
+
+const int gem_fifo_tbins_vmereg           = gem_tbins_adr;
+const int gem_fifo_tbins_bitlo            = 0;
+const int gem_fifo_tbins_bithi            = 4;
+const int gem_fifo_tbins_default          = 7;
+
+const int gem_fifo_pretrig_vmereg         = gem_tbins_adr;
+const int gem_fifo_pretrig_bitlo          = 5;
+const int gem_fifo_pretrig_bithi          = 9;
+const int gem_fifo_pretrig_default        = 2;
+
+const int gem_fifo_decouple_vmereg        = gem_tbins_adr;
+const int gem_fifo_decouple_bitlo         = 10;
+const int gem_fifo_decouple_bithi         = 10;
+const int gem_fifo_decouple_default       = 0;
+
+const int gem_read_enable_vmereg          = gem_tbins_adr;
+const int gem_read_enable_bitlo           = 11;
+const int gem_read_enable_bithi           = 11;
+const int gem_read_enable_default         = 0;
+
+const int gem_zero_supress_enable_vmereg  = gem_tbins_adr;
+const int gem_zero_supress_enable_bitlo   = 12;
+const int gem_zero_supress_enable_bithi   = 12;
+const int gem_zero_supress_enable_default = 0;
+
+//-----------------------------------------------------------------------------
+// 0X312 ADR_GEM_CFG
+//-----------------------------------------------------------------------------
+//
+const int gemA_rxd_int_delay_vmereg     = gem_cfg_adr;
+const int gemA_rxd_int_delay_bitlo      = 0;
+const int gemA_rxd_int_delay_bithi      = 3;
+const int gemA_rxd_int_delay_default    = 0;
+
+const int gemB_rxd_int_delay_vmereg     = gem_cfg_adr;
+const int gemB_rxd_int_delay_bitlo      = 0;
+const int gemB_rxd_int_delay_bithi      = 0;
+const int gemB_rxd_int_delay_default    = 0;
+
+const int decouple_gem_rxd_int_delay_vmereg  = gem_cfg_adr;
+const int decouple_gem_rxd_int_delay_bitlo   = 0;
+const int decouple_gem_rxd_int_delay_bithi   = 0;
+const int decouple_gem_rxd_int_delay_default = 0;
+
+const int gem_fiber_exists_vmereg            = gem_cfg_adr;
+const int gem_fiber_exists_bitlo             = 9;
+const int gem_fiber_exists_bithi             = 12;
+const int gem_fiber_exists_default           = 0xf;
 
 //
 //////////////////////////////////////////////
