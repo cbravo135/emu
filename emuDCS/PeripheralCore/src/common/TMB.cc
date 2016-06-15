@@ -3314,8 +3314,8 @@ bool TMB::ReadTMBRawhits_(){
 
   // Determine the CRC to see if we've extracted the data correctly, among other possibilities
   int CRC_end  = tmb_data_.size();
-  int CRC_low  = (tmb_data_[CRC_end-4].to_ulong()) &0x7ff;
-  int CRC_high = (tmb_data_[CRC_end-3].to_ulong()) &0x7ff;
+  int CRC_low  = (tmb_data_[CRC_end-3].to_ulong()) &0x7ff;
+  int CRC_high = (tmb_data_[CRC_end-2].to_ulong()) &0x7ff;
   //
   int CRCdata  = (CRC_high<<11) | CRC_low;
   int CRCcalc = TMBCRCcalc(tmb_data_);
