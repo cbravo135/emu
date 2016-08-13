@@ -6398,6 +6398,7 @@ void TMB::SetTMBRegisterDefaults() {
   //0XD4 = ADR_JTAGSM0:  JTAG State Machine Control (reads JTAG PROM)
   //------------------------------------------------------------------
   jtag_state_machine_start_    = jtag_state_machine_start_default   ;
+  jtag_state_machine_select_   = jtag_state_machine_select_default  ;
   jtag_state_machine_sreset_   = jtag_state_machine_sreset_default  ;
   jtag_disable_write_to_adr10_ = jtag_disable_write_to_adr10_default;
   jtag_state_machine_throttle_ = jtag_state_machine_throttle_default;
@@ -6711,8 +6712,8 @@ void TMB::DecodeTMBRegister_(unsigned long int address, int data) {
 								    ddd_state_machine_clock_alct_lock_bithi);
     read_ddd_state_machine_clockd_alct_lock_ = ExtractValueFromData(data,ddd_state_machine_clockd_alct_lock_bitlo,
 								    ddd_state_machine_clockd_alct_lock_bithi);
-    read_ddd_state_machine_clock_cfeb_lock_  = ExtractValueFromData(data,ddd_state_machine_clock_cfeb_lock_bitlo,
-								    ddd_state_machine_clock_cfeb_lock_bithi);
+    read_ddd_state_machine_clock_mpc_lock_  = ExtractValueFromData(data,ddd_state_machine_clock_mpc_lock_bitlo,
+								    ddd_state_machine_clock_mpc_lock_bithi);
     read_ddd_state_machine_clock_dcc_lock_   = ExtractValueFromData(data,ddd_state_machine_clock_dcc_lock_bitlo,
 								    ddd_state_machine_clock_dcc_lock_bithi);
     read_ddd_state_machine_clock_rpc_lock_   = ExtractValueFromData(data,ddd_state_machine_clock_rpc_lock_bitlo,
@@ -7226,7 +7227,7 @@ void TMB::DecodeTMBRegister_(unsigned long int address, int data) {
     //------------------------------------------------------------------
     read_jtag_state_machine_start_       = ExtractValueFromData(data,jtag_state_machine_start_bitlo      ,jtag_state_machine_start_bithi      );
     read_jtag_state_machine_sreset_      = ExtractValueFromData(data,jtag_state_machine_sreset_bitlo     ,jtag_state_machine_sreset_bithi     );
-    read_jtag_state_machine_autostart_   = ExtractValueFromData(data,jtag_state_machine_autostart_bitlo  ,jtag_state_machine_autostart_bithi  );
+    read_jtag_state_machine_select_      = ExtractValueFromData(data,jtag_state_machine_select_bitlo     ,jtag_state_machine_select_bithi  );
     read_jtag_state_machine_busy_        = ExtractValueFromData(data,jtag_state_machine_busy_bitlo       ,jtag_state_machine_busy_bithi       );
     read_jtag_state_machine_aborted_     = ExtractValueFromData(data,jtag_state_machine_aborted_bitlo    ,jtag_state_machine_aborted_bithi    );
     read_jtag_state_machine_cksum_ok_    = ExtractValueFromData(data,jtag_state_machine_cksum_ok_bitlo   ,jtag_state_machine_cksum_ok_bithi   );
@@ -7856,7 +7857,7 @@ void TMB::PrintTMBRegister(unsigned long int address) {
     (*MyOutput_) << "    clock 1 DCM lock = " << std::hex << read_ddd_state_machine_clock1_lock_      << std::endl;
     (*MyOutput_) << "    clock ALCT lock  = " << std::hex << read_ddd_state_machine_clock_alct_lock_  << std::endl;
     (*MyOutput_) << "    clock ALCTd lock = " << std::hex << read_ddd_state_machine_clockd_alct_lock_ << std::endl;
-    (*MyOutput_) << "    clock CFEB lock  = " << std::hex << read_ddd_state_machine_clock_cfeb_lock_  << std::endl;
+    (*MyOutput_) << "    clock MPC lock   = " << std::hex << read_ddd_state_machine_clock_mpc_lock_   << std::endl;
     (*MyOutput_) << "    clock DCC lock   = " << std::hex << read_ddd_state_machine_clock_dcc_lock_   << std::endl;
     (*MyOutput_) << "    clock RPC lock   = " << std::hex << read_ddd_state_machine_clock_rpc_lock_   << std::endl;
     //
@@ -8226,7 +8227,7 @@ void TMB::PrintTMBRegister(unsigned long int address) {
     (*MyOutput_) << " ->JTAG State Machine Control register:" << std::endl;
     (*MyOutput_) << "    prom start vme   = "   << std::hex << read_jtag_state_machine_start_       << std::endl;
     (*MyOutput_) << "    sreset           = "   << std::hex << read_jtag_state_machine_sreset_      << std::endl;
-    (*MyOutput_) << "    autostart        = "   << std::hex << read_jtag_state_machine_autostart_   << std::endl;
+    (*MyOutput_) << "    alct data format = "   << std::hex << read_jtag_state_machine_select_      << std::endl;
     (*MyOutput_) << "    busy             = "   << std::hex << read_jtag_state_machine_busy_        << std::endl;
     (*MyOutput_) << "    aborted          = "   << std::hex << read_jtag_state_machine_aborted_     << std::endl;
     (*MyOutput_) << "    check sum OK     = "   << std::hex << read_jtag_state_machine_cksum_ok_    << std::endl;
@@ -9119,6 +9120,7 @@ int TMB::FillTMBRegister(unsigned long int address) {
     //------------------------------------------------------------------
     InsertValueIntoDataWord(jtag_state_machine_start_   ,jtag_state_machine_start_bithi   ,jtag_state_machine_start_bitlo   ,&data_word);
     InsertValueIntoDataWord(jtag_state_machine_sreset_  ,jtag_state_machine_sreset_bithi  ,jtag_state_machine_sreset_bitlo  ,&data_word);
+    InsertValueIntoDataWord(jtag_state_machine_select_  ,jtag_state_machine_select_bithi  ,jtag_state_machine_select_bitlo  ,&data_word);
     InsertValueIntoDataWord(jtag_disable_write_to_adr10_,jtag_disable_write_to_adr10_bithi,jtag_disable_write_to_adr10_bitlo,&data_word);
     InsertValueIntoDataWord(jtag_state_machine_throttle_,jtag_state_machine_throttle_bithi,jtag_state_machine_throttle_bitlo,&data_word);
     //
@@ -10110,7 +10112,7 @@ void TMB::CheckJTAGStateMachine() {
   //
   ReadJTAGStateMachine();
   //
-  config_ok &= compareValues("JTAG state machine autostart"         ,read_jtag_state_machine_autostart_  ,jtag_state_machine_autostart_expected  );
+  config_ok &= compareValues("JTAG state machine select"            ,read_jtag_state_machine_select_     ,jtag_state_machine_select_expected     );
   config_ok &= compareValues("JTAG state machine aborted"           ,read_jtag_state_machine_aborted_    ,jtag_state_machine_aborted_expected    );
   config_ok &= compareValues("JTAG state machine check sum OK"      ,read_jtag_state_machine_cksum_ok_   ,jtag_state_machine_cksum_ok_expected   );
   config_ok &= compareValues("JTAG state machine word count OK"     ,read_jtag_state_machine_wdcnt_ok_   ,jtag_state_machine_wdcnt_ok_expected   );
@@ -10141,14 +10143,14 @@ void TMB::CheckDDDStateMachine() {
 			     ,ddd_state_machine_clock_alct_lock_expected );
   config_ok &= compareValues("DDD state machine clock ALCTd lock" ,read_ddd_state_machine_clockd_alct_lock_
 			     ,ddd_state_machine_clockd_alct_lock_expected);
-  config_ok &= compareValues("DDD state machine clock CFEB lock"  ,read_ddd_state_machine_clock_cfeb_lock_
-			     ,ddd_state_machine_clock_cfeb_lock_expected );
+  config_ok &= compareValues("DDD state machine clock MPC lock"   ,read_ddd_state_machine_clock_mpc_lock_
+			     ,ddd_state_machine_clock_mpc_lock_expected );
   config_ok &= compareValues("DDD state machine clock DCC lock"   ,read_ddd_state_machine_clock_dcc_lock_
 			     ,ddd_state_machine_clock_dcc_lock_expected  );
   //
   // expected value of RPC lock check depends on if RPC exists...
   //
-  config_ok &= compareValues("DDD state machine clock RPC lock"   ,read_ddd_state_machine_clock_rpc_lock_,(rpc_exists_ & 0x1)                    );
+  config_ok &= compareValues("DDD state machine clock RPC lock"   ,read_ddd_state_machine_clock_rpc_lock_, ddd_state_machine_clock_rpc_lock_expected);
   //
   ReportCheck("TMB DDD state machine check",config_ok);
   //

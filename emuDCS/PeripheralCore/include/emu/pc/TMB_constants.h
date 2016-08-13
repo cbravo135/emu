@@ -568,7 +568,7 @@ const int ddd_state_machine_clock0d_lock_expected     =  1 ;
 const int ddd_state_machine_clock1_lock_vmereg        =  vme_dddsm_adr;
 const int ddd_state_machine_clock1_lock_bitlo         = 10;
 const int ddd_state_machine_clock1_lock_bithi         = 10;
-const int ddd_state_machine_clock1_lock_expected      =  0;  
+const int ddd_state_machine_clock1_lock_expected      =  1;
 //
 const int ddd_state_machine_clock_alct_lock_vmereg    =  vme_dddsm_adr;
 const int ddd_state_machine_clock_alct_lock_bitlo     = 11;
@@ -580,20 +580,21 @@ const int ddd_state_machine_clockd_alct_lock_bitlo    = 12;
 const int ddd_state_machine_clockd_alct_lock_bithi    = 12;
 const int ddd_state_machine_clockd_alct_lock_expected =  1;  
 //
-const int ddd_state_machine_clock_cfeb_lock_vmereg     =  vme_dddsm_adr;
-const int ddd_state_machine_clock_cfeb_lock_bitlo      = 13;
-const int ddd_state_machine_clock_cfeb_lock_bithi      = 13;
-const int ddd_state_machine_clock_cfeb_lock_expected   =  0;  
+const int ddd_state_machine_clock_mpc_lock_vmereg     =  vme_dddsm_adr;
+const int ddd_state_machine_clock_mpc_lock_bitlo      = 13;
+const int ddd_state_machine_clock_mpc_lock_bithi      = 13;
+const int ddd_state_machine_clock_mpc_lock_expected   =  1;
 //
 const int ddd_state_machine_clock_dcc_lock_vmereg     =  vme_dddsm_adr;
 const int ddd_state_machine_clock_dcc_lock_bitlo      = 14;
 const int ddd_state_machine_clock_dcc_lock_bithi      = 14;
 const int ddd_state_machine_clock_dcc_lock_expected   =  1;  
 //
+// this is not really the RPC lock. It actually checks if the RPC done bit is somehow a clock
 const int ddd_state_machine_clock_rpc_lock_vmereg     =  vme_dddsm_adr;
 const int ddd_state_machine_clock_rpc_lock_bitlo      = 15;
 const int ddd_state_machine_clock_rpc_lock_bithi      = 15;
-// Expected value for RPC clock lock depends on rpc_exists_ for this TMB...
+const int ddd_state_machine_clock_rpc_lock_expected   = 0;
 //
 //
 //------------------------------------------------------------------
@@ -1949,11 +1950,11 @@ const int jtag_state_machine_sreset_bitlo         =  1;
 const int jtag_state_machine_sreset_bithi         =  1;
 const int jtag_state_machine_sreset_default       =  0;
 //
-// greg, this needs to be changed to allow selection of ALCT userPROM format
-const int jtag_state_machine_autostart_vmereg     =  jtag_sm_ctrl_adr;
-const int jtag_state_machine_autostart_bitlo      =  2;
-const int jtag_state_machine_autostart_bithi      =  2;
-const int jtag_state_machine_autostart_expected   =  1;   //expect JTAG state machine to have auto-started
+const int jtag_state_machine_select_vmereg     =  jtag_sm_ctrl_adr;
+const int jtag_state_machine_select_bitlo      =  2;
+const int jtag_state_machine_select_bithi      =  2;
+const int jtag_state_machine_select_default    =  0;
+const int jtag_state_machine_select_expected   =  0;   //expect old data format
 //
 const int jtag_state_machine_busy_vmereg          =  jtag_sm_ctrl_adr;
 const int jtag_state_machine_busy_bitlo           =  3;

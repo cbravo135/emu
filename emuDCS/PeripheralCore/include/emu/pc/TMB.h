@@ -859,7 +859,7 @@ public:
   inline int  GetReadDDDStateMachineClock1Lock() {return read_ddd_state_machine_clock1_lock_;}
   inline int  GetReadDDDStateMachineClockALCTLock() {return read_ddd_state_machine_clock_alct_lock_;}
   inline int  GetReadDDDStateMachineClockdALCTLock() {return read_ddd_state_machine_clockd_alct_lock_;}
-  inline int  GetReadDDDStateMachineClockCFEBLock() {return read_ddd_state_machine_clock_cfeb_lock_;}
+  inline int  GetReadDDDStateMachineClockMPCLock() {return read_ddd_state_machine_clock_mpc_lock_;}
   inline int  GetReadDDDStateMachineClockDCCLock() {return read_ddd_state_machine_clock_dcc_lock_;}
   inline int  GetReadDDDStateMachineClockRPCLock() {return read_ddd_state_machine_clock_rpc_lock_;}
   //
@@ -2857,7 +2857,7 @@ private:
   int read_ddd_state_machine_clock1_lock_;
   int read_ddd_state_machine_clock_alct_lock_;
   int read_ddd_state_machine_clockd_alct_lock_;
-  int read_ddd_state_machine_clock_cfeb_lock_;
+  int read_ddd_state_machine_clock_mpc_lock_;
   int read_ddd_state_machine_clock_dcc_lock_;
   int read_ddd_state_machine_clock_rpc_lock_;
   //
@@ -3485,13 +3485,14 @@ private:
   //0XD4 = ADR_JTAGSM0:  JTAG State Machine Control (reads JTAG PROM)
   //------------------------------------------------------------------
   int jtag_state_machine_start_;
+  int jtag_state_machine_select_;
   int jtag_state_machine_sreset_;
   int jtag_disable_write_to_adr10_;
   int jtag_state_machine_throttle_;
   //
   int read_jtag_state_machine_start_;
   int read_jtag_state_machine_sreset_;
-  int read_jtag_state_machine_autostart_;
+  int read_jtag_state_machine_select_;
   int read_jtag_state_machine_busy_;
   int read_jtag_state_machine_aborted_;
   int read_jtag_state_machine_cksum_ok_;
