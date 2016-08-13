@@ -3311,6 +3311,7 @@ bool TMB::ReadTMBRawhits_(){
   //
   if (debug_) (*MyOutput_) << "Total number of words read = " << std::dec << tmb_data_.size() << std::endl;
   //
+
   // Determine the CRC to see if we've extracted the data correctly, among other possibilities
   int CRC_end  = tmb_data_.size();
   int CRC_low  = (tmb_data_[CRC_end-4].to_ulong()) &0x7ff;
@@ -3326,6 +3327,14 @@ bool TMB::ReadTMBRawhits_(){
     DecodeTMBRawHits_();
   } else {
     (*MyOutput_) << "CRC not OK..." << std::endl;
+  }
+  PrintTMBRawHits(); 
+
+  (*MyOutput_) << std::endl; 
+  (*MyOutput_) << "TMB Raw Data Packet Dump" << std::endl; 
+  (*MyOutput_) << std::endl; 
+  for(int i=0; i<tmb_data_.size(); i++) {
+    (*MyOutput_) << "Address = " << std::dec << std::setw(3) << i << ", data = " << std::hex << std::setw(4) << tmb_data_[i].to_ulong() << std::endl;
   }
   //
   return dataOK;
@@ -3543,141 +3552,340 @@ void TMB::DecodeTMBRawHitWord_(int address) {
   //
   int data = tmb_data_[address].to_ulong();
   //
-  if (address == 0) {
-    h0_beginning_of_cathode_ = ExtractValueFromData(data ,h0_beginning_of_cathode_lo_bit ,h0_beginning_of_cathode_hi_bit );
-    h0_marker_6_             = ExtractValueFromData(data ,h0_marker_6_lo_bit             ,h0_marker_6_hi_bit             );
-    //
-  } else if (address == 1) { 
-    h1_nTbins_per_cfeb_ = ExtractValueFromData(data ,h1_nTbins_per_cfeb_lo_bit ,h1_nTbins_per_cfeb_hi_bit );
-    h1_cfebs_read_      = ExtractValueFromData(data ,h1_cfebs_read_lo_bit      ,h1_cfebs_read_hi_bit      );
-    h1_fifo_mode_       = ExtractValueFromData(data ,h1_fifo_mode_lo_bit       ,h1_fifo_mode_hi_bit       );
+   if (address == 0) {
+   	h0_beginning_of_cathode_= ExtractValueFromData(data, h0_beginning_of_cathode_lo_bit, h0_beginning_of_cathode_hi_bit);
+  }else if (address == 1) { 
+    	h1_r_l1a_bxn_win_= ExtractValueFromData(data, h1_r_l1a_bxn_win_lo_bit, h1_r_l1a_bxn_win_hi_bit);
+
     //
   } else if (address == 2) { 
-    h2_l1a_counter_ = ExtractValueFromData(data ,h2_l1a_counter_lo_bit ,h2_l1a_counter_hi_bit );
-    h2_csc_id_      = ExtractValueFromData(data ,h2_csc_id_lo_bit      ,h2_csc_id_hi_bit      );
-    h2_board_id_    = ExtractValueFromData(data ,h2_board_id_lo_bit    ,h2_board_id_hi_bit    );
-    h2_l1a_type_    = ExtractValueFromData(data ,h2_l1a_type_lo_bit    ,h2_l1a_type_hi_bit    );
+    	h2_r_l1a_cnt_win_= ExtractValueFromData(data, h2_r_l1a_cnt_win_lo_bit, h2_r_l1a_cnt_win_hi_bit);
     //
   } else if (address == 3) { 
-    h3_bxn_counter_   = ExtractValueFromData(data ,h3_bxn_counter_lo_bit   ,h3_bxn_counter_hi_bit   );
-    h3_record_type_   = ExtractValueFromData(data ,h3_record_type_lo_bit   ,h3_record_type_hi_bit   );
-    h3_scope_in_data_ = ExtractValueFromData(data ,h3_scope_in_data_lo_bit ,h3_scope_in_data_hi_bit );
+    	h3_readout_counter_= ExtractValueFromData(data, h3_readout_counter_lo_bit, h3_readout_counter_hi_bit);
     //
   } else if (address == 4) { 
-    h4_nheader_words_   = ExtractValueFromData(data ,h4_nheader_words_lo_bit   ,h4_nheader_words_hi_bit   );
-    h4_nCFEBs_read_     = ExtractValueFromData(data ,h4_nCFEBs_read_lo_bit     ,h4_nCFEBs_read_hi_bit     );
-    h4_has_buffer_data_ = ExtractValueFromData(data ,h4_has_buffer_data_lo_bit ,h4_has_buffer_data_hi_bit );
-    h4_fifo_pretrig_    = ExtractValueFromData(data ,h4_fifo_pretrig_lo_bit    ,h4_fifo_pretrig_hi_bit    );
+    	h4_board_id_= ExtractValueFromData(data, h4_board_id_lo_bit, h4_board_id_hi_bit);
+
+	h4_csc_id_= ExtractValueFromData(data, h4_csc_id_lo_bit, h4_csc_id_hi_bit);
+
+	h4_run_id_= ExtractValueFromData(data, h4_run_id_lo_bit, h4_run_id_hi_bit);
+
+	h4_buf_q_ovf_err_= ExtractValueFromData(data, h4_buf_q_ovf_err_lo_bit, h4_buf_q_ovf_err_hi_bit);
+
+	h4_sync_err_hdr_= ExtractValueFromData(data, h4_sync_err_hdr_lo_bit, h4_sync_err_hdr_hi_bit);
     //
   } else if (address == 5) { 
-    h5_l1a_at_pretrig_                   = ExtractValueFromData(data ,h5_l1a_at_pretrig_lo_bit                   ,h5_l1a_at_pretrig_hi_bit                   );
-    h5_trigger_source_vector_            = ExtractValueFromData(data ,h5_trigger_source_vector_lo_bit            ,h5_trigger_source_vector_hi_bit            );
-    h5_trigger_source_halfstrip_distrip_ = ExtractValueFromData(data ,h5_trigger_source_halfstrip_distrip_lo_bit ,h5_trigger_source_halfstrip_distrip_hi_bit );
-    //
+    	h5_r_nheaders_= ExtractValueFromData(data, h5_r_nheaders_lo_bit, h5_r_nheaders_hi_bit);
+
+	h5_fifo_mode_= ExtractValueFromData(data, h5_fifo_mode_lo_bit, h5_fifo_mode_hi_bit);
+
+	h5_readout_type_= ExtractValueFromData(data, h5_readout_type_lo_bit, h5_readout_type_hi_bit);
+
+	h5_l1a_type_= ExtractValueFromData(data, h5_l1a_type_lo_bit, h5_l1a_type_hi_bit);
+
+	h5_r_has_buf_= ExtractValueFromData(data, h5_r_has_buf_lo_bit, h5_r_has_buf_hi_bit);
+
+	h5_buf_stalled_hdr_= ExtractValueFromData(data, h5_buf_stalled_hdr_lo_bit, h5_buf_stalled_hdr_hi_bit);    //
   } else if (address == 6) { 
-    h6_aff_to_dmb_  = ExtractValueFromData(data ,h6_aff_to_dmb_lo_bit  ,h6_aff_to_dmb_hi_bit  );
-    h6_cfeb_exists_ = ExtractValueFromData(data ,h6_cfeb_exists_lo_bit ,h6_cfeb_exists_hi_bit );
-    h6_run_info_    = ExtractValueFromData(data ,h6_run_info_lo_bit    ,h6_run_info_hi_bit    );
-    //
+    	h6_bd_status_= ExtractValueFromData(data, h6_bd_status_lo_bit, h6_bd_status_hi_bit);
+
   } else if (address == 7) { 
-    h7_bxn_at_clct_pretrig_ = ExtractValueFromData(data ,h7_bxn_at_clct_pretrig_lo_bit ,h7_bxn_at_clct_pretrig_hi_bit );
-    h7_sync_err_            = ExtractValueFromData(data ,h7_sync_err_lo_bit            ,h7_sync_err_hi_bit            );
+   	h7_revcode_= ExtractValueFromData(data, h7_revcode_lo_bit, h7_revcode_hi_bit);
     //
   } else if (address == 8) { 
-    h8_clct0_lsbs_ = ExtractValueFromData(data ,h8_clct0_lsbs_lo_bit ,h8_clct0_lsbs_hi_bit );
+    	h8_r_bxn_counter_= ExtractValueFromData(data, h8_r_bxn_counter_lo_bit, h8_r_bxn_counter_hi_bit);
+
+	h8_r_tmb_clct0_discard_= ExtractValueFromData(data, h8_r_tmb_clct0_discard_lo_bit, h8_r_tmb_clct0_discard_hi_bit);
+
+	h8_r_tmb_clct1_discard_= ExtractValueFromData(data, h8_r_tmb_clct1_discard_lo_bit, h8_r_tmb_clct1_discard_hi_bit);
+
+	h8_clock_lock_lost_err_= ExtractValueFromData(data, h8_clock_lock_lost_err_lo_bit, h8_clock_lock_lost_err_hi_bit);
     //
   } else if (address == 9) { 
-    h9_clct1_lsbs_ = ExtractValueFromData(data ,h9_clct1_lsbs_lo_bit ,h9_clct1_lsbs_hi_bit );
+    	h9_r_pretrig_counter_lsbs_= ExtractValueFromData(data, h9_r_pretrig_counter_lsbs_lo_bit, h9_r_pretrig_counter_lsbs_hi_bit);
     //
   } else if (address == 10) { 
-    h10_clct0_msbs_            = ExtractValueFromData(data ,h10_clct0_msbs_lo_bit            ,h10_clct0_msbs_hi_bit            );
-    h10_clct1_msbs_            = ExtractValueFromData(data ,h10_clct1_msbs_lo_bit            ,h10_clct1_msbs_hi_bit            );
-    h10_clct0_invalid_pattern_ = ExtractValueFromData(data ,h10_clct0_invalid_pattern_lo_bit ,h10_clct0_invalid_pattern_hi_bit );
+    	h10_r_pretrig_counter_msbs_= ExtractValueFromData(data, h10_r_pretrig_counter_msbs_lo_bit, h10_r_pretrig_counter_msbs_hi_bit);
     //
   } else if (address == 11) {
-    h11_alct_clct_match_           = ExtractValueFromData(data ,h11_alct_clct_match_lo_bit           ,h11_alct_clct_match_hi_bit           );
-    h11_alct_trig_only_            = ExtractValueFromData(data ,h11_alct_trig_only_lo_bit            ,h11_alct_trig_only_hi_bit            );
-    h11_clct_trig_only_            = ExtractValueFromData(data ,h11_clct_trig_only_lo_bit            ,h11_clct_trig_only_hi_bit            );
-    h11_clct0_alct_bxn_diff_       = ExtractValueFromData(data ,h11_clct0_alct_bxn_diff_lo_bit       ,h11_clct0_alct_bxn_diff_hi_bit       );
-    h11_clct1_alct_bxn_diff_       = ExtractValueFromData(data ,h11_clct1_alct_bxn_diff_lo_bit       ,h11_clct1_alct_bxn_diff_hi_bit       );
-    h11_alct_in_clct_match_window_ = ExtractValueFromData(data ,h11_alct_in_clct_match_window_lo_bit ,h11_alct_in_clct_match_window_hi_bit );
-    h11_triad_persistence_         = ExtractValueFromData(data ,h11_triad_persistence_lo_bit         ,h11_triad_persistence_hi_bit         );
+    	h11_r_clct_counter_lsbs_= ExtractValueFromData(data, h11_r_clct_counter_lsbs_lo_bit, h11_r_clct_counter_lsbs_hi_bit);
     //
   } else if (address == 12) { 
-    h12_mpc0_frame0_lsbs_ = ExtractValueFromData(data ,h12_mpc0_frame0_lsbs_lo_bit ,h12_mpc0_frame0_lsbs_hi_bit );
+    	h12_r_clct_counter_msbs_= ExtractValueFromData(data, h12_r_clct_counter_msbs_lo_bit, h12_r_clct_counter_msbs_hi_bit);    
     //
   } else if (address == 13) { 
-    h13_mpc0_frame1_lsbs_ = ExtractValueFromData(data ,h13_mpc0_frame1_lsbs_lo_bit ,h13_mpc0_frame1_lsbs_hi_bit );
+    h13_r_trig_counter_lsbs_= ExtractValueFromData(data, h13_r_trig_counter_lsbs_lo_bit, h13_r_trig_counter_lsbs_hi_bit);
     //
   } else if (address == 14) { 
-    h14_mpc1_frame0_lsbs_ = ExtractValueFromData(data ,h14_mpc1_frame0_lsbs_lo_bit ,h14_mpc1_frame0_lsbs_hi_bit );
+    h14_r_trig_counter_msbs_= ExtractValueFromData(data, h14_r_trig_counter_msbs_lo_bit, h14_r_trig_counter_msbs_hi_bit);
     //
   } else if (address == 15) { 
-    h15_mpc1_frame1_lsbs_ = ExtractValueFromData(data ,h15_mpc1_frame1_lsbs_lo_bit ,h15_mpc1_frame1_lsbs_hi_bit );
+    h15_r_alct_counter_lsbs_= ExtractValueFromData(data, h15_r_alct_counter_lsbs_lo_bit, h15_r_alct_counter_lsbs_hi_bit);
     //
   } else if (address == 16) { 
-    h16_mpc0_frame0_msbs_              = ExtractValueFromData(data ,h16_mpc0_frame0_msbs_lo_bit              ,h16_mpc0_frame0_msbs_hi_bit              );
-    h16_mpc0_frame1_msbs_              = ExtractValueFromData(data ,h16_mpc0_frame1_msbs_lo_bit              ,h16_mpc0_frame1_msbs_hi_bit              );
-    h16_mpc1_frame0_msbs_              = ExtractValueFromData(data ,h16_mpc1_frame0_msbs_lo_bit              ,h16_mpc1_frame0_msbs_hi_bit              );
-    h16_mpc1_frame1_msbs_              = ExtractValueFromData(data ,h16_mpc1_frame1_msbs_lo_bit              ,h16_mpc1_frame1_msbs_hi_bit              );
-    h16_mpc_accept_                    = ExtractValueFromData(data ,h16_mpc_accept_lo_bit                    ,h16_mpc_accept_hi_bit                    );
-    h16_clct_halfstrip_pretrig_thresh_ = ExtractValueFromData(data ,h16_clct_halfstrip_pretrig_thresh_lo_bit ,h16_clct_halfstrip_pretrig_thresh_hi_bit );
-    h16_clct_distrip_pretrig_thresh_   = ExtractValueFromData(data ,h16_clct_distrip_pretrig_thresh_lo_bit   ,h16_clct_distrip_pretrig_thresh_hi_bit   );
+    h16_r_alct_counter_msbs_= ExtractValueFromData(data, h16_r_alct_counter_msbs_lo_bit, h16_r_alct_counter_msbs_hi_bit);
     //
   } else if (address == 17) { 
-    h17_write_buffer_ready_     = ExtractValueFromData(data ,h17_write_buffer_ready_lo_bit     ,h17_write_buffer_ready_hi_bit     );
-    h17_pretrig_tbin_           = ExtractValueFromData(data ,h17_pretrig_tbin_lo_bit           ,h17_pretrig_tbin_hi_bit           );
-    h17_write_buffer_address_   = ExtractValueFromData(data ,h17_write_buffer_address_lo_bit   ,h17_write_buffer_address_hi_bit   );
-    h17_pretrig_no_free_buffer_ = ExtractValueFromData(data ,h17_pretrig_no_free_buffer_lo_bit ,h17_pretrig_no_free_buffer_hi_bit );
-    h17_buffer_full_            = ExtractValueFromData(data ,h17_buffer_full_lo_bit            ,h17_buffer_full_hi_bit            );
-    h17_buffer_almost_full_     = ExtractValueFromData(data ,h17_buffer_almost_full_lo_bit     ,h17_buffer_almost_full_hi_bit     );
-    h17_buffer_half_full_       = ExtractValueFromData(data ,h17_buffer_half_full_lo_bit       ,h17_buffer_half_full_hi_bit       );
-    h17_buffer_empty_           = ExtractValueFromData(data ,h17_buffer_empty_lo_bit           ,h17_buffer_empty_hi_bit           );
+    h17_r_orbit_counter_lsbs_= ExtractValueFromData(data, h17_r_orbit_counter_lsbs_lo_bit, h17_r_orbit_counter_lsbs_hi_bit);
     //
   } else if (address == 18) { 
-    h18_nbuf_busy_          = ExtractValueFromData(data ,h18_nbuf_busy_lo_bit          ,h18_nbuf_busy_hi_bit          );
-    h18_buf_busy_           = ExtractValueFromData(data ,h18_buf_busy_lo_bit           ,h18_buf_busy_hi_bit           );
-    h18_l1a_stack_overflow_ = ExtractValueFromData(data ,h18_l1a_stack_overflow_lo_bit ,h18_l1a_stack_overflow_hi_bit );
+    h18_r_orbit_counter_msbs_= ExtractValueFromData(data, h18_r_orbit_counter_msbs_lo_bit, h18_r_orbit_counter_msbs_hi_bit);
     //
   } else if (address == 19) { 
-    h19_tmb_trig_pulse_         = ExtractValueFromData(data ,h19_tmb_trig_pulse_lo_bit         ,h19_tmb_trig_pulse_hi_bit         );
-    h19_tmb_alct_only_          = ExtractValueFromData(data ,h19_tmb_alct_only_lo_bit          ,h19_tmb_alct_only_hi_bit          );
-    h19_tmb_clct_only_          = ExtractValueFromData(data ,h19_tmb_clct_only_lo_bit          ,h19_tmb_clct_only_hi_bit          );
-    h19_tmb_match_              = ExtractValueFromData(data ,h19_tmb_match_lo_bit              ,h19_tmb_match_hi_bit              );
-    h19_write_buffer_ready_     = ExtractValueFromData(data ,h19_write_buffer_ready_lo_bit     ,h19_write_buffer_ready_hi_bit     );
-    h19_write_buffer_available_ = ExtractValueFromData(data ,h19_write_buffer_available_lo_bit ,h19_write_buffer_available_hi_bit );
-    h19_write_tbin_address_     = ExtractValueFromData(data ,h19_write_tbin_address_lo_bit     ,h19_write_tbin_address_hi_bit     );
-    h19_write_buffer_address_   = ExtractValueFromData(data ,h19_write_buffer_address_lo_bit   ,h19_write_buffer_address_hi_bit   );
+    	h19_r_ncfebs_= ExtractValueFromData(data, h19_r_ncfebs_lo_bit, h19_r_ncfebs_hi_bit);
+
+	h19_r_fifo_tbins_cfeb_= ExtractValueFromData(data, h19_r_fifo_tbins_cfeb_lo_bit, h19_r_fifo_tbins_cfeb_hi_bit);
+
+	h19_fifo_pretrig_cfeb_= ExtractValueFromData(data, h19_fifo_pretrig_cfeb_lo_bit, h19_fifo_pretrig_cfeb_hi_bit);
+
+	h19_scp_auto_= ExtractValueFromData(data, h19_scp_auto_lo_bit, h19_scp_auto_hi_bit);
     //
   } else if (address == 20) { 
-    h20_discard_no_write_buf_available_ = ExtractValueFromData(data ,h20_discard_no_write_buf_available_lo_bit ,h20_discard_no_write_buf_available_hi_bit );
-    h20_discard_invalid_pattern_        = ExtractValueFromData(data ,h20_discard_invalid_pattern_lo_bit        ,h20_discard_invalid_pattern_hi_bit        );
-    h20_discard_tmb_reject_             = ExtractValueFromData(data ,h20_discard_tmb_reject_lo_bit             ,h20_discard_tmb_reject_hi_bit             );
-    h20_timeout_no_tmb_trig_pulse_      = ExtractValueFromData(data ,h20_timeout_no_tmb_trig_pulse_lo_bit      ,h20_timeout_no_tmb_trig_pulse_hi_bit      );
-    h20_timeout_no_mpc_frame_           = ExtractValueFromData(data ,h20_timeout_no_mpc_frame_lo_bit           ,h20_timeout_no_mpc_frame_hi_bit           );
-    h20_timeout_no_mpc_response_        = ExtractValueFromData(data ,h20_timeout_no_mpc_response_lo_bit        ,h20_timeout_no_mpc_response_hi_bit        );
+    	h20_hit_thresh_pretrig_= ExtractValueFromData(data, h20_hit_thresh_pretrig_lo_bit, h20_hit_thresh_pretrig_hi_bit);
+
+	h20_pid_thresh_pretrig_= ExtractValueFromData(data, h20_pid_thresh_pretrig_lo_bit, h20_pid_thresh_pretrig_hi_bit);
+
+	h20_hit_thresh_postdrift_= ExtractValueFromData(data, h20_hit_thresh_postdrift_lo_bit, h20_hit_thresh_postdrift_hi_bit);
+
+	h20_pid_thresh_postdrift_= ExtractValueFromData(data, h20_pid_thresh_postdrift_lo_bit, h20_pid_thresh_postdrift_hi_bit);
+
+	h20_stagger_hs_csc_= ExtractValueFromData(data, h20_stagger_hs_csc_lo_bit, h20_stagger_hs_csc_hi_bit);
     //
   } else if (address == 21) { 
-    h21_match_trig_alct_delay_   = ExtractValueFromData(data ,h21_match_trig_alct_delay_lo_bit   ,h21_match_trig_alct_delay_hi_bit   );
-    h21_match_trig_window_width_ = ExtractValueFromData(data ,h21_match_trig_window_width_lo_bit ,h21_match_trig_window_width_hi_bit );
-    h21_mpc_tx_delay_            = ExtractValueFromData(data ,h21_mpc_tx_delay_lo_bit            ,h21_mpc_tx_delay_hi_bit            );
-    //
+    	h21_triad_persist_= ExtractValueFromData(data, h21_triad_persist_lo_bit, h21_triad_persist_hi_bit);
+
+	h21_dmb_thresh_pretrig_= ExtractValueFromData(data, h21_dmb_thresh_pretrig_lo_bit, h21_dmb_thresh_pretrig_hi_bit);
+
+	h21_alct_delay_= ExtractValueFromData(data, h21_alct_delay_lo_bit, h21_alct_delay_hi_bit);
+
+	h21_clct_window_= ExtractValueFromData(data, h21_clct_window_lo_bit, h21_clct_window_hi_bit);    //
   } else if (address == 22) {
-    h22_rpc_exist_       = ExtractValueFromData(data ,h22_rpc_exist_lo_bit       ,h22_rpc_exist_hi_bit       );
-    h22_rpc_list_        = ExtractValueFromData(data ,h22_rpc_list_lo_bit        ,h22_rpc_list_hi_bit        );
-    h22_nrpc_            = ExtractValueFromData(data ,h22_nrpc_lo_bit            ,h22_nrpc_hi_bit            );
-    h22_rpc_read_enable_ = ExtractValueFromData(data ,h22_rpc_read_enable_lo_bit ,h22_rpc_read_enable_hi_bit );
-    h22_nlayers_hit_     = ExtractValueFromData(data ,h22_nlayers_hit_lo_bit     ,h22_nlayers_hit_hi_bit     );
-    h22_l1a_in_window_   = ExtractValueFromData(data ,h22_l1a_in_window_lo_bit   ,h22_l1a_in_window_hi_bit   );
+	h22_r_trig_source_vec_lsbs_= ExtractValueFromData(data, h22_r_trig_source_vec_lsbs_lo_bit, h22_r_trig_source_vec_lsbs_hi_bit);
+
+	h22_r_layers_hit_= ExtractValueFromData(data, h22_r_layers_hit_lo_bit, h22_r_layers_hit_hi_bit);
     //
   } else if (address == 23) { 
-    h23_board_status_ = ExtractValueFromData(data ,h23_board_status_lo_bit ,h23_board_status_hi_bit );
+    	h23_active_feb_mux_lsbs_= ExtractValueFromData(data, h23_active_feb_mux_lsbs_lo_bit, h23_active_feb_mux_lsbs_hi_bit);
+
+	h23_r_cfebs_read_lsbs_= ExtractValueFromData(data, h23_r_cfebs_read_lsbs_lo_bit, h23_r_cfebs_read_lsbs_hi_bit);
+
+	h23_r_l1a_match_win_= ExtractValueFromData(data, h23_r_l1a_match_win_lo_bit, h23_r_l1a_match_win_hi_bit);
+
+	h23_active_feb_src_= ExtractValueFromData(data, h23_active_feb_src_lo_bit, h23_active_feb_src_hi_bit);
     //
   } else if (address == 24) { 
-    h24_time_since_hard_reset_ = ExtractValueFromData(data ,h24_time_since_hard_reset_lo_bit ,h24_time_since_hard_reset_hi_bit );
+    	h24_r_tmb_match_= ExtractValueFromData(data, h24_r_tmb_match_lo_bit, h24_r_tmb_match_hi_bit);
+
+	h24_r_tmb_alct_only_= ExtractValueFromData(data, h24_r_tmb_alct_only_lo_bit, h24_r_tmb_alct_only_hi_bit);
+
+	h24_r_tmb_clct_only_= ExtractValueFromData(data, h24_r_tmb_clct_only_lo_bit, h24_r_tmb_clct_only_hi_bit);
+
+	h24_r_tmb_match_win_= ExtractValueFromData(data, h24_r_tmb_match_win_lo_bit, h24_r_tmb_match_win_hi_bit);
+
+	h24_r_tmb_no_alct_= ExtractValueFromData(data, h24_r_tmb_no_alct_lo_bit, h24_r_tmb_no_alct_hi_bit);
+
+	h24_r_tmb_one_alct_= ExtractValueFromData(data, h24_r_tmb_one_alct_lo_bit, h24_r_tmb_one_alct_hi_bit);
+
+	h24_r_tmb_one_clct_= ExtractValueFromData(data, h24_r_tmb_one_clct_lo_bit, h24_r_tmb_one_clct_hi_bit);
+
+	h24_r_tmb_two_alct_= ExtractValueFromData(data, h24_r_tmb_two_alct_lo_bit, h24_r_tmb_two_alct_hi_bit);
+
+	h24_r_tmb_two_clct_= ExtractValueFromData(data, h24_r_tmb_two_clct_lo_bit, h24_r_tmb_two_clct_hi_bit);
+
+	h24_r_tmb_dupe_alct_= ExtractValueFromData(data, h24_r_tmb_dupe_alct_lo_bit, h24_r_tmb_dupe_alct_hi_bit);
+
+	h24_r_tmb_dupe_clct_= ExtractValueFromData(data, h24_r_tmb_dupe_clct_lo_bit, h24_r_tmb_dupe_clct_hi_bit);
+
+	h24_r_tmb_rank_err_= ExtractValueFromData(data, h24_r_tmb_rank_err_lo_bit, h24_r_tmb_rank_err_hi_bit);
     //
   } else if (address == 25) { 
-    h25_firmware_version_date_code_ = ExtractValueFromData(data ,h25_firmware_version_date_code_lo_bit ,h25_firmware_version_date_code_hi_bit );
+    	h25_r_clct0_xtmb_lsbs_= ExtractValueFromData(data, h25_r_clct0_xtmb_lsbs_lo_bit, h25_r_clct0_xtmb_lsbs_hi_bit);
+    //
+  } else if (address == 26) { 
+    	h26_r_clct1_xtmb_lsbs_= ExtractValueFromData(data, h26_r_clct1_xtmb_lsbs_lo_bit, h26_r_clct1_xtmb_lsbs_hi_bit);
+    //
+  } else if (address == 27) { 
+    	h27_r_clct0_xtmb_msbs_= ExtractValueFromData(data, h27_r_clct0_xtmb_msbs_lo_bit, h27_r_clct0_xtmb_msbs_hi_bit);
+
+	h27_r_clct1_xtmb_msbs_= ExtractValueFromData(data, h27_r_clct1_xtmb_msbs_lo_bit, h27_r_clct1_xtmb_msbs_hi_bit);
+
+	h27_r_clctc_xtmb_= ExtractValueFromData(data, h27_r_clctc_xtmb_lo_bit, h27_r_clctc_xtmb_hi_bit);
+
+	h27_r_clct0_invp_= ExtractValueFromData(data, h27_r_clct0_invp_lo_bit, h27_r_clct0_invp_hi_bit);
+
+	h27_r_clct1_invp_= ExtractValueFromData(data, h27_r_clct1_invp_lo_bit, h27_r_clct1_invp_hi_bit);
+
+	h27_r_clct1_busy_= ExtractValueFromData(data, h27_r_clct1_busy_lo_bit, h27_r_clct1_busy_hi_bit);
+
+	h27_perr_cfeb_ff_lsbs_= ExtractValueFromData(data, h27_perr_cfeb_ff_lsbs_lo_bit, h27_perr_cfeb_ff_lsbs_hi_bit);
+
+	h27_perr_gem_or_rpc_or_mini_ff_= ExtractValueFromData(data, h27_perr_gem_or_rpc_or_mini_ff_lo_bit, 					h27_perr_gem_or_rpc_or_mini_ff_hi_bit);
+
+	h27_perr_ff_= ExtractValueFromData(data, h27_perr_ff_lo_bit, h27_perr_ff_hi_bit);
+    //
+  } else if (address == 28) { 
+    	h28_r_alct0_valid_= ExtractValueFromData(data, h28_r_alct0_valid_lo_bit, h28_r_alct0_valid_hi_bit);
+
+	h28_r_alct0_quality_= ExtractValueFromData(data, h28_r_alct0_quality_lo_bit, h28_r_alct0_quality_hi_bit);
+
+	h28_r_alct0_amu_= ExtractValueFromData(data, h28_r_alct0_amu_lo_bit, h28_r_alct0_amu_hi_bit);
+
+	h28_r_alct0_key_= ExtractValueFromData(data, h28_r_alct0_key_lo_bit, h28_r_alct0_key_hi_bit);
+
+	h28_r_alct_preClct_win_= ExtractValueFromData(data, h28_r_alct_preClct_win_lo_bit, h28_r_alct_preClct_win_hi_bit);
+    //
+  } else if (address == 29) { 
+    	h29_r_alct1_valid_= ExtractValueFromData(data, h29_r_alct1_valid_lo_bit, h29_r_alct1_valid_hi_bit);
+
+	h29_r_alct1_quality_= ExtractValueFromData(data, h29_r_alct1_quality_lo_bit, h29_r_alct1_quality_hi_bit);
+
+	h29_r_alct1_amu_= ExtractValueFromData(data, h29_r_alct1_amu_lo_bit, h29_r_alct1_amu_hi_bit);
+
+	h29_r_alct1_key_= ExtractValueFromData(data, h29_r_alct1_key_lo_bit, h29_r_alct1_key_hi_bit);
+
+	h29_drift_delay_= ExtractValueFromData(data, h29_drift_delay_lo_bit, h29_drift_delay_hi_bit);
+
+	h29_bcb_read_enable_= ExtractValueFromData(data, h29_bcb_read_enable_lo_bit, h29_bcb_read_enable_hi_bit);
+
+	h29_hs_layer_trig_= ExtractValueFromData(data, h29_hs_layer_trig_lo_bit, h29_hs_layer_trig_hi_bit);
+    //
+  } else if (address == 30) { 
+    	h30_r_alct_bxn_= ExtractValueFromData(data, h30_r_alct_bxn_lo_bit, h30_r_alct_bxn_hi_bit);
+
+	h30_r_alct_ecc_err_= ExtractValueFromData(data, h30_r_alct_ecc_err_lo_bit, h30_r_alct_ecc_err_hi_bit);
+
+	h30_cfeb_badbits_found_lsbs_= ExtractValueFromData(data, h30_cfeb_badbits_found_lsbs_lo_bit, h30_cfeb_badbits_found_lsbs_hi_bit);
+
+	h30_cfeb_badbits_blocked_= ExtractValueFromData(data, h30_cfeb_badbits_blocked_lo_bit, h30_cfeb_badbits_blocked_hi_bit);
+
+	h30_alct_cfg_done_= ExtractValueFromData(data, h30_alct_cfg_done_lo_bit, h30_alct_cfg_done_hi_bit);
+
+	h30_bx0_match_= ExtractValueFromData(data, h30_bx0_match_lo_bit, h30_bx0_match_hi_bit);
+    //
+  } else if (address == 31) { 
+    h31_r_mpc0_frame0_ff_lsbs_= ExtractValueFromData(data, h31_r_mpc0_frame0_ff_lsbs_lo_bit, h31_r_mpc0_frame0_ff_lsbs_hi_bit);
+    //
+  } else if (address == 32) { 
+    h32_r_mpc0_frame1_ff_lsbs_= ExtractValueFromData(data, h32_r_mpc0_frame1_ff_lsbs_lo_bit, h32_r_mpc0_frame1_ff_lsbs_hi_bit);
+    //
+  } else if (address == 33) { 
+    h33_r_mpc1_frame0_ff_lsbs_= ExtractValueFromData(data, h33_r_mpc1_frame0_ff_lsbs_lo_bit, h33_r_mpc1_frame0_ff_lsbs_hi_bit);
+    //
+  } else if (address == 34) { 
+    h34_r_mpc1_frame1_ff_lsbs_= ExtractValueFromData(data, h34_r_mpc1_frame1_ff_lsbs_lo_bit, h34_r_mpc1_frame1_ff_lsbs_hi_bit);
+    //
+  } else if (address == 35) { 
+    	h35_r_mpc0_frame0_ff_msbs_= ExtractValueFromData(data, h35_r_mpc0_frame0_ff_msbs_lo_bit, h35_r_mpc0_frame0_ff_msbs_hi_bit);
+
+	h35_r_mpc0_frame1_ff_msbs_= ExtractValueFromData(data, h35_r_mpc0_frame1_ff_msbs_lo_bit, h35_r_mpc0_frame1_ff_msbs_hi_bit);
+
+	h35_r_mpc1_frame0_ff_msbs_= ExtractValueFromData(data, h35_r_mpc1_frame0_ff_msbs_lo_bit, h35_r_mpc1_frame0_ff_msbs_hi_bit);
+
+	h35_r_mpc1_frame1_ff_msbs_= ExtractValueFromData(data, h35_r_mpc1_frame1_ff_msbs_lo_bit, h35_r_mpc1_frame1_ff_msbs_hi_bit);
+
+	h35_mpc_tx_delay_= ExtractValueFromData(data, h35_mpc_tx_delay_lo_bit, h35_mpc_tx_delay_hi_bit);
+
+	h35_r_mpc_accept_= ExtractValueFromData(data, h35_r_mpc_accept_lo_bit, h35_r_mpc_accept_hi_bit);
+
+	h35_cfeb_en_lsbs_= ExtractValueFromData(data, h35_cfeb_en_lsbs_lo_bit, h35_cfeb_en_lsbs_hi_bit);
+    //
+  } else if (address == 36) { 
+    	h36_rd_list_rpc_= ExtractValueFromData(data, h36_rd_list_rpc_lo_bit, h36_rd_list_rpc_hi_bit);
+
+	h36_r_nrpcs_read_= ExtractValueFromData(data, h36_r_nrpcs_read_lo_bit, h36_r_nrpcs_read_hi_bit);
+
+	h36_rpc_read_enable_= ExtractValueFromData(data, h36_rpc_read_enable_lo_bit, h36_rpc_read_enable_hi_bit);
+
+	h36_fifo_tbins_rpc_= ExtractValueFromData(data, h36_fifo_tbins_rpc_lo_bit, h36_fifo_tbins_rpc_hi_bit);
+	
+	h36_fifo_pretrig_rpc_= ExtractValueFromData(data, h36_fifo_pretrig_rpc_lo_bit, h36_fifo_pretrig_rpc_hi_bit);
+
+	h36_gem_zero_suppress_= ExtractValueFromData(data, h36_gem_zero_suppress_lo_bit, h36_gem_zero_suppress_hi_bit);
+
+	h36_gem_read_enable_= ExtractValueFromData(data, h36_gem_read_enable_lo_bit, h36_gem_read_enable_hi_bit);
+
+	h36_fifo_tbins_gem_= ExtractValueFromData(data, h36_fifo_tbins_gem_lo_bit, h36_fifo_tbins_gem_hi_bit);
+
+	h36_fifo_pretrig_gem_= ExtractValueFromData(data, h36_fifo_pretrig_gem_lo_bit, h36_fifo_pretrig_gem_hi_bit);
+    //
+  } else if (address == 37) { 
+    	h37_r_wr_buf_adr_= ExtractValueFromData(data, h37_r_wr_buf_adr_lo_bit, h37_r_wr_buf_adr_hi_bit);
+
+	h37_r_wr_buf_ready_= ExtractValueFromData(data, h37_r_wr_buf_ready_lo_bit, h37_r_wr_buf_ready_hi_bit);
+
+	h37_wr_buf_ready_= ExtractValueFromData(data, h37_wr_buf_ready_lo_bit, h37_wr_buf_ready_hi_bit);
+
+	h37_buf_q_full_= ExtractValueFromData(data, h37_buf_q_full_lo_bit, h37_buf_q_full_hi_bit);
+
+	h37_buf_q_empty_= ExtractValueFromData(data, h37_buf_q_empty_lo_bit, h37_buf_q_empty_hi_bit);
+    //
+  } else if (address == 38) { 
+   	h38_r_buf_fence_dist_= ExtractValueFromData(data, h38_r_buf_fence_dist_lo_bit, h38_r_buf_fence_dist_hi_bit);
+
+	h38_buf_q_ovf_err_= ExtractValueFromData(data, h38_buf_q_ovf_err_lo_bit, h38_buf_q_ovf_err_hi_bit);
+
+	h38_buf_q_udf_err_= ExtractValueFromData(data, h38_buf_q_udf_err_lo_bit, h38_buf_q_udf_err_hi_bit);
+
+	h38_buf_q_adr_err_= ExtractValueFromData(data, h38_buf_q_adr_err_lo_bit, h38_buf_q_adr_err_hi_bit);
+
+	h38_buf_stalled_once_= ExtractValueFromData(data, h38_buf_stalled_once_lo_bit, h38_buf_stalled_once_hi_bit);
+    //
+  } else if (address == 39) { 
+    	h39_buf_fence_cnt_= ExtractValueFromData(data, h39_buf_fence_cnt_lo_bit, h39_buf_fence_cnt_hi_bit);
+
+	h39_reverse_hs_csc_= ExtractValueFromData(data, h39_reverse_hs_csc_lo_bit, h39_reverse_hs_csc_hi_bit);
+
+	h39_reverse_hs_me1a_= ExtractValueFromData(data, h39_reverse_hs_me1a_lo_bit, h39_reverse_hs_me1a_hi_bit);
+
+	h39_reverse_hs_me1b_= ExtractValueFromData(data, h39_reverse_hs_me1b_lo_bit, h39_reverse_hs_me1b_hi_bit);
+    //
+  } else if (address == 40) { 
+    	h40_active_feb_mux_msbs_= ExtractValueFromData(data, h40_active_feb_mux_msbs_lo_bit, h40_active_feb_mux_msbs_hi_bit);
+
+	h40_r_cfebs_read_msbs_= ExtractValueFromData(data, h40_r_cfebs_read_msbs_lo_bit, h40_r_cfebs_read_msbs_hi_bit);
+
+	h40_perr_cfeb_ff_msbs_= ExtractValueFromData(data, h40_perr_cfeb_ff_msbs_lo_bit, h40_perr_cfeb_ff_msbs_hi_bit);
+
+	h40_cfeb_badbits_found_msbs_= ExtractValueFromData(data, h40_cfeb_badbits_found_msbs_lo_bit, h40_cfeb_badbits_found_msbs_hi_bit);
+
+	h40_cfeb_en_msbs_= ExtractValueFromData(data, h40_cfeb_en_msbs_lo_bit, h40_cfeb_en_msbs_hi_bit);
+
+	h40_buf_fence_cnt_is_peak_= ExtractValueFromData(data, h40_buf_fence_cnt_is_peak_lo_bit, h40_buf_fence_cnt_is_peak_hi_bit);
+
+	h40_chamber_is_me11_= ExtractValueFromData(data, h40_chamber_is_me11_lo_bit, h40_chamber_is_me11_hi_bit);
+
+	h40_r_trig_source_vec_msbs_= ExtractValueFromData(data, h40_r_trig_source_vec_msbs_lo_bit, h40_r_trig_source_vec_msbs_hi_bit);
+
+	h40_r_tmb_trig_pulse_= ExtractValueFromData(data, h40_r_tmb_trig_pulse_lo_bit, h40_r_tmb_trig_pulse_hi_bit);
+
+    //
+  } else if (address == 41) { 
+    	h41_tmb_allow_alct_= ExtractValueFromData(data, h41_tmb_allow_alct_lo_bit, h41_tmb_allow_alct_hi_bit);
+
+	h41_tmb_allow_clct_= ExtractValueFromData(data, h41_tmb_allow_clct_lo_bit, h41_tmb_allow_clct_hi_bit);
+
+	h41_tmb_allow_match_= ExtractValueFromData(data, h41_tmb_allow_match_lo_bit, h41_tmb_allow_match_hi_bit);
+
+	h41_tmb_allow_alct_ro_= ExtractValueFromData(data, h41_tmb_allow_alct_ro_lo_bit, h41_tmb_allow_alct_ro_hi_bit);
+
+	h41_tmb_allow_clct_ro_= ExtractValueFromData(data, h41_tmb_allow_clct_ro_lo_bit, h41_tmb_allow_clct_ro_hi_bit);
+
+	h41_tmb_allow_match_ro_= ExtractValueFromData(data, h41_tmb_allow_match_ro_lo_bit, h41_tmb_allow_match_ro_hi_bit);
+
+	h41_r_tmb_alct_only_ro_= ExtractValueFromData(data, h41_r_tmb_alct_only_ro_lo_bit, h41_r_tmb_alct_only_ro_hi_bit);
+
+	h41_r_tmb_clct_only_ro_= ExtractValueFromData(data, h41_r_tmb_clct_only_ro_lo_bit, h41_r_tmb_clct_only_ro_hi_bit);
+
+	h41_r_tmb_match_ro_= ExtractValueFromData(data, h41_r_tmb_match_ro_lo_bit, h41_r_tmb_match_ro_hi_bit);
+
+	h41_r_tmb_trig_keep_= ExtractValueFromData(data, h41_r_tmb_trig_keep_lo_bit, h41_r_tmb_trig_keep_hi_bit);
+
+	h41_r_tmb_non_trig_keep_= ExtractValueFromData(data, h41_r_tmb_non_trig_keep_lo_bit, h41_r_tmb_non_trig_keep_hi_bit);
+
+	h41_lyr_thresh_pretrig_= ExtractValueFromData(data, h41_lyr_thresh_pretrig_lo_bit, h41_lyr_thresh_pretrig_hi_bit);
+
+	h41_layer_trig_en_= ExtractValueFromData(data, h41_layer_trig_en_lo_bit, h41_layer_trig_en_hi_bit);
     //
   }
   //
@@ -3687,158 +3895,242 @@ void TMB::DecodeTMBRawHitWord_(int address) {
 void TMB::PrintTMBRawHits() {
   //
   (*MyOutput_) << "Header 0:" << std::endl;
-  (*MyOutput_) << "-> beginning of cathode record marker = " << h0_beginning_of_cathode_ << std::endl;
-  (*MyOutput_) << "-> marker 6                           = " << h0_marker_6_             << std::endl;
-  //
-  (*MyOutput_) << "Header 1:" << std::endl;
-  (*MyOutput_) << "-> number of time bins per CFEB in dump                = " << h1_nTbins_per_cfeb_ << std::endl;
-  (*MyOutput_) << "-> CFEBs read out for this event                       = " << h1_cfebs_read_      << std::endl;
-  (*MyOutput_) << "-> fifo mode                                           = " << h1_fifo_mode_       << std::endl;
-  //
-  (*MyOutput_) << "Header 2:" << std::endl;
-  (*MyOutput_) << "-> L1A received and pushed on L1A stack                = " << h2_l1a_counter_ << std::endl;
-  (*MyOutput_) << "-> Chamber ID number (= slot/2 or slot/2-1 if slot>12) = " << h2_csc_id_      << std::endl;
-  (*MyOutput_) << "-> module ID number (= VME slot)                       = " << h2_board_id_    << std::endl;
-  (*MyOutput_) << "-> L1A pop type mode                                   = " << h2_l1a_type_;
-  if (h2_l1a_type_ == 0) {
-    (*MyOutput_) << " = Normal CLCT trigger with buffer data and L1A window match" << std::endl;
-  } else if (h2_l1a_type_ == 1) {
-    (*MyOutput_) << " = ALCT-only trigger, no data buffers" << std::endl;
-  } else if (h2_l1a_type_ == 2) {
-    (*MyOutput_) << " = L1A-only, no matching TMB trigger, no buffer data" << std::endl;
-  } else if (h2_l1a_type_ == 3) {
-    (*MyOutput_) << " = TMB triggered, no L1A-window match, event has buffer data" << std::endl;
+  (*MyOutput_) << " -> Beginning of Cathode record marker                      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h0_beginning_of_cathode_<<std::endl;
+
+  (*MyOutput_) << "Header 1:" <<std::endl;
+  (*MyOutput_) << " -> BXN pushed on L1A stack at L1A arrival                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h1_r_l1a_bxn_win_<<std::endl;
+
+  (*MyOutput_) << "Header 2:" <<std::endl;
+  (*MyOutput_) << " -> L1As received and pushed on L1A stack                   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h2_r_l1a_cnt_win_<<std::endl;
+
+  (*MyOutput_) << "Header 3:" <<std::endl;
+  (*MyOutput_) << " -> Readout counter                                         = 0x" << std::hex << std::setfill('0') << std::setw(4) << h3_readout_counter_<<std::endl;
+
+  (*MyOutput_) << "Header 4:" <<std::endl;
+  (*MyOutput_) << " -> TMB module ID number = VME slot                         = 0x" << std::hex << std::setfill('0') << std::setw(4) << h4_board_id_<<std::endl;
+  (*MyOutput_) << " -> Chamber ID number                                       = 0x" << std::hex << std::setfill('0') << std::setw(4) << h4_csc_id_<<std::endl;
+  (*MyOutput_) << " -> Run info                                                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h4_run_id_<<std::endl;
+  (*MyOutput_) << " -> Fence queue overflow error                              = 0x" << std::hex << std::setfill('0') << std::setw(4) << h4_buf_q_ovf_err_<<std::endl;
+  (*MyOutput_) << " -> BXN sync error                                          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h4_sync_err_hdr_<<std::endl;
+
+  (*MyOutput_) << "Header 5:" <<std::endl;
+  (*MyOutput_) << " -> Number of header words                                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h5_r_nheaders_<<std::endl;
+  (*MyOutput_) << " -> Trigger type and fifo mode                              = 0x" << std::hex << std::setfill('0') << std::setw(4) << h5_fifo_mode_<<std::endl;
+  (*MyOutput_) << " -> Readout type: dump,nodump, full header, short header    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h5_readout_type_<<std::endl;
+  (*MyOutput_) << " -> L1A Pop type code: buffers, no buffers, clct/alct_only  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h5_l1a_type_<<std::endl;
+  (*MyOutput_) << " -> Event has clct and rpc buffer data                      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h5_r_has_buf_<<std::endl;
+  (*MyOutput_) << " -> Raw hits buffer was full at pretrigger                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h5_buf_stalled_hdr_<<std::endl;
+
+  (*MyOutput_) << "Header 6:" <<std::endl;
+  (*MyOutput_) << " -> Board status summary                                    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h6_bd_status_<<std::endl;
+
+  (*MyOutput_) << "Header 7:" <<std::endl;
+  (*MyOutput_) << " -> Firmware version date code                              = 0x" << std::hex << std::setfill('0') << std::setw(4) << h7_revcode_<<std::endl;
+
+  (*MyOutput_) << "Header 8:" <<std::endl;
+  (*MyOutput_) << " -> CLCT Bunch Crossing number at pre-trig, 0-3563          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h8_r_bxn_counter_<<std::endl;
+  (*MyOutput_) << " -> TMB discarded clct0 from ME1A                           = 0x" << std::hex << std::setfill('0') << std::setw(4) << h8_r_tmb_clct0_discard_<<std::endl;
+  (*MyOutput_) << " -> TMB discarded clct1 from ME1A                           = 0x" << std::hex << std::setfill('0') << std::setw(4) << h8_r_tmb_clct1_discard_<<std::endl;
+  (*MyOutput_) << " -> Main DLL lost lock                                      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h8_clock_lock_lost_err_<<std::endl;
+
+  (*MyOutput_) << "Header 9:" <<std::endl;
+  (*MyOutput_) << " -> CLCT pre-trigger counter, stop on ovf                   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h9_r_pretrig_counter_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 10:" <<std::endl;
+  (*MyOutput_) << " -> CLCT pre-trigger counter                                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h10_r_pretrig_counter_msbs_<<std::endl;
+
+  (*MyOutput_) << "Header 11:" <<std::endl;
+  (*MyOutput_) << " -> CLCT post-drift counter, stop on ovf                    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h11_r_clct_counter_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 12:" <<std::endl;
+  (*MyOutput_) << " -> CLCT post-drift counter                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h12_r_clct_counter_msbs_<<std::endl;
+
+  (*MyOutput_) << "Header 13:" <<std::endl;
+  (*MyOutput_) << " -> TMB trigger counter, stop on ovf                        = 0x" << std::hex << std::setfill('0') << std::setw(4) << h13_r_trig_counter_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 14:" <<std::endl;
+  (*MyOutput_) << " -> TMB trigger counter                                     = 0x" << std::hex << std::setfill('0') << std::setw(4) << h14_r_trig_counter_msbs_<<std::endl;
+
+  (*MyOutput_) << "Header 15:" <<std::endl;
+  (*MyOutput_) << " -> Counts ALCTs received from ALCT board, stop on ovf      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h15_r_alct_counter_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 16:" <<std::endl;
+  (*MyOutput_) << " -> Counts ALCTs received from ALCT board, stop on ovf      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h16_r_alct_counter_msbs_<<std::endl;
+
+  (*MyOutput_) << "Header 17:" <<std::endl;
+  (*MyOutput_) << " -> BX0s since last hard reset, stop on ovf                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h17_r_orbit_counter_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 18:" <<std::endl;
+  (*MyOutput_) << " -> BX0s since last hard reset                              = 0x" << std::hex << std::setfill('0') << std::setw(4) << h18_r_orbit_counter_msbs_<<std::endl;
+
+  (*MyOutput_) << "Header 19:" <<std::endl;
+  (*MyOutput_) << " -> Number of CFEBs read out                                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h19_r_ncfebs_<<std::endl;
+  (*MyOutput_) << " -> Number of time bins per CFEB in dump                    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h19_r_fifo_tbins_cfeb_<<std::endl;
+  (*MyOutput_) << " -> # Time bins before pretrigger;                          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h19_fifo_pretrig_cfeb_<<std::endl;
+  (*MyOutput_) << " -> Readout includes logic analyzer scope data              = 0x" << std::hex << std::setfill('0') << std::setw(4) << h19_scp_auto_<<std::endl;
+  (*MyOutput_) << " -> Readout includes minicope data                          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h19_mini_read_enable_<<std::endl;
+
+  (*MyOutput_) << "Header 20:" <<std::endl;
+  (*MyOutput_) << " -> Hits on pattern template pre-trigger threshold          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h20_hit_thresh_pretrig_<<std::endl;
+  (*MyOutput_) << " -> Pattern shape ID pre-trigger threshold                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h20_pid_thresh_pretrig_<<std::endl;
+  (*MyOutput_) << " -> Hits on pattern  post-drift  threshold                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h20_hit_thresh_postdrift_<<std::endl;
+  (*MyOutput_) << " -> Pattern shape ID post-drift  threshold                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h20_pid_thresh_postdrift_<<std::endl;
+  (*MyOutput_) << " -> CSC Staggering ON                                       = 0x" << std::hex << std::setfill('0') << std::setw(4) << h20_stagger_hs_csc_<<std::endl;
+
+  (*MyOutput_) << "Header 21:" <<std::endl;
+  (*MyOutput_) << " -> CLCT Triad persistence                                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h21_triad_persist_<<std::endl;
+  (*MyOutput_) << " -> DMB pre-trigger threshold for active-feb                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h21_dmb_thresh_pretrig_<<std::endl;
+  (*MyOutput_) << " -> Delay ALCT for CLCT match window                        = 0x" << std::hex << std::setfill('0') << std::setw(4) << h21_alct_delay_<<std::endl;
+  (*MyOutput_) << " -> CLCT match window width                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h21_clct_window_<<std::endl;
+
+  (*MyOutput_) << "Header 22:" <<std::endl;
+  (*MyOutput_) << " -> Trigger source vector                                   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h22_r_trig_source_vec_lsbs_<<std::endl;
+  (*MyOutput_) << " -> CSC layers hit on layer trigger after drift             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h22_r_layers_hit_<<std::endl;
+
+  (*MyOutput_) << "Header 23:" <<std::endl;
+  (*MyOutput_) << " -> Active CFEB list sent to DMB                            = 0x" << std::hex << std::setfill('0') << std::setw(4) << h23_active_feb_mux_lsbs_<<std::endl;
+  (*MyOutput_) << " -> CFEBs read out for this event                           = 0x" << std::hex << std::setfill('0') << std::setw(4) << h23_r_cfebs_read_lsbs_<<std::endl;
+  (*MyOutput_) << " -> Position of l1a in window                               = 0x" << std::hex << std::setfill('0') << std::setw(4) << h23_r_l1a_match_win_<<std::endl;
+  (*MyOutput_) << " -> Active CFEB list source, 0=pretrig, 1=tmb match         = 0x" << std::hex << std::setfill('0') << std::setw(4) << h23_active_feb_src_<<std::endl;
+
+  (*MyOutput_) << "Header 24:" <<std::endl;
+  (*MyOutput_) << " -> ALCT and CLCT matched in time, pushed on L1A stack      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_match_<<std::endl;
+  (*MyOutput_) << " -> Only ALCT triggered, pushed on L1a stack                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_alct_only_<<std::endl;
+  (*MyOutput_) << " -> Only CLCT triggered, pushed on L1A stack                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_clct_only_<<std::endl;
+  (*MyOutput_) << " -> Location of alct in clct window, pushed on L1A stack    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_match_win_<<std::endl;
+  (*MyOutput_) << " -> No ALCT                                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_no_alct_<<std::endl;
+  (*MyOutput_) << " -> One ALCT                                                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_one_alct_<<std::endl;
+  (*MyOutput_) << " -> One CLCT                                                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_one_clct_<<std::endl;
+  (*MyOutput_) << " -> Two ALCTs                                               = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_two_alct_<<std::endl;
+  (*MyOutput_) << " -> Two CLCTs                                               = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_two_clct_<<std::endl;
+  (*MyOutput_) << " -> ALCT0 copied into ALCT1 to make 2nd LCT                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_dupe_alct_<<std::endl;
+  (*MyOutput_) << " -> CLCT0 copied into CLCT1 to make 2nd LCT                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_dupe_clct_<<std::endl;
+  (*MyOutput_) << " -> LCT1 has higher quality than LCT0                       = 0x" << std::hex << std::setfill('0') << std::setw(4) << h24_r_tmb_rank_err_<<std::endl;
+
+  (*MyOutput_) << "Header 25:" <<std::endl;
+  (*MyOutput_) << " -> CLCT0 after drift lsbs                                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h25_r_clct0_xtmb_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 26:" <<std::endl;
+  (*MyOutput_) << " -> CLCT1 after drift lsbs                                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h26_r_clct1_xtmb_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 27:" <<std::endl;
+  (*MyOutput_) << " -> CLCT0 after drift msbs                                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h27_r_clct0_xtmb_msbs_<<std::endl;
+  (*MyOutput_) << " -> CLCT1 after drift msbs                                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h27_r_clct1_xtmb_msbs_<<std::endl;
+  (*MyOutput_) << " -> CLCT0/1 common after drift msbs                         = 0x" << std::hex << std::setfill('0') << std::setw(4) << h27_r_clctc_xtmb_<<std::endl;
+  (*MyOutput_) << " -> CLCT0 had invalid pattern after drift delay             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h27_r_clct0_invp_<<std::endl;
+  (*MyOutput_) << " -> CLCT1 had invalid pattern after drift delay             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h27_r_clct1_invp_<<std::endl;
+  (*MyOutput_) << " -> 2nd CLCT busy, logic error indicator                    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h27_r_clct1_busy_<<std::endl;
+  (*MyOutput_) << " -> CFEB RAM parity error, latched                          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h27_perr_cfeb_ff_lsbs_<<std::endl;
+  (*MyOutput_) << " -> GEM or RPC or Minicope RAM parity error, latched        = 0x" << std::hex << std::setfill('0') << std::setw(4) << h27_perr_gem_or_rpc_or_mini_ff_<<std::endl;
+  (*MyOutput_) << " -> Parity error summary,  latched                          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h27_perr_ff_<<std::endl;
+
+  (*MyOutput_) << "Header 28:" <<std::endl;
+  (*MyOutput_) << " -> ALCT0 valid pattern flag                                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h28_r_alct0_valid_<<std::endl;
+  (*MyOutput_) << " -> ALCT0 quality                                           = 0x" << std::hex << std::setfill('0') << std::setw(4) << h28_r_alct0_quality_<<std::endl;
+  (*MyOutput_) << " -> ALCT0 accelerator muon flag                             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h28_r_alct0_amu_<<std::endl;
+  (*MyOutput_) << " -> ALCT0 key wire group                                    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h28_r_alct0_key_<<std::endl;
+  (*MyOutput_) << " -> ALCT active_feb_flag position in pretrig window         = 0x" << std::hex << std::setfill('0') << std::setw(4) << h28_r_alct_preClct_win_<<std::endl;
+
+  (*MyOutput_) << "Header 29:" <<std::endl;
+  (*MyOutput_) << " -> ALCT1 valid pattern flag                                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h29_r_alct1_valid_<<std::endl;
+  (*MyOutput_) << " -> ALCT1 quality                                           = 0x" << std::hex << std::setfill('0') << std::setw(4) << h29_r_alct1_quality_<<std::endl;
+  (*MyOutput_) << " -> ALCT1 accelerator muon flag                             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h29_r_alct1_amu_<<std::endl;
+  (*MyOutput_) << " -> ALCT1 key wire group                                    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h29_r_alct1_key_<<std::endl;
+  (*MyOutput_) << " -> CLCT drift delay                                        = 0x" << std::hex << std::setfill('0') << std::setw(4) << h29_drift_delay_<<std::endl;
+  (*MyOutput_) << " -> Enable blocked bits in readout                          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h29_bcb_read_enable_<<std::endl;
+  (*MyOutput_) << " -> Layer-mode trigger                                      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h29_hs_layer_trig_<<std::endl;
+
+  (*MyOutput_) << "Header 30:" <<std::endl;
+  (*MyOutput_) << " -> ALCT0/1 bxn                                             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h30_r_alct_bxn_<<std::endl;
+  (*MyOutput_) << " -> ALCT trigger path ECC error code                        = 0x" << std::hex << std::setfill('0') << std::setw(4) << h30_r_alct_ecc_err_<<std::endl;
+  (*MyOutput_) << " -> CFEB[n] has at least 1 bad bit                          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h30_cfeb_badbits_found_lsbs_<<std::endl;
+  (*MyOutput_) << " -> A CFEB had bad bits that were blocked                   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h30_cfeb_badbits_blocked_<<std::endl;
+  (*MyOutput_) << " -> ALCT FPGA configuration done                            = 0x" << std::hex << std::setfill('0') << std::setw(4) << h30_alct_cfg_done_<<std::endl;
+  (*MyOutput_) << " -> ALCT bx0 and CLCT bx0 match                             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h30_bx0_match_<<std::endl;
+
+  (*MyOutput_) << "Header 31:" <<std::endl;
+  (*MyOutput_) << " -> MPC muon 0 frame 0 LSBs                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h31_r_mpc0_frame0_ff_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 32:" <<std::endl;
+  (*MyOutput_) << " -> MPC muon 0 frame 1 LSBs                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h32_r_mpc0_frame1_ff_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 33:" <<std::endl;
+  (*MyOutput_) << " -> MPC muon 1 frame 0 LSBs                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h33_r_mpc1_frame0_ff_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 34:" <<std::endl;
+  (*MyOutput_) << " -> MPC muon 1 frame 1 LSBs                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h34_r_mpc1_frame1_ff_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 35:" <<std::endl;
+  (*MyOutput_) << " -> MPC muon 0 frame 0 MSBS                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h35_r_mpc0_frame0_ff_msbs_<<std::endl;
+  (*MyOutput_) << " -> MPC muon 0 frame 1 MSBS                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h35_r_mpc0_frame1_ff_msbs_<<std::endl;
+  (*MyOutput_) << " -> MPC muon 1 frame 0 MSBS                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h35_r_mpc1_frame0_ff_msbs_<<std::endl;
+  (*MyOutput_) << " -> MPC muon 1 frame 1 MSBS                                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h35_r_mpc1_frame1_ff_msbs_<<std::endl;
+  (*MyOutput_) << " -> MPC transmit delay                                      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h35_mpc_tx_delay_<<std::endl;
+  (*MyOutput_) << " -> MPC muon accept response                                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h35_r_mpc_accept_<<std::endl;
+  (*MyOutput_) << " -> CFEBs enabled for triggering                            = 0x" << std::hex << std::setfill('0') << std::setw(4) << h35_cfeb_en_lsbs_<<std::endl;
+
+  (*MyOutput_) << "Header 36:" <<std::endl;
+  if (!GetGemEnabled())
+  {
+  (*MyOutput_) << " -> RPCs included in read out                               = 0x" << std::hex << std::setfill('0') << std::setw(4) << h36_rd_list_rpc_<<std::endl;
+  (*MyOutput_) << " -> Number of RPCs in readout, 0,1,2, 0 if head-only event  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h36_r_nrpcs_read_<<std::endl;
+  (*MyOutput_) << " -> RPC readout enabled                                     = 0x" << std::hex << std::setfill('0') << std::setw(4) << h36_rpc_read_enable_<<std::endl;
+  (*MyOutput_) << " -> Number RPC FIFO time bins to read out                   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h36_fifo_tbins_rpc_<<std::endl;
+  (*MyOutput_) << " -> Number RPC FIFO time bins before pretrigger             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h36_fifo_pretrig_rpc_<<std::endl;
   }
-  //
-  (*MyOutput_) << "Header 3:" << std::endl;  
-  (*MyOutput_) << "-> Bunch-crossing number pushed on L1A stack on L1A arrival = " << h3_bxn_counter_ << std::endl;
-  (*MyOutput_) << "-> Record type = " << h3_record_type_;
-  if (h3_record_type_ == 0 ) {
-    (*MyOutput_) << " = No rawhits, full header" << std::endl;
-  } else if (h3_record_type_ == 1 ) {
-    (*MyOutput_) << " = Full rawhits, full header" << std::endl;
-  } else if (h3_record_type_ == 2 ) {
-    (*MyOutput_) << " = Local rawhits, full header" << std::endl;
-  } else if (h3_record_type_ == 3 ) {
-    (*MyOutput_) << " = No rawhits, short header (no buffer available at pretrigger)" << std::endl;
+  else
+  {
+  (*MyOutput_) << " -> GEM zero-suppression enabled                            = 0x" << std::hex << std::setfill('0') << std::setw(4) << h36_gem_zero_suppress_<<std::endl;
+  (*MyOutput_) << " -> GEM readout enabled                                     = 0x" << std::hex << std::setfill('0') << std::setw(4) << h36_gem_read_enable_<<std::endl;
+  (*MyOutput_) << " -> Number GEM FIFO time bins to read out                   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h36_fifo_tbins_gem_<<std::endl;
+  (*MyOutput_) << " -> Number GEM FIFO time bins before pretrigger             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h36_fifo_pretrig_gem_<<std::endl;
   }
-  (*MyOutput_) << "-> internal logic analyzer scope data included in readout = 0x " << std::hex << h3_scope_in_data_ << std::endl;
-  //
-  (*MyOutput_) << "Header 4:" << std::endl;  
-  (*MyOutput_) << "-> Number of header words                        = 0x " << std::hex << h4_nheader_words_   << std::endl;
-  (*MyOutput_) << "-> Number of CFEBs readout                       = 0x " << std::hex << h4_nCFEBs_read_     << std::endl;
-  (*MyOutput_) << "-> Number of CFEBs readout                       = 0x " << std::hex << h4_has_buffer_data_ << std::endl;
-  (*MyOutput_) << "-> Number time bins in readout before pretrigger = 0x " << std::hex << h4_fifo_pretrig_    << std::endl;
-  //
-  (*MyOutput_) << "Header 5:" << std::endl;  
-  (*MyOutput_) << "-> L1A number at CLCT pretrigger       = 0x " << std::hex << h5_l1a_at_pretrig_                   << std::endl;
-  (*MyOutput_) << "-> trigger source vector               = 0x " << std::hex << h5_trigger_source_vector_            << std::endl;
-  (*MyOutput_) << "-> trigger source halfstrip or distrip = 0x " << std::hex << h5_trigger_source_halfstrip_distrip_ << std::endl;
-  //
-  (*MyOutput_) << "Header 6:" << std::endl;  
-  (*MyOutput_) << "-> Active CFEB list sent to DMB = 0x " << std::hex << h6_aff_to_dmb_  << std::endl;
-  (*MyOutput_) << "-> List of instantiated CFEBs   = 0x " << std::hex << h6_cfeb_exists_ << std::endl;
-  (*MyOutput_) << "-> Run info                     = 0x " << std::hex << h6_run_info_    << std::endl;
-  //
-  (*MyOutput_) << "Header 7:" << std::endl;  
-  (*MyOutput_) << "-> bunch crossing number at CLCT pretrigger    = 0x " << std::hex << h7_bxn_at_clct_pretrig_ << std::endl;
-  (*MyOutput_) << "-> bunch crossing number synchronization error = 0x " << std::hex << h7_sync_err_            << std::endl;
-  //
-  (*MyOutput_) << "Header 8:" << std::endl;  
-  (*MyOutput_) << "-> CLCT0 pattern trigger (after drift) LSBS = 0x " << std::hex << h8_clct0_lsbs_ << std::endl;
-  //
-  (*MyOutput_) << "Header 9:" << std::endl;  
-  (*MyOutput_) << "-> CLCT1 pattern trigger (after drift) LSBS = 0x " << std::hex << h9_clct1_lsbs_ << std::endl;
-  //
-  (*MyOutput_) << "Header 10:" << std::endl;  
-  (*MyOutput_) << "-> CLCT0 pattern trigger (after drift) MSBS = 0x " << std::hex << h10_clct0_msbs_            << std::endl;
-  (*MyOutput_) << "-> CLCT1 pattern trigger (after drift) MSBS = 0x " << std::hex << h10_clct1_msbs_            << std::endl;
-  (*MyOutput_) << "-> CLCT0 had invalid pattern after drift    = 0x " << std::hex << h10_clct0_invalid_pattern_ << std::endl;
-  //
-  (*MyOutput_) << "Header 11:" << std::endl;  
-  (*MyOutput_) << "-> ALCT and CLCT matched in time         = 0x " << std::hex << h11_alct_clct_match_           << std::endl;
-  (*MyOutput_) << "-> ALCT trigger only                     = 0x " << std::hex << h11_alct_trig_only_            << std::endl;
-  (*MyOutput_) << "-> CLCT trigger only                     = 0x " << std::hex << h11_clct_trig_only_            << std::endl;
-  (*MyOutput_) << "-> ALCT-CLCT0 bunch crossing difference  = 0x " << std::hex << h11_clct0_alct_bxn_diff_       << std::endl;
-  (*MyOutput_) << "-> ALCT-CLCT1 bunch crossing difference  = 0x " << std::hex << h11_clct1_alct_bxn_diff_       << std::endl;
-  (*MyOutput_) << "-> Location of ALCT in CLCT match window = 0x " << std::hex << h11_alct_in_clct_match_window_ << std::endl;
-  (*MyOutput_) << "-> triad persistence                     = 0x " << std::hex << h11_triad_persistence_         << std::endl;
-  //
-  (*MyOutput_) << "Header 12:" << std::endl;  
-  (*MyOutput_) << "-> MPC muon0 frame 0 LSBs = 0x " << std::hex << h12_mpc0_frame0_lsbs_ << std::endl;
-  //
-  (*MyOutput_) << "Header 13:" << std::endl;  
-  (*MyOutput_) << "-> MPC muon0 frame 1 LSBs = 0x " << std::hex << h13_mpc0_frame1_lsbs_ << std::endl;
-  //
-  (*MyOutput_) << "Header 14:" << std::endl;  
-  (*MyOutput_) << "-> MPC muon1 frame 0 LSBs = 0x " << std::hex << h14_mpc1_frame0_lsbs_ << std::endl;
-  //
-  (*MyOutput_) << "Header 15:" << std::endl;  
-  (*MyOutput_) << "-> MPC muon1 frame 1 LSBs = 0x " << std::hex << h15_mpc1_frame1_lsbs_ << std::endl;
-  //
-  (*MyOutput_) << "Header 16:" << std::endl;  
-  (*MyOutput_) << "-> MPC muon0 frame 0 MSBs              = 0x " << std::hex << h16_mpc0_frame0_msbs_              << std::endl;
-  (*MyOutput_) << "-> MPC muon0 frame 1 MSBs              = 0x " << std::hex << h16_mpc0_frame1_msbs_              << std::endl;
-  (*MyOutput_) << "-> MPC muon1 frame 0 MSBs              = 0x " << std::hex << h16_mpc1_frame0_msbs_              << std::endl;
-  (*MyOutput_) << "-> MPC muon1 frame 1 MSBs              = 0x " << std::hex << h16_mpc1_frame1_msbs_              << std::endl;
-  (*MyOutput_) << "-> MPC muon accept response            = 0x " << std::hex << h16_mpc_accept_                    << std::endl;
-  (*MyOutput_) << "-> CLCT halfstrip pretrigger threshold = 0x " << std::hex << h16_clct_halfstrip_pretrig_thresh_ << std::endl;
-  (*MyOutput_) << "-> CLCT distrip pretrigger threshold   = 0x " << std::hex << h16_clct_distrip_pretrig_thresh_   << std::endl;
-  //
-  (*MyOutput_) << "Header 17:" << std::endl;  
-  (*MyOutput_) << "-> Write buffer is ready           = 0x " << std::hex << h17_write_buffer_ready_     << std::endl;
-  (*MyOutput_) << "-> Tbin address for pretrig        = 0x " << std::hex << h17_pretrig_tbin_           << std::endl;
-  (*MyOutput_) << "-> write buffer address            = 0x " << std::hex << h17_write_buffer_address_   << std::endl;
-  (*MyOutput_) << "-> pretrig arrived, no buffer free = 0x " << std::hex << h17_pretrig_no_free_buffer_ << std::endl;
-  (*MyOutput_) << "-> buffer full                     = 0x " << std::hex << h17_buffer_full_            << std::endl;
-  (*MyOutput_) << "-> buffer almost full              = 0x " << std::hex << h17_buffer_almost_full_     << std::endl;
-  (*MyOutput_) << "-> buffer half full                = 0x " << std::hex << h17_buffer_half_full_       << std::endl;
-  (*MyOutput_) << "-> buffer empty                    = 0x " << std::hex << h17_buffer_empty_           << std::endl;
-  //
-  (*MyOutput_) << "Header 18:" << std::hex << std::endl;  
-  (*MyOutput_) << "-> Number of buffers busy = 0x " << std::hex << h18_nbuf_busy_          << std::endl;
-  (*MyOutput_) << "-> List of busy buffers   = 0x " << std::hex << h18_buf_busy_           << std::endl;
-  (*MyOutput_) << "-> L1A stack overflow     = 0x " << std::hex << h18_l1a_stack_overflow_ << std::endl;
-  //
-  (*MyOutput_) << "Header 19:" << std::endl;  
-  (*MyOutput_) << "-> TMB response                                             = 0x " << std::hex << h19_tmb_trig_pulse_         << std::endl;
-  (*MyOutput_) << "-> Only ALCT triggered                                      = 0x " << std::hex << h19_tmb_alct_only_          << std::endl;
-  (*MyOutput_) << "-> Only CLCT triggered                                      = 0x " << std::hex << h19_tmb_clct_only_          << std::endl;
-  (*MyOutput_) << "-> ALCT*CLCT triggered                                      = 0x " << std::hex << h19_tmb_match_              << std::endl;
-  (*MyOutput_) << "-> Write buffer ready at pretrig                            = 0x " << std::hex << h19_write_buffer_ready_     << std::endl;
-  (*MyOutput_) << "-> write buffer either (ready -or- not required) at pretrig = 0x " << std::hex << h19_write_buffer_available_ << std::endl;
-  (*MyOutput_) << "-> Tbin address at pretrig                                  = 0x " << std::hex << h19_write_tbin_address_     << std::endl;
-  (*MyOutput_) << "-> Address of write buffer at pretrig                       = 0x " << std::hex << h19_write_buffer_address_   << std::endl;
-  //
-  (*MyOutput_) << "Header 20:" << std::endl;  
-  (*MyOutput_) << "-> pretrig but no write buffer available = 0x " << std::hex << h20_discard_no_write_buf_available_ << std::endl;
-  (*MyOutput_) << "-> invalid pattern after drift           = 0x " << std::hex << h20_discard_invalid_pattern_        << std::endl;
-  (*MyOutput_) << "-> TMB rejected event                    = 0x " << std::hex << h20_discard_tmb_reject_             << std::endl;
-  (*MyOutput_) << "-> timeout with no TMB trig pulse        = 0x " << std::hex << h20_timeout_no_tmb_trig_pulse_      << std::endl;
-  (*MyOutput_) << "-> timeout with no mpc_frame_ff          = 0x " << std::hex << h20_timeout_no_mpc_frame_           << std::endl;
-  (*MyOutput_) << "-> timeout with no mpc_response_ff       = 0x " << std::hex << h20_timeout_no_mpc_response_        << std::endl;
-  //
-  (*MyOutput_) << "Header 21:" << std::endl;  
-  (*MyOutput_) << "-> setting of ALCT delay for match window = 0x " << std::hex << h21_match_trig_alct_delay_   << std::endl;
-  (*MyOutput_) << "-> setting of match window width          = 0x " << std::hex << h21_match_trig_window_width_ << std::endl;
-  (*MyOutput_) << "-> setting of MPC transmit delay          = 0x " << std::hex << h21_mpc_tx_delay_            << std::endl;
-  //
-  (*MyOutput_) << "Header 22:" << std::endl;  
-  (*MyOutput_) << "-> RPCs connected to this TMB            = 0x " << std::hex << h22_rpc_exist_       << std::endl;
-  (*MyOutput_) << "-> RPCs included in readout              = 0x " << std::hex << h22_rpc_list_        << std::endl;
-  (*MyOutput_) << "-> Number of RPCs in readout             = 0x " << std::hex << h22_nrpc_            << std::endl;
-  (*MyOutput_) << "-> RPC readout enabled                   = 0x " << std::hex << h22_rpc_read_enable_ << std::endl;
-  (*MyOutput_) << "-> Number of layers hit on layer trigger = 0x " << std::hex << h22_nlayers_hit_     << std::endl;
-  (*MyOutput_) << "-> Position of L1A in window             = 0x " << std::hex << h22_l1a_in_window_   << std::endl;
-  //
-  (*MyOutput_) << "Header 23:" << std::endl;  
-  (*MyOutput_) << "-> Board status = 0x " << std::hex << h23_board_status_ << std::endl;
-  //
-  (*MyOutput_) << "Header 24:" << std::endl;  
-  (*MyOutput_) << "-> seconds since last hard reset = 0x " << std::hex << h24_time_since_hard_reset_ << std::endl;
-  //
-  (*MyOutput_) << "Header 25:" << std::endl;  
-  (*MyOutput_) << "-> Firmware version date code = 0x " << std::hex << h25_firmware_version_date_code_ << std::endl;
+
+  (*MyOutput_) << "Header 37:" <<std::endl;
+  (*MyOutput_) << " -> Buffer RAM write address at pretrigger                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h37_r_wr_buf_adr_<<std::endl;
+  (*MyOutput_) << " -> Write buffer was ready at pretrig                       = 0x" << std::hex << std::setfill('0') << std::setw(4) << h37_r_wr_buf_ready_<<std::endl;
+  (*MyOutput_) << " -> Write buffer ready now                                  = 0x" << std::hex << std::setfill('0') << std::setw(4) << h37_wr_buf_ready_<<std::endl;
+  (*MyOutput_) << " -> All raw hits ram in use, ram writing must stop          = 0x" << std::hex << std::setfill('0') << std::setw(4) << h37_buf_q_full_<<std::endl;
+  (*MyOutput_) << " -> No fences remain on buffer stack                        = 0x" << std::hex << std::setfill('0') << std::setw(4) << h37_buf_q_empty_<<std::endl;
+
+  (*MyOutput_) << "Header 38:" <<std::endl;
+  (*MyOutput_) << " -> Distance to 1st fence address at pretrigger             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h38_r_buf_fence_dist_<<std::endl;
+  (*MyOutput_) << " -> Tried to push when stack full                           = 0x" << std::hex << std::setfill('0') << std::setw(4) << h38_buf_q_ovf_err_<<std::endl;
+  (*MyOutput_) << " -> Tried to pop when stack empty                           = 0x" << std::hex << std::setfill('0') << std::setw(4) << h38_buf_q_udf_err_<<std::endl;
+  (*MyOutput_) << " -> Fence adr popped from stack doesnt match rls adr        = 0x" << std::hex << std::setfill('0') << std::setw(4) << h38_buf_q_adr_err_<<std::endl;
+  (*MyOutput_) << " -> Buffer write pointer hit a fence and stalled            = 0x" << std::hex << std::setfill('0') << std::setw(4) << h38_buf_stalled_once_<<std::endl;
+
+  (*MyOutput_) << "Header 39:" <<std::endl;
+  (*MyOutput_) << " -> Number of fences in fence RAM currently                 = 0x" << std::hex << std::setfill('0') << std::setw(4) << h39_buf_fence_cnt_<<std::endl;
+  (*MyOutput_) << " -> 1=Reverse staggered CSC, non-me1                        = 0x" << std::hex << std::setfill('0') << std::setw(4) << h39_reverse_hs_csc_<<std::endl;
+  (*MyOutput_) << " -> 1=ME1A hstrip order reversed                            = 0x" << std::hex << std::setfill('0') << std::setw(4) << h39_reverse_hs_me1a_<<std::endl;
+  (*MyOutput_) << " -> 1=ME1B hstrip order reversed                            = 0x" << std::hex << std::setfill('0') << std::setw(4) << h39_reverse_hs_me1b_<<std::endl;
+
+  (*MyOutput_) << "Header 40:" <<std::endl;
+  (*MyOutput_) << " -> Hdr23 Active CFEB list sent to DMB                      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h40_active_feb_mux_msbs_<<std::endl;
+  (*MyOutput_) << " -> Hdr23 CFEBs read out for this event                     = 0x" << std::hex << std::setfill('0') << std::setw(4) << h40_r_cfebs_read_msbs_<<std::endl;
+  (*MyOutput_) << " -> Hdr27 CFEB RAM parity error, latched                    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h40_perr_cfeb_ff_msbs_<<std::endl;
+  (*MyOutput_) << " -> Hdr30 CFEB[n] has at least 1 bad bit                    = 0x" << std::hex << std::setfill('0') << std::setw(4) << h40_cfeb_badbits_found_msbs_<<std::endl;
+  (*MyOutput_) << " -> Hdr35 CFEBs enabled for triggering                      = 0x" << std::hex << std::setfill('0') << std::setw(4) << h40_cfeb_en_msbs_<<std::endl;
+  (*MyOutput_) << " -> Current fence is peak number of fences in RAM           = 0x" << std::hex << std::setfill('0') << std::setw(4) << h40_buf_fence_cnt_is_peak_<<std::endl;
+  (*MyOutput_) << " -> chamber_is_me11                                         = 0x" << std::hex << std::setfill('0') << std::setw(4) << h40_chamber_is_me11_<<std::endl;
+  (*MyOutput_) << " -> Pre-trigger was ME1A/ME1B                               = 0x" << std::hex << std::setfill('0') << std::setw(4) << h40_r_trig_source_vec_msbs_<<std::endl;
+  (*MyOutput_) << " -> TMB trig pulse coincident with rtmb_push                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h40_r_tmb_trig_pulse_<<std::endl;
+
+  (*MyOutput_) << "Header 41:" <<std::endl;
+  (*MyOutput_) << " -> Allow ALCT-only  tmb-matching trigger                   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_tmb_allow_alct_<<std::endl;
+  (*MyOutput_) << " -> Allow CLCT-only  tmb-matching trigger                   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_tmb_allow_clct_<<std::endl;
+  (*MyOutput_) << " -> Allow Match-only tmb-matching trigger                   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_tmb_allow_match_<<std::endl;
+  (*MyOutput_) << " -> Allow ALCT-only  tmb-matching readout only              = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_tmb_allow_alct_ro_<<std::endl;
+  (*MyOutput_) << " -> Allow CLCT-only  tmb-matching readout only              = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_tmb_allow_clct_ro_<<std::endl;
+  (*MyOutput_) << " -> Allow Match-only tmb-matching readout only              = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_tmb_allow_match_ro_<<std::endl;
+  (*MyOutput_) << " -> Only ALCT triggered, non-triggering readout             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_r_tmb_alct_only_ro_<<std::endl;
+  (*MyOutput_) << " -> Only CLCT triggered, non-triggering readout             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_r_tmb_clct_only_ro_<<std::endl;
+  (*MyOutput_) << " -> ALCT and CLCT matched in time, non-triggering readout   = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_r_tmb_match_ro_<<std::endl;
+  (*MyOutput_) << " -> Triggering readout event                                = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_r_tmb_trig_keep_<<std::endl;
+  (*MyOutput_) << " -> Non-triggering readout event                            = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_r_tmb_non_trig_keep_<<std::endl;
+  (*MyOutput_) << " -> Layer pre-trigger threshold                             = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_lyr_thresh_pretrig_<<std::endl;
+  (*MyOutput_) << " -> Layer trigger mode enabled                              = 0x" << std::hex << std::setfill('0') << std::setw(4) << h41_layer_trig_en_<<std::endl;
 //
   return;
 }

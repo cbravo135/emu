@@ -3142,518 +3142,638 @@ const int mpc_frames_fifo_ctrl_sditter_default           = 0;
 //////////////////////////////////////////////
 // Bit mapping for TMB Raw Hits
 //////////////////////////////////////////////
-//-----------
-// header 0
-//-----------
-// beginning of cathode record marker
-const int h0_beginning_of_cathode_header_number =  0;
-const int h0_beginning_of_cathode_lo_bit        =  0;
-const int h0_beginning_of_cathode_hi_bit        = 11;
-//
-// marker 6
-const int h0_marker_6_header_number             =  0;
-const int h0_marker_6_lo_bit                    = 12;
-const int h0_marker_6_hi_bit                    = 14;
-//
-//-----------
-// header 1
-//-----------
-// number of time bins per CFEB in dump
-const int h1_nTbins_per_cfeb_header_number =  1;
-const int h1_nTbins_per_cfeb_lo_bit        =  0;
-const int h1_nTbins_per_cfeb_hi_bit        =  4;
-//
-// CFEBs read out for this event
-const int h1_cfebs_read_header_number      =  1;
-const int h1_cfebs_read_lo_bit             =  5;
-const int h1_cfebs_read_hi_bit             =  9;
-//
-// fifo mode
-// 0 = no raw hits, full header (if buffer was available at pretrigger)
-// 1 = all 5 CFEBs raw hits, full header (if buffer was available at pretrigger)
-// 2 = Local raw hits, full header (if buffer was available at pretrigger)
-// 3 = no raw hits, short header
-// 4 = no raw hits, no header
-const int h1_fifo_mode_header_number       =  0;
-const int h1_fifo_mode_lo_bit              = 12;
-const int h1_fifo_mode_hi_bit              = 14;
-//
-//-----------
-// header 2
-//-----------
-// L1A received and pushed on L1A stack
-const int h2_l1a_counter_header_number =  2;
-const int h2_l1a_counter_lo_bit        =  0;
-const int h2_l1a_counter_hi_bit        =  3;
-//
-// Chamber ID number (= slot/2 or slot/2-1 if slot>12 at power up)
-const int h2_csc_id_header_number      =  2;
-const int h2_csc_id_lo_bit             =  4;
-const int h2_csc_id_hi_bit             =  7;
-//
-// module ID number (= VME slot at power up)
-const int h2_board_id_header_number    =  2;
-const int h2_board_id_lo_bit           =  8;
-const int h2_board_id_hi_bit           = 12;
-//
-// L1A pop type mode:  
-// 0 = Normal CLCT trigger with buffer data and L1A window match
-// 1 = ALCT-only trigger, no data buffers
-// 2 = L1A-only, no matching TMB trigger, no buffer data
-// 3 = TMB triggered, no L1A-window match, event has buffer data
-const int h2_l1a_type_header_number    =  2;
-const int h2_l1a_type_lo_bit           = 13;
-const int h2_l1a_type_hi_bit           = 14;
-//
-//-----------
-// header 3
-//-----------
-// Bunch-crossing number pushed on L1A stack on L1A arrival
-const int h3_bxn_counter_header_number   =  3;
-const int h3_bxn_counter_lo_bit          =  0;
-const int h3_bxn_counter_hi_bit          = 11;
-//
-// record type: 
-//   0 = rawhits no   , header full
-//   1 = rawhits full , header full
-//   2 = rawhits local, header full
-//   3 = rawhits no   , header short (no buffer was available at pretrigger)
-const int h3_record_type_header_number   =  3;
-const int h3_record_type_lo_bit          = 12;
-const int h3_record_type_hi_bit          = 13;
-//
-// internal logic analyzer scop data included in readout
-const int h3_scope_in_data_header_number =  3;
-const int h3_scope_in_data_lo_bit        = 14;
-const int h3_scope_in_data_hi_bit        = 14;
-//
-//-----------
-// header 4
-//-----------
-// Number of header words
-const int h4_nheader_words_header_number   =  4;
-const int h4_nheader_words_lo_bit          =  0;
-const int h4_nheader_words_hi_bit          =  4;
-//
-// Number of CFEBs readout
-const int h4_nCFEBs_read_header_number     =  4;
-const int h4_nCFEBs_read_lo_bit            =  5;
-const int h4_nCFEBs_read_hi_bit            =  7;
-//
-// Number of CFEBs readout
-const int h4_has_buffer_data_header_number =  4;
-const int h4_has_buffer_data_lo_bit        =  8;
-const int h4_has_buffer_data_hi_bit        =  8;
-//
-// Number time bins in readout before pretrigger
-const int h4_fifo_pretrig_header_number    =  4;
-const int h4_fifo_pretrig_lo_bit           =  9;
-const int h4_fifo_pretrig_hi_bit           = 13;
-//
-//-----------
-// header 5
-//-----------
-// L1A number at CLCT pretrigger
-const int h5_l1a_at_pretrig_header_number                   =  5;
-const int h5_l1a_at_pretrig_lo_bit                          =  0;
-const int h5_l1a_at_pretrig_hi_bit                          =  3;
-//
-// trigger source vector
-const int h5_trigger_source_vector_header_number            =  5;
-const int h5_trigger_source_vector_lo_bit                   =  4;
-const int h5_trigger_source_vector_hi_bit                   = 11;
-//
-// trigger source halfstrip or distrip
-const int h5_trigger_source_halfstrip_distrip_header_number =  5;
-const int h5_trigger_source_halfstrip_distrip_lo_bit        = 12;
-const int h5_trigger_source_halfstrip_distrip_hi_bit        = 12;
-//
-//-----------
-// header 6
-//-----------
-// Active CFEB list sent to DMB
-const int h6_aff_to_dmb_header_number  =  6;
-const int h6_aff_to_dmb_lo_bit         =  0;
-const int h6_aff_to_dmb_hi_bit         =  4;
-//
-// List of instantiated CFEBs
-const int h6_cfeb_exists_header_number =  6;
-const int h6_cfeb_exists_lo_bit        =  5;
-const int h6_cfeb_exists_hi_bit        =  9;
-//
+
+// First 4 words must conform to DDU specification
+
+// Beginning of Cathode record marker
+const int h0_beginning_of_cathode_lo_bit   =0;
+const int h0_beginning_of_cathode_hi_bit   =11;
+
+// BXN pushed on L1A stack at L1A arrival
+const int h1_r_l1a_bxn_win_lo_bit   =0;
+const int h1_r_l1a_bxn_win_hi_bit   =11;
+
+// L1As received and pushed on L1A stack
+const int h2_r_l1a_cnt_win_lo_bit   =0;
+const int h2_r_l1a_cnt_win_hi_bit   =11;
+
+// Readout counter
+const int h3_readout_counter_lo_bit   =0;
+const int h3_readout_counter_hi_bit   =11;
+
+
+// Next 4 words for short mode
+
+// TMB module ID number = VME slot
+const int h4_board_id_lo_bit   =0;
+const int h4_board_id_hi_bit   =4;
+
+// Chamber ID number
+const int h4_csc_id_lo_bit   =5;
+const int h4_csc_id_hi_bit   =8;
+
 // Run info
-const int h6_run_info_header_number    =  6;
-const int h6_run_info_lo_bit           = 10;
-const int h6_run_info_hi_bit           = 13;
-//
-//-----------
-// header 7
-//-----------
-// bunch crossing number at CLCT pretrigger
-const int h7_bxn_at_clct_pretrig_header_number =  7;
-const int h7_bxn_at_clct_pretrig_lo_bit        =  0;
-const int h7_bxn_at_clct_pretrig_hi_bit        = 11;
-//
-// bunch crossing number synchronization error
-const int h7_sync_err_header_number            =  7;
-const int h7_sync_err_lo_bit                   = 12;
-const int h7_sync_err_hi_bit                   = 12;
-//
-//-----------
-// header 8
-//-----------
-// CLCT0 pattern trigger (after drift) LSBS
-const int h8_clct0_lsbs_header_number =  8;
-const int h8_clct0_lsbs_lo_bit        =  0;
-const int h8_clct0_lsbs_hi_bit        = 14;
-//
-//-----------
-// header 9
-//-----------
-// CLCT1 pattern trigger (after drift) LSBS
-const int h9_clct1_lsbs_header_number =  9;
-const int h9_clct1_lsbs_lo_bit        =  0;
-const int h9_clct1_lsbs_hi_bit        = 14;
-//
-//-----------
-// header 10
-//-----------
-// CLCT0 pattern trigger (after drift) MSBS
-const int h10_clct0_msbs_header_number            = 10;
-const int h10_clct0_msbs_lo_bit                   =  0;
-const int h10_clct0_msbs_hi_bit                   =  5;
-//
-// CLCT1 pattern trigger (after drift) MSBS
-const int h10_clct1_msbs_header_number            = 10;
-const int h10_clct1_msbs_lo_bit                   =  6;
-const int h10_clct1_msbs_hi_bit                   = 11;
-//
-// CLCT0 had invalid pattern after drift
-const int h10_clct0_invalid_pattern_header_number = 10;
-const int h10_clct0_invalid_pattern_lo_bit        = 12;
-const int h10_clct0_invalid_pattern_hi_bit        = 12;
-//
-//-----------
-// header 11
-//-----------
-// ALCT and CLCT matched in time
-const int h11_alct_clct_match_header_number           = 11;
-const int h11_alct_clct_match_lo_bit                  =  0;
-const int h11_alct_clct_match_hi_bit                  =  0;
-//
-// ALCT trigger only
-const int h11_alct_trig_only_header_number            = 11;
-const int h11_alct_trig_only_lo_bit                   =  1;
-const int h11_alct_trig_only_hi_bit                   =  1;
-//
-// CLCT trigger only
-const int h11_clct_trig_only_header_number            = 11;
-const int h11_clct_trig_only_lo_bit                   =  2;
-const int h11_clct_trig_only_hi_bit                   =  2;
-//
-// ALCT-CLCT0 bunch crossing difference
-const int h11_clct0_alct_bxn_diff_header_number       = 11;
-const int h11_clct0_alct_bxn_diff_lo_bit              =  3;
-const int h11_clct0_alct_bxn_diff_hi_bit              =  4;
-//
-// ALCT-CLCT1 bunch crossing difference
-const int h11_clct1_alct_bxn_diff_header_number       = 11;
-const int h11_clct1_alct_bxn_diff_lo_bit              =  5;
-const int h11_clct1_alct_bxn_diff_hi_bit              =  6;
-//
-// Location of ALCT in CLCT match window
-const int h11_alct_in_clct_match_window_header_number = 11;
-const int h11_alct_in_clct_match_window_lo_bit        =  7;
-const int h11_alct_in_clct_match_window_hi_bit        = 10;
-//
-// triad persistence
-const int h11_triad_persistence_header_number         = 11;
-const int h11_triad_persistence_lo_bit                = 11;
-const int h11_triad_persistence_hi_bit                = 14;
-//
-//-----------
-// header 12
-//-----------
-// MPC muon0 frame 0 LSBs
-const int h12_mpc0_frame0_lsbs_header_number = 12;
-const int h12_mpc0_frame0_lsbs_lo_bit        =  0;
-const int h12_mpc0_frame0_lsbs_hi_bit        = 14;
-//
-//-----------
-// header 13
-//-----------
-// MPC muon0 frame 1 LSBs
-const int h13_mpc0_frame1_lsbs_header_number = 13;
-const int h13_mpc0_frame1_lsbs_lo_bit        =  0;
-const int h13_mpc0_frame1_lsbs_hi_bit        = 14;
-//
-//-----------
-// header 14
-//-----------
-// MPC muon1 frame 0 LSBs
-const int h14_mpc1_frame0_lsbs_header_number = 14;
-const int h14_mpc1_frame0_lsbs_lo_bit        =  0;
-const int h14_mpc1_frame0_lsbs_hi_bit        = 14;
-//
-//-----------
-// header 15
-//-----------
-// MPC muon1 frame 1 LSBs
-const int h15_mpc1_frame1_lsbs_header_number = 15;
-const int h15_mpc1_frame1_lsbs_lo_bit        =  0;
-const int h15_mpc1_frame1_lsbs_hi_bit        = 14;
-//
-//-----------
-// header 16
-//-----------
-// MPC muon0 frame 0 MSBs
-const int h16_mpc0_frame0_msbs_header_number              = 16;
-const int h16_mpc0_frame0_msbs_lo_bit                     =  0;
-const int h16_mpc0_frame0_msbs_hi_bit                     =  0;
-//
-// MPC muon0 frame 1 MSBs
-const int h16_mpc0_frame1_msbs_header_number              = 16;
-const int h16_mpc0_frame1_msbs_lo_bit                     =  1;
-const int h16_mpc0_frame1_msbs_hi_bit                     =  1;
-//
-// MPC muon1 frame 0 MSBs
-const int h16_mpc1_frame0_msbs_header_number              = 16;
-const int h16_mpc1_frame0_msbs_lo_bit                     =  2;
-const int h16_mpc1_frame0_msbs_hi_bit                     =  2;
-//
-// MPC muon1 frame 1 MSBs
-const int h16_mpc1_frame1_msbs_header_number              = 16;
-const int h16_mpc1_frame1_msbs_lo_bit                     =  3;
-const int h16_mpc1_frame1_msbs_hi_bit                     =  3;
-//
-// MPC muon accept response
-const int h16_mpc_accept_header_number                    = 16;
-const int h16_mpc_accept_lo_bit                           =  4;
-const int h16_mpc_accept_hi_bit                           =  5;
-//
-// CLCT halfstrip pretrigger threshold
-const int h16_clct_halfstrip_pretrig_thresh_header_number = 16;
-const int h16_clct_halfstrip_pretrig_thresh_lo_bit        =  8;
-const int h16_clct_halfstrip_pretrig_thresh_hi_bit        = 10;
-//
-// CLCT distrip pretrigger threshold
-const int h16_clct_distrip_pretrig_thresh_header_number   = 16;
-const int h16_clct_distrip_pretrig_thresh_lo_bit          = 11;
-const int h16_clct_distrip_pretrig_thresh_hi_bit          = 13;
-//
-//-----------
-// header 17
-//-----------
-// Write buffer is ready
-const int h17_write_buffer_ready_header_number     = 17;
-const int h17_write_buffer_ready_lo_bit            =  0;
-const int h17_write_buffer_ready_hi_bit            =  0;
-//
-// Tbin address for pretrig
-const int h17_pretrig_tbin_header_number           = 17;
-const int h17_pretrig_tbin_lo_bit                  =  1;
-const int h17_pretrig_tbin_hi_bit                  =  5;
-//
-// write buffer address 
-const int h17_write_buffer_address_header_number   = 17;
-const int h17_write_buffer_address_lo_bit          =  6;
-const int h17_write_buffer_address_hi_bit          =  8;
-//
-// pretrig arrived, no buffer free
-const int h17_pretrig_no_free_buffer_header_number = 17;
-const int h17_pretrig_no_free_buffer_lo_bit        =  9;
-const int h17_pretrig_no_free_buffer_hi_bit        =  9;
-//
-// buffer full
-const int h17_buffer_full_header_number            = 17;
-const int h17_buffer_full_lo_bit                   = 10;
-const int h17_buffer_full_hi_bit                   = 10;
-//
-// buffer almost full
-const int h17_buffer_almost_full_header_number     = 17;
-const int h17_buffer_almost_full_lo_bit            = 11;
-const int h17_buffer_almost_full_hi_bit            = 11;
-//
-// buffer half full
-const int h17_buffer_half_full_header_number       = 17;
-const int h17_buffer_half_full_lo_bit              = 12;
-const int h17_buffer_half_full_hi_bit              = 12;
-//
-// buffer empty
-const int h17_buffer_empty_header_number           = 17;
-const int h17_buffer_empty_lo_bit                  = 13;
-const int h17_buffer_empty_hi_bit                  = 13;
-//
-//-----------
-// header 18
-//-----------
-// Number of buffers busy
-const int h18_nbuf_busy_header_number          = 18;
-const int h18_nbuf_busy_lo_bit                 =  0;
-const int h18_nbuf_busy_hi_bit                 =  3;
-//
-// List of busy buffers
-const int h18_buf_busy_header_number           = 18;
-const int h18_buf_busy_lo_bit                  =  4;
-const int h18_buf_busy_hi_bit                  = 11;
-//
-// L1A stack overflow
-const int h18_l1a_stack_overflow_header_number = 18;
-const int h18_l1a_stack_overflow_lo_bit        = 13;
-const int h18_l1a_stack_overflow_hi_bit        = 13;
-//
-//-----------
-// header 19
-//-----------
-// TMB response
-const int h19_tmb_trig_pulse_header_number         = 19;
-const int h19_tmb_trig_pulse_lo_bit                =  0;
-const int h19_tmb_trig_pulse_hi_bit                =  0;
-//
-// Only ALCT triggered
-const int h19_tmb_alct_only_header_number          = 19;
-const int h19_tmb_alct_only_lo_bit                 =  1;
-const int h19_tmb_alct_only_hi_bit                 =  1;
-//
-// Only CLCT triggered
-const int h19_tmb_clct_only_header_number          = 19;
-const int h19_tmb_clct_only_lo_bit                 =  2;
-const int h19_tmb_clct_only_hi_bit                 =  2;
-//
-// ALCT*CLCT triggered
-const int h19_tmb_match_header_number              = 19;
-const int h19_tmb_match_lo_bit                     =  3;
-const int h19_tmb_match_hi_bit                     =  3;
-//
-// Write buffer ready at pretrig
-const int h19_write_buffer_ready_header_number     = 19;
-const int h19_write_buffer_ready_lo_bit            =  4;
-const int h19_write_buffer_ready_hi_bit            =  4;
-//
-// write buffer either (ready -or- not required) at pretrig
-const int h19_write_buffer_available_header_number = 19;
-const int h19_write_buffer_available_lo_bit        =  5;
-const int h19_write_buffer_available_hi_bit        =  5;
-//
-// Tbin address at pretrig
-const int h19_write_tbin_address_header_number     = 19;
-const int h19_write_tbin_address_lo_bit            =  6;
-const int h19_write_tbin_address_hi_bit            = 10;
-//
-// Address of write buffer at pretrig
-const int h19_write_buffer_address_header_number   = 19;
-const int h19_write_buffer_address_lo_bit          = 11;
-const int h19_write_buffer_address_hi_bit          = 13;
-//
-//-----------
-// header 20
-//-----------
-// pretrig but no write buffer available
-const int h20_discard_no_write_buf_available_header_number = 20;
-const int h20_discard_no_write_buf_available_lo_bit        =  0;
-const int h20_discard_no_write_buf_available_hi_bit        =  3;
-//
-// invalid pattern after drift
-const int h20_discard_invalid_pattern_header_number        = 20;
-const int h20_discard_invalid_pattern_lo_bit               =  4;
-const int h20_discard_invalid_pattern_hi_bit               =  7;
-//
-// TMB rejected event
-const int h20_discard_tmb_reject_header_number             = 20;
-const int h20_discard_tmb_reject_lo_bit                    =  8;
-const int h20_discard_tmb_reject_hi_bit                    = 11;
-//
-// timeout with no TMB trig pulse
-const int h20_timeout_no_tmb_trig_pulse_header_number      = 20;
-const int h20_timeout_no_tmb_trig_pulse_lo_bit             = 12;
-const int h20_timeout_no_tmb_trig_pulse_hi_bit             = 12;
-//
-// timeout with no mpc_frame_ff
-const int h20_timeout_no_mpc_frame_header_number           = 20;
-const int h20_timeout_no_mpc_frame_lo_bit                  = 13;
-const int h20_timeout_no_mpc_frame_hi_bit                  = 13;
-//
-// timeout with no mpc_response_ff
-const int h20_timeout_no_mpc_response_header_number        = 20;
-const int h20_timeout_no_mpc_response_lo_bit               = 14;
-const int h20_timeout_no_mpc_response_hi_bit               = 14;
-//
-//-----------
-// header 21
-//-----------
-// setting of ALCT delay for match window
-const int h21_match_trig_alct_delay_header_number   = 21;
-const int h21_match_trig_alct_delay_lo_bit          =  0;
-const int h21_match_trig_alct_delay_hi_bit          =  3;
-//
-// setting of match window width
-const int h21_match_trig_window_width_header_number = 21;
-const int h21_match_trig_window_width_lo_bit        =  4;
-const int h21_match_trig_window_width_hi_bit        =  7;
-//
-// setting of MPC transmit delay
-const int h21_mpc_tx_delay_header_number            = 21;
-const int h21_mpc_tx_delay_lo_bit                   =  8;
-const int h21_mpc_tx_delay_hi_bit                   = 11;
-//
-//-----------
-// header 22
-//-----------
-// RPCs connected to this TMB
-const int h22_rpc_exist_header_number       = 22;
-const int h22_rpc_exist_lo_bit              =  0;
-const int h22_rpc_exist_hi_bit              =  1;
-//
-// RPCs included in readout
-const int h22_rpc_list_header_number        = 22;
-const int h22_rpc_list_lo_bit               =  2;
-const int h22_rpc_list_hi_bit               =  3;
-//
-// Number of RPCs in readout
-const int h22_nrpc_header_number            = 22;
-const int h22_nrpc_lo_bit                   =  4;
-const int h22_nrpc_hi_bit                   =  5;
-//
-// RPC readout enabled
-const int h22_rpc_read_enable_header_number = 22;
-const int h22_rpc_read_enable_lo_bit        =  6;
-const int h22_rpc_read_enable_hi_bit        =  6;
-//
-// Number of layers hit on layer trigger
-const int h22_nlayers_hit_header_number     = 22;
-const int h22_nlayers_hit_lo_bit            =  7;
-const int h22_nlayers_hit_hi_bit            =  9;
-//
-// Position of L1A in window
-const int h22_l1a_in_window_header_number   = 22;
-const int h22_l1a_in_window_lo_bit          = 10;
-const int h22_l1a_in_window_hi_bit          = 13;
-//
-//-----------
-// header 23
-//-----------
-// Board status
-const int h23_board_status_header_number = 23;
-const int h23_board_status_lo_bit        =  0;
-const int h23_board_status_hi_bit        = 14;
-//
-//-----------
-// header 24
-//-----------
-// seconds since last hard reset
-const int h24_time_since_hard_reset_header_number = 24;
-const int h24_time_since_hard_reset_lo_bit        =  0;
-const int h24_time_since_hard_reset_hi_bit        = 14;
-//
-//-----------
-// header 25
-//-----------
+const int h4_run_id_lo_bit   =9;
+const int h4_run_id_hi_bit   =12;
+
+// Fence queue overflow error
+const int h4_buf_q_ovf_err_lo_bit   =13;
+const int h4_buf_q_ovf_err_hi_bit   =13;
+
+// BXN sync error
+const int h4_sync_err_hdr_lo_bit   =14;
+const int h4_sync_err_hdr_hi_bit   =14;
+
+// Number of header words
+const int h5_r_nheaders_lo_bit   =0;
+const int h5_r_nheaders_hi_bit   =5;
+
+// Trigger type and fifo mode
+const int h5_fifo_mode_lo_bit   =6;
+const int h5_fifo_mode_hi_bit   =8;
+
+// Readout type: dump,nodump, full header, short header
+const int h5_readout_type_lo_bit   =9;
+const int h5_readout_type_hi_bit   =10;
+
+// L1A Pop type code: buffers, no buffers, clct/alct_only
+const int h5_l1a_type_lo_bit   =11;
+const int h5_l1a_type_hi_bit   =12;
+
+// Event has clct and rpc buffer data
+const int h5_r_has_buf_lo_bit   =13;
+const int h5_r_has_buf_hi_bit   =13;
+
+// Raw hits buffer was full at pretrigger
+const int h5_buf_stalled_hdr_lo_bit   =14;
+const int h5_buf_stalled_hdr_hi_bit   =14;
+
+// Board status summary
+const int h6_bd_status_lo_bit   =0;
+const int h6_bd_status_hi_bit   =14;
+
 // Firmware version date code
-const int h25_firmware_version_date_code_header_number = 25;
-const int h25_firmware_version_date_code_lo_bit        =  0;
-const int h25_firmware_version_date_code_hi_bit        = 13;
-//
-//
+const int h7_revcode_lo_bit   =0;
+const int h7_revcode_hi_bit   =14;
+
+
+// Full Header-mode words 8-to-EOB: Event Counters
+
+// CLCT Bunch Crossing number at pre-trig, 0-3563
+const int h8_r_bxn_counter_lo_bit   =0;
+const int h8_r_bxn_counter_hi_bit   =11;
+
+// TMB discarded clct0 from ME1A
+const int h8_r_tmb_clct0_discard_lo_bit   =12;
+const int h8_r_tmb_clct0_discard_hi_bit   =12;
+
+// TMB discarded clct1 from ME1A
+const int h8_r_tmb_clct1_discard_lo_bit   =13;
+const int h8_r_tmb_clct1_discard_hi_bit   =13;
+
+// Main DLL lost lock
+const int h8_clock_lock_lost_err_lo_bit   =14;
+const int h8_clock_lock_lost_err_hi_bit   =14;
+
+// CLCT pre-trigger counter, stop on ovf
+const int h9_r_pretrig_counter_lsbs_lo_bit   =0;
+const int h9_r_pretrig_counter_lsbs_hi_bit   =14;
+
+// CLCT pre-trigger counter
+const int h10_r_pretrig_counter_msbs_lo_bit   =0;
+const int h10_r_pretrig_counter_msbs_hi_bit   =14;
+
+// CLCT post-drift counter, stop on ovf
+const int h11_r_clct_counter_lsbs_lo_bit   =0;
+const int h11_r_clct_counter_lsbs_hi_bit   =14;
+
+// CLCT post-drift counter
+const int h12_r_clct_counter_msbs_lo_bit   =0;
+const int h12_r_clct_counter_msbs_hi_bit   =14;
+
+// TMB trigger counter, stop on ovf
+const int h13_r_trig_counter_lsbs_lo_bit   =0;
+const int h13_r_trig_counter_lsbs_hi_bit   =14;
+
+// TMB trigger counter
+const int h14_r_trig_counter_msbs_lo_bit   =0;
+const int h14_r_trig_counter_msbs_hi_bit   =14;
+
+// Counts ALCTs received from ALCT board, stop on ovf
+const int h15_r_alct_counter_lsbs_lo_bit   =0;
+const int h15_r_alct_counter_lsbs_hi_bit   =14;
+
+// Counts ALCTs received from ALCT board, stop on ovf
+const int h16_r_alct_counter_msbs_lo_bit   =0;
+const int h16_r_alct_counter_msbs_hi_bit   =14;
+
+// BX0s since last hard reset, stop on ovf
+const int h17_r_orbit_counter_lsbs_lo_bit   =0;
+const int h17_r_orbit_counter_lsbs_hi_bit   =14;
+
+// BX0s since last hard reset
+const int h18_r_orbit_counter_msbs_lo_bit   =0;
+const int h18_r_orbit_counter_msbs_hi_bit   =14;
+
+
+// CLCT Raw Hits Size
+
+// Number of CFEBs read out
+const int h19_r_ncfebs_lo_bit   =0;
+const int h19_r_ncfebs_hi_bit   =2;
+
+// Number of time bins per CFEB in dump
+const int h19_r_fifo_tbins_cfeb_lo_bit   =3;
+const int h19_r_fifo_tbins_cfeb_hi_bit   =7;
+
+// # Time bins before pretrigger;
+const int h19_fifo_pretrig_cfeb_lo_bit   =8;
+const int h19_fifo_pretrig_cfeb_hi_bit   =12;
+
+// Readout includes logic analyzer scope data
+const int h19_scp_auto_lo_bit   =13;
+const int h19_scp_auto_hi_bit   =13;
+
+// Readout includes minicope data
+const int h19_mini_read_enable_lo_bit   =14;
+const int h19_mini_read_enable_hi_bit   =14;
+
+
+// CLCT Configuration
+
+// Hits on pattern template pre-trigger threshold
+const int h20_hit_thresh_pretrig_lo_bit   =0;
+const int h20_hit_thresh_pretrig_hi_bit   =2;
+
+// Pattern shape ID pre-trigger threshold
+const int h20_pid_thresh_pretrig_lo_bit   =3;
+const int h20_pid_thresh_pretrig_hi_bit   =6;
+
+// Hits on pattern  post-drift  threshold
+const int h20_hit_thresh_postdrift_lo_bit   =7;
+const int h20_hit_thresh_postdrift_hi_bit   =9;
+
+// Pattern shape ID post-drift  threshold
+const int h20_pid_thresh_postdrift_lo_bit   =10;
+const int h20_pid_thresh_postdrift_hi_bit   =13;
+
+// CSC Staggering ON
+const int h20_stagger_hs_csc_lo_bit   =14;
+const int h20_stagger_hs_csc_hi_bit   =14;
+
+// CLCT Triad persistence
+const int h21_triad_persist_lo_bit   =0;
+const int h21_triad_persist_hi_bit   =3;
+
+// DMB pre-trigger threshold for active-feb
+const int h21_dmb_thresh_pretrig_lo_bit   =4;
+const int h21_dmb_thresh_pretrig_hi_bit   =6;
+
+// Delay ALCT for CLCT match window
+const int h21_alct_delay_lo_bit   =7;
+const int h21_alct_delay_hi_bit   =10;
+
+// CLCT match window width
+const int h21_clct_window_lo_bit   =11;
+const int h21_clct_window_hi_bit   =14;
+
+
+// CLCT Trigger Status
+
+// Trigger source vector
+const int h22_r_trig_source_vec_lsbs_lo_bit   =0;
+const int h22_r_trig_source_vec_lsbs_hi_bit   =8;
+
+// CSC layers hit on layer trigger after drift
+const int h22_r_layers_hit_lo_bit   =9;
+const int h22_r_layers_hit_hi_bit   =14;
+
+// Active CFEB list sent to DMB
+const int h23_active_feb_mux_lsbs_lo_bit   =0;
+const int h23_active_feb_mux_lsbs_hi_bit   =4;
+
+// CFEBs read out for this event
+const int h23_r_cfebs_read_lsbs_lo_bit   =5;
+const int h23_r_cfebs_read_lsbs_hi_bit   =9;
+
+// Position of l1a in window
+const int h23_r_l1a_match_win_lo_bit   =10;
+const int h23_r_l1a_match_win_hi_bit   =13;
+
+// Active CFEB list source, 0=pretrig, 1=tmb match
+const int h23_active_feb_src_lo_bit   =14;
+const int h23_active_feb_src_hi_bit   =14;
+
+
+// CLCT+ALCT Match Status
+
+// ALCT and CLCT matched in time, pushed on L1A stack
+const int h24_r_tmb_match_lo_bit   =0;
+const int h24_r_tmb_match_hi_bit   =0;
+
+// Only ALCT triggered, pushed on L1a stack
+const int h24_r_tmb_alct_only_lo_bit   =1;
+const int h24_r_tmb_alct_only_hi_bit   =1;
+
+// Only CLCT triggered, pushed on L1A stack
+const int h24_r_tmb_clct_only_lo_bit   =2;
+const int h24_r_tmb_clct_only_hi_bit   =2;
+
+// Location of alct in clct window, pushed on L1A stack
+const int h24_r_tmb_match_win_lo_bit   =3;
+const int h24_r_tmb_match_win_hi_bit   =6;
+
+// No ALCT
+const int h24_r_tmb_no_alct_lo_bit   =7;
+const int h24_r_tmb_no_alct_hi_bit   =7;
+
+// One ALCT
+const int h24_r_tmb_one_alct_lo_bit   =8;
+const int h24_r_tmb_one_alct_hi_bit   =8;
+
+// One CLCT
+const int h24_r_tmb_one_clct_lo_bit   =9;
+const int h24_r_tmb_one_clct_hi_bit   =9;
+
+// Two ALCTs
+const int h24_r_tmb_two_alct_lo_bit   =10;
+const int h24_r_tmb_two_alct_hi_bit   =10;
+
+// Two CLCTs
+const int h24_r_tmb_two_clct_lo_bit   =11;
+const int h24_r_tmb_two_clct_hi_bit   =11;
+
+// ALCT0 copied into ALCT1 to make 2nd LCT
+const int h24_r_tmb_dupe_alct_lo_bit   =12;
+const int h24_r_tmb_dupe_alct_hi_bit   =12;
+
+// CLCT0 copied into CLCT1 to make 2nd LCT
+const int h24_r_tmb_dupe_clct_lo_bit   =13;
+const int h24_r_tmb_dupe_clct_hi_bit   =13;
+
+// LCT1 has higher quality than LCT0
+const int h24_r_tmb_rank_err_lo_bit   =14;
+const int h24_r_tmb_rank_err_hi_bit   =14;
+
+
+// CLCT Trigger Data
+
+
+// CLCT0 after drift lsbs
+const int h25_r_clct0_xtmb_lsbs_lo_bit   =0;
+const int h25_r_clct0_xtmb_lsbs_hi_bit   =14;
+
+// CLCT1 after drift lsbs
+const int h26_r_clct1_xtmb_lsbs_lo_bit   =0;
+const int h26_r_clct1_xtmb_lsbs_hi_bit   =14;
+
+// CLCT0 after drift msbs
+const int h27_r_clct0_xtmb_msbs_lo_bit   =0;
+const int h27_r_clct0_xtmb_msbs_hi_bit   =0;
+
+// CLCT1 after drift msbs
+const int h27_r_clct1_xtmb_msbs_lo_bit   =1;
+const int h27_r_clct1_xtmb_msbs_hi_bit   =1;
+
+// CLCT0/1 common after drift msbs
+const int h27_r_clctc_xtmb_lo_bit   =2;
+const int h27_r_clctc_xtmb_hi_bit   =4;
+
+// CLCT0 had invalid pattern after drift delay
+const int h27_r_clct0_invp_lo_bit   =5;
+const int h27_r_clct0_invp_hi_bit   =5;
+
+// CLCT1 had invalid pattern after drift delay
+const int h27_r_clct1_invp_lo_bit   =6;
+const int h27_r_clct1_invp_hi_bit   =6;
+
+// 2nd CLCT busy, logic error indicator
+const int h27_r_clct1_busy_lo_bit   =7;
+const int h27_r_clct1_busy_hi_bit   =7;
+
+// CFEB RAM parity error, latched
+const int h27_perr_cfeb_ff_lsbs_lo_bit   =8;
+const int h27_perr_cfeb_ff_lsbs_hi_bit   =12;
+
+// GEM or RPC or Minicope RAM parity error, latched
+const int h27_perr_gem_or_rpc_or_mini_ff_lo_bit   =13;
+const int h27_perr_gem_or_rpc_or_mini_ff_hi_bit   =13;
+
+// Parity error summary,  latched
+const int h27_perr_ff_lo_bit   =14;
+const int h27_perr_ff_hi_bit   =14;
+
+
+// ALCT Trigger Data
+
+
+// ALCT0 valid pattern flag
+const int h28_r_alct0_valid_lo_bit   =0;
+const int h28_r_alct0_valid_hi_bit   =0;
+
+// ALCT0 quality
+const int h28_r_alct0_quality_lo_bit   =1;
+const int h28_r_alct0_quality_hi_bit   =2;
+
+// ALCT0 accelerator muon flag
+const int h28_r_alct0_amu_lo_bit   =3;
+const int h28_r_alct0_amu_hi_bit   =3;
+
+// ALCT0 key wire group
+const int h28_r_alct0_key_lo_bit   =4;
+const int h28_r_alct0_key_hi_bit   =10;
+
+// ALCT active_feb_flag position in pretrig window
+const int h28_r_alct_preClct_win_lo_bit   =11;
+const int h28_r_alct_preClct_win_hi_bit   =14;
+
+// ALCT1 valid pattern flag
+const int h29_r_alct1_valid_lo_bit   =0;
+const int h29_r_alct1_valid_hi_bit   =0;
+
+// ALCT1 quality
+const int h29_r_alct1_quality_lo_bit   =1;
+const int h29_r_alct1_quality_hi_bit   =2;
+
+// ALCT1 accelerator muon flag
+const int h29_r_alct1_amu_lo_bit   =3;
+const int h29_r_alct1_amu_hi_bit   =3;
+
+// ALCT1 key wire group
+const int h29_r_alct1_key_lo_bit   =4;
+const int h29_r_alct1_key_hi_bit   =10;
+
+// CLCT drift delay
+const int h29_drift_delay_lo_bit   =11;
+const int h29_drift_delay_hi_bit   =12;
+
+// Enable blocked bits in readout
+const int h29_bcb_read_enable_lo_bit   =13;
+const int h29_bcb_read_enable_hi_bit   =13;
+
+// Layer-mode trigger
+const int h29_hs_layer_trig_lo_bit   =14;
+const int h29_hs_layer_trig_hi_bit   =14;
+
+// ALCT0/1 bxn
+const int h30_r_alct_bxn_lo_bit   =0;
+const int h30_r_alct_bxn_hi_bit   =4;
+
+// ALCT trigger path ECC error code
+const int h30_r_alct_ecc_err_lo_bit   =5;
+const int h30_r_alct_ecc_err_hi_bit   =6;
+
+// CFEB[n] has at least 1 bad bit
+const int h30_cfeb_badbits_found_lsbs_lo_bit   =7;
+const int h30_cfeb_badbits_found_lsbs_hi_bit   =11;
+
+// A CFEB had bad bits that were blocked
+const int h30_cfeb_badbits_blocked_lo_bit   =12;
+const int h30_cfeb_badbits_blocked_hi_bit   =12;
+
+// ALCT FPGA configuration done
+const int h30_alct_cfg_done_lo_bit   =13;
+const int h30_alct_cfg_done_hi_bit   =13;
+
+// ALCT bx0 and CLCT bx0 match
+const int h30_bx0_match_lo_bit   =14;
+const int h30_bx0_match_hi_bit   =14;
+
+
+// MPC Frames
+
+// MPC muon 0 frame 0 LSBs
+const int h31_r_mpc0_frame0_ff_lsbs_lo_bit   =0;
+const int h31_r_mpc0_frame0_ff_lsbs_hi_bit   =14;
+
+// MPC muon 0 frame 1 LSBs
+const int h32_r_mpc0_frame1_ff_lsbs_lo_bit   =0;
+const int h32_r_mpc0_frame1_ff_lsbs_hi_bit   =14;
+
+// MPC muon 1 frame 0 LSBs
+const int h33_r_mpc1_frame0_ff_lsbs_lo_bit   =0;
+const int h33_r_mpc1_frame0_ff_lsbs_hi_bit   =14;
+
+// MPC muon 1 frame 1 LSBs
+const int h34_r_mpc1_frame1_ff_lsbs_lo_bit   =0;
+const int h34_r_mpc1_frame1_ff_lsbs_hi_bit   =14;
+
+// MPC muon 0 frame 0 MSBS
+const int h35_r_mpc0_frame0_ff_msbs_lo_bit   =0;
+const int h35_r_mpc0_frame0_ff_msbs_hi_bit   =0;
+
+// MPC muon 0 frame 1 MSBS
+const int h35_r_mpc0_frame1_ff_msbs_lo_bit   =1;
+const int h35_r_mpc0_frame1_ff_msbs_hi_bit   =1;
+
+// MPC muon 1 frame 0 MSBS
+const int h35_r_mpc1_frame0_ff_msbs_lo_bit   =2;
+const int h35_r_mpc1_frame0_ff_msbs_hi_bit   =2;
+
+// MPC muon 1 frame 1 MSBS
+const int h35_r_mpc1_frame1_ff_msbs_lo_bit   =3;
+const int h35_r_mpc1_frame1_ff_msbs_hi_bit   =3;
+
+// MPC transmit delay
+const int h35_mpc_tx_delay_lo_bit   =4;
+const int h35_mpc_tx_delay_hi_bit   =7;
+
+const int h35_r_mpc_accept_lo_bit   =8;
+const int h35_r_mpc_accept_hi_bit   =9;
+
+// CFEBs enabled for triggering
+const int h35_cfeb_en_lsbs_lo_bit   =10;
+const int h35_cfeb_en_lsbs_hi_bit   =14;
+
+// RPC/GEM Configuration
+
+//RPC
+// RPCs included in read out
+const int h36_rd_list_rpc_lo_bit   =0;
+const int h36_rd_list_rpc_hi_bit   =1;
+
+// Number of RPCs in readout, 0,1,2, 0 if head-only event
+const int h36_r_nrpcs_read_lo_bit   =2;
+const int h36_r_nrpcs_read_hi_bit   =3;
+
+// RPC readout enabled
+const int h36_rpc_read_enable_lo_bit   =4;
+const int h36_rpc_read_enable_hi_bit   =4;
+
+// Number RPC FIFO time bins to read out
+const int h36_fifo_tbins_rpc_lo_bit   =5;
+const int h36_fifo_tbins_rpc_hi_bit   =9;
+
+// Number RPC FIFO time bins before pretrigger
+const int h36_fifo_pretrig_rpc_lo_bit   =10;
+const int h36_fifo_pretrig_rpc_hi_bit   =14;
+
+//GEM
+// GEM zero-suppression enabled
+const int h36_gem_zero_suppress_lo_bit   =0;
+const int h36_gem_zero_suppress_hi_bit   =0;
+
+// GEM readout enabled
+const int h36_gem_read_enable_lo_bit   =4;
+const int h36_gem_read_enable_hi_bit   =4;
+
+// Number GEM FIFO time bins to read out
+const int h36_fifo_tbins_gem_lo_bit   =5;
+const int h36_fifo_tbins_gem_hi_bit   =9;
+
+// Number GEM FIFO time bins before pretrigger
+const int h36_fifo_pretrig_gem_lo_bit   =10;
+const int h36_fifo_pretrig_gem_hi_bit   =14;
+
+// Buffer Status
+
+// Buffer RAM write address at pretrigger
+const int h37_r_wr_buf_adr_lo_bit   =0;
+const int h37_r_wr_buf_adr_hi_bit   =10;
+
+// Write buffer was ready at pretrig
+const int h37_r_wr_buf_ready_lo_bit   =11;
+const int h37_r_wr_buf_ready_hi_bit   =11;
+
+// Write buffer ready now
+const int h37_wr_buf_ready_lo_bit   =12;
+const int h37_wr_buf_ready_hi_bit   =12;
+
+// All raw hits ram in use, ram writing must stop
+const int h37_buf_q_full_lo_bit   =13;
+const int h37_buf_q_full_hi_bit   =13;
+
+// No fences remain on buffer stack
+const int h37_buf_q_empty_lo_bit   =14;
+const int h37_buf_q_empty_hi_bit   =14;
+
+// Distance to 1st fence address at pretrigger
+const int h38_r_buf_fence_dist_lo_bit   =0;
+const int h38_r_buf_fence_dist_hi_bit   =10;
+
+// Tried to push when stack full
+const int h38_buf_q_ovf_err_lo_bit   =11;
+const int h38_buf_q_ovf_err_hi_bit   =11;
+
+// Tried to pop when stack empty
+const int h38_buf_q_udf_err_lo_bit   =12;
+const int h38_buf_q_udf_err_hi_bit   =12;
+
+// Fence adr popped from stack doesnt match rls adr
+const int h38_buf_q_adr_err_lo_bit   =13;
+const int h38_buf_q_adr_err_hi_bit   =13;
+
+// Buffer write pointer hit a fence and stalled
+const int h38_buf_stalled_once_lo_bit   =14;
+const int h38_buf_stalled_once_hi_bit   =14;
+
+// Spare Frames
+
+// Number of fences in fence RAM currently
+const int h39_buf_fence_cnt_lo_bit   =0;
+const int h39_buf_fence_cnt_hi_bit   =11;
+
+// 1=Reverse staggered CSC, non-me1
+const int h39_reverse_hs_csc_lo_bit   =12;
+const int h39_reverse_hs_csc_hi_bit   =12;
+
+// 1=ME1A hstrip order reversed
+const int h39_reverse_hs_me1a_lo_bit   =13;
+const int h39_reverse_hs_me1a_hi_bit   =13;
+
+// 1=ME1B hstrip order reversed
+const int h39_reverse_hs_me1b_lo_bit   =14;
+const int h39_reverse_hs_me1b_hi_bit   =14;
+
+// Hdr23 Active CFEB list sent to DMB
+const int h40_active_feb_mux_msbs_lo_bit   =0;
+const int h40_active_feb_mux_msbs_hi_bit   =1;
+
+// Hdr23 CFEBs read out for this event
+const int h40_r_cfebs_read_msbs_lo_bit   =2;
+const int h40_r_cfebs_read_msbs_hi_bit   =3;
+
+// Hdr27 CFEB RAM parity error, latched
+const int h40_perr_cfeb_ff_msbs_lo_bit   =4;
+const int h40_perr_cfeb_ff_msbs_hi_bit   =5;
+
+// Hdr30 CFEB[n] has at least 1 bad bit
+const int h40_cfeb_badbits_found_msbs_lo_bit   =6;
+const int h40_cfeb_badbits_found_msbs_hi_bit   =7;
+
+// Hdr35 CFEBs enabled for triggering
+const int h40_cfeb_en_msbs_lo_bit   =8;
+const int h40_cfeb_en_msbs_hi_bit   =9;
+
+// Current fence is peak number of fences in RAM
+const int h40_buf_fence_cnt_is_peak_lo_bit   =10;
+const int h40_buf_fence_cnt_is_peak_hi_bit   =10;
+
+// TMB has 7 DCFEBs so hdr40_[10:1] are active
+//chamber_is_me11 corresponds to (MXCFEB==7)
+const int h40_chamber_is_me11_lo_bit   =11;
+const int h40_chamber_is_me11_hi_bit   =11;
+
+// Pre-trigger was ME1A/ME1B
+const int h40_r_trig_source_vec_msbs_lo_bit   =12;
+const int h40_r_trig_source_vec_msbs_hi_bit   =13;
+
+// TMB trig pulse coincident with rtmb_push
+const int h40_r_tmb_trig_pulse_lo_bit   =14;
+const int h40_r_tmb_trig_pulse_hi_bit   =14;
+
+// Allow ALCT-only  tmb-matching trigger
+const int h41_tmb_allow_alct_lo_bit   =0;
+const int h41_tmb_allow_alct_hi_bit   =0;
+
+// Allow CLCT-only  tmb-matching trigger
+const int h41_tmb_allow_clct_lo_bit   =1;
+const int h41_tmb_allow_clct_hi_bit   =1;
+
+// Allow Match-only tmb-matching trigger
+const int h41_tmb_allow_match_lo_bit   =2;
+const int h41_tmb_allow_match_hi_bit   =2;
+
+// Allow ALCT-only  tmb-matching readout only
+const int h41_tmb_allow_alct_ro_lo_bit   =3;
+const int h41_tmb_allow_alct_ro_hi_bit   =3;
+
+// Allow CLCT-only  tmb-matching readout only
+const int h41_tmb_allow_clct_ro_lo_bit   =4;
+const int h41_tmb_allow_clct_ro_hi_bit   =4;
+
+// Allow Match-only tmb-matching readout only
+const int h41_tmb_allow_match_ro_lo_bit   =5;
+const int h41_tmb_allow_match_ro_hi_bit   =5;
+
+// Only ALCT triggered, non-triggering readout
+const int h41_r_tmb_alct_only_ro_lo_bit   =6;
+const int h41_r_tmb_alct_only_ro_hi_bit   =6;
+
+// Only CLCT triggered, non-triggering readout
+const int h41_r_tmb_clct_only_ro_lo_bit   =7;
+const int h41_r_tmb_clct_only_ro_hi_bit   =7;
+
+// ALCT and CLCT matched in time, non-triggering readout
+const int h41_r_tmb_match_ro_lo_bit   =8;
+const int h41_r_tmb_match_ro_hi_bit   =8;
+
+// Triggering readout event
+const int h41_r_tmb_trig_keep_lo_bit = 9;
+const int h41_r_tmb_trig_keep_hi_bit = 9;
+
+// Non-triggering readout event
+const int h41_r_tmb_non_trig_keep_lo_bit   =10;
+const int h41_r_tmb_non_trig_keep_hi_bit   =10;
+
+// Layer pre-trigger threshold
+const int h41_lyr_thresh_pretrig_lo_bit   =11;
+const int h41_lyr_thresh_pretrig_hi_bit   =13;
+
+// Layer trigger mode enabled
+const int h41_layer_trig_en_lo_bit   =14;
+const int h41_layer_trig_en_hi_bit   =14;
+
 /////////////////////////////////////////////////////////////////////////////
 // The following stuff should be deprecated
 /////////////////////////////////////////////////////////////////////////////

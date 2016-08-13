@@ -491,7 +491,6 @@ public:
   /// default is 0.1seconds
   void TMBRawhits(); 
   void ResetRAMAddress();
-  inline int GetAlctInClctMatchWindow() { return h11_alct_in_clct_match_window_ ; }
   void PrintTMBRawHits();
   //
   //
@@ -4057,220 +4056,164 @@ private:
   //*******************************************************************
   // TMB Raw Hits header words
   //*******************************************************************
-  //-----------
-  // header 0
-  //-----------
-  int h0_beginning_of_cathode_ ;
-  int h0_marker_6_             ;
-  //
-  //-----------
-  // header 1
-  //-----------
-  int h1_nTbins_per_cfeb_ ;
-  int h1_cfebs_read_      ;
-  //
-  // fifo mode
-  // 0 = no raw hits, full header (if buffer was available at pretrigger)
-  // 1 = all 5 CFEBs raw hits, full header (if buffer was available at pretrigger)
-  // 2 = Local raw hits, full header (if buffer was available at pretrigger)
-  // 3 = no raw hits, short header
-  // 4 = no raw hits, no header
-  int h1_fifo_mode_       ;
-  //
-  //-----------
-  // header 2
-  //-----------
-  int h2_l1a_counter_ ;
-  int h2_csc_id_      ;
-  int h2_board_id_    ;
-  //
-  // L1A pop type mode:  
-  // 0 = Normal CLCT trigger with buffer data and L1A window match
-  // 1 = ALCT-only trigger, no data buffers
-  // 2 = L1A-only, no matching TMB trigger, no buffer data
-  // 3 = TMB triggered, no L1A-window match, event has buffer data
-  int h2_l1a_type_    ;
-  //
-  //-----------
-  // header 3
-  //-----------
-  int h3_bxn_counter_   ;
-  //
-  // record type: 
-  //   0 = rawhits no   , header full
-  //   1 = rawhits full , header full
-  //   2 = rawhits local, header full
-  //   3 = rawhits no   , header short (no buffer was available at pretrigger)
-  int h3_record_type_   ;
-  int h3_scope_in_data_ ;
-  //
-  //-----------
-  // header 4
-  //-----------
-  int h4_nheader_words_   ;
-  int h4_nCFEBs_read_     ;
-  int h4_has_buffer_data_ ;
-  int h4_fifo_pretrig_    ;
-  //
-  //-----------
-  // header 5
-  //-----------
-  int h5_l1a_at_pretrig_                   ;
-  int h5_trigger_source_vector_            ;
-  int h5_trigger_source_halfstrip_distrip_ ;
-  //
-  //-----------
-  // header 6
-  //-----------
-  int h6_aff_to_dmb_  ;
-  int h6_cfeb_exists_ ;
-  int h6_run_info_    ;
-  //
-  //-----------
-  // header 7
-  //-----------
-  int h7_bxn_at_clct_pretrig_ ;
-  int h7_sync_err_            ;
-  //
-  //-----------
-  // header 8
-  //-----------
-  int h8_clct0_lsbs_ ;
-  //
-  //-----------
-  // header 9
-  //-----------
-  int h9_clct1_lsbs_ ;
-  //
-  //-----------
-  // header 10
-  //-----------
-  int h10_clct0_msbs_            ;
-  int h10_clct1_msbs_            ;
-  int h10_clct0_invalid_pattern_ ;
-  //
-  //-----------
-  // header 11
-  //-----------
-  int h11_alct_clct_match_           ;
-  int h11_alct_trig_only_            ;
-  int h11_clct_trig_only_            ;
-  int h11_clct0_alct_bxn_diff_       ;
-  int h11_clct1_alct_bxn_diff_       ;
-  int h11_alct_in_clct_match_window_ ;
-  int h11_triad_persistence_         ;
-  //
-  //-----------
-  // header 12
-  //-----------
-  int h12_mpc0_frame0_lsbs_ ;
-  //
-  //-----------
-  // header 13
-  //-----------
-  int h13_mpc0_frame1_lsbs_ ;
-  //
-  //-----------
-  // header 14
-  //-----------
-  int h14_mpc1_frame0_lsbs_ ;
-  //
-  //-----------
-  // header 15
-  //-----------
-  int h15_mpc1_frame1_lsbs_ ;
-  //
-  //-----------
-  // header 16
-  //-----------
-  int h16_mpc0_frame0_msbs_              ;
-  int h16_mpc0_frame1_msbs_              ;
-  int h16_mpc1_frame0_msbs_              ;
-  int h16_mpc1_frame1_msbs_              ;
-  int h16_mpc_accept_                    ;
-  int h16_clct_halfstrip_pretrig_thresh_ ;
-  int h16_clct_distrip_pretrig_thresh_   ;
-  //
-  //-----------
-  // header 17
-  //-----------
-  int h17_write_buffer_ready_     ;
-  int h17_pretrig_tbin_           ;
-  int h17_write_buffer_address_   ;
-  int h17_pretrig_no_free_buffer_ ;
-  int h17_buffer_full_            ;
-  int h17_buffer_almost_full_     ;
-  int h17_buffer_half_full_       ;
-  int h17_buffer_empty_           ;
-  //
-  //-----------
-  // header 18
-  //-----------
-  int h18_nbuf_busy_          ;
-  int h18_buf_busy_           ;
-  int h18_l1a_stack_overflow_ ;
-  //
-  //-----------
-  // header 19
-  //-----------
-  int h19_tmb_trig_pulse_         ;
-  int h19_tmb_alct_only_          ;
-  int h19_tmb_clct_only_          ;
-  int h19_tmb_match_              ;
-  int h19_write_buffer_ready_     ;
-  int h19_write_buffer_available_ ;
-  int h19_write_tbin_address_     ;
-  int h19_write_buffer_address_   ;
-  //
-  //-----------
-  // header 20
-  //-----------
-  int h20_discard_no_write_buf_available_ ;
-  int h20_discard_invalid_pattern_        ;
-  int h20_discard_tmb_reject_             ;
-  int h20_timeout_no_tmb_trig_pulse_      ;
-  int h20_timeout_no_mpc_frame_           ;
-  int h20_timeout_no_mpc_response_        ;
-  //
-  //-----------
-  // header 21
-  //-----------
-  int h21_match_trig_alct_delay_   ;
-  int h21_match_trig_window_width_ ;
-  int h21_mpc_tx_delay_            ;
-  //
-  //-----------
-  // header 22
-  //-----------
-  int h22_rpc_exist_       ;
-  int h22_rpc_list_        ;
-  int h22_nrpc_            ;
-  int h22_rpc_read_enable_ ;
-  int h22_nlayers_hit_     ;
-  int h22_l1a_in_window_   ;
-  //
-  //-----------
-  // header 23
-  //-----------
-  int h23_board_status_ ;
-  //
-  //-----------
-  // header 24
-  //-----------
-  int h24_time_since_hard_reset_ ;
-  //
-  //-----------
-  // header 25
-  //-----------
-  int h25_firmware_version_date_code_ ;
-  //
+  //number following h is the number of the header. for example, h1=header 01
+
+  int h0_beginning_of_cathode_;
+  int h1_r_l1a_bxn_win_;
+  int h2_r_l1a_cnt_win_;
+  int h3_readout_counter_;
+  int h4_board_id_;
+  int h4_csc_id_;
+  int h4_run_id_;
+  int h4_buf_q_ovf_err_;
+  int h4_sync_err_hdr_;
+  int h5_r_nheaders_;
+  int h5_fifo_mode_;
+  int h5_readout_type_;
+  int h5_l1a_type_;
+  int h5_r_has_buf_;
+  int h5_buf_stalled_hdr_;
+  int h6_bd_status_;
+  int h7_revcode_;
+  int h8_r_bxn_counter_;
+  int h8_r_tmb_clct0_discard_;
+  int h8_r_tmb_clct1_discard_;
+  int h8_clock_lock_lost_err_;
+  int h9_r_pretrig_counter_lsbs_;
+  int h10_r_pretrig_counter_msbs_;
+  int h11_r_clct_counter_lsbs_;
+  int h12_r_clct_counter_msbs_;
+  int h13_r_trig_counter_lsbs_;
+  int h14_r_trig_counter_msbs_;
+  int h15_r_alct_counter_lsbs_;
+  int h16_r_alct_counter_msbs_;
+  int h17_r_orbit_counter_lsbs_;
+  int h18_r_orbit_counter_msbs_;
+  int h19_r_ncfebs_;
+  int h19_r_fifo_tbins_cfeb_;
+  int h19_fifo_pretrig_cfeb_;
+  int h19_scp_auto_;
+  int h19_mini_read_enable_;
+  int h20_hit_thresh_pretrig_;
+  int h20_pid_thresh_pretrig_;
+  int h20_hit_thresh_postdrift_;
+  int h20_pid_thresh_postdrift_;
+  int h20_stagger_hs_csc_;
+  int h21_triad_persist_;
+  int h21_dmb_thresh_pretrig_;
+  int h21_alct_delay_;
+  int h21_clct_window_;
+  int h22_r_trig_source_vec_lsbs_;
+  int h22_r_layers_hit_;
+  int h23_active_feb_mux_lsbs_;
+  int h23_r_cfebs_read_lsbs_;
+  int h23_r_l1a_match_win_;
+  int h23_active_feb_src_;
+  int h24_r_tmb_match_;
+  int h24_r_tmb_alct_only_;
+  int h24_r_tmb_clct_only_;
+  int h24_r_tmb_match_win_;
+  int h24_r_tmb_no_alct_;
+  int h24_r_tmb_one_alct_;
+  int h24_r_tmb_one_clct_;
+  int h24_r_tmb_two_alct_;
+  int h24_r_tmb_two_clct_;
+  int h24_r_tmb_dupe_alct_;
+  int h24_r_tmb_dupe_clct_;
+  int h24_r_tmb_rank_err_;
+  int h25_r_clct0_xtmb_lsbs_;
+  int h26_r_clct1_xtmb_lsbs_;
+  int h27_r_clct0_xtmb_msbs_;
+  int h27_r_clct1_xtmb_msbs_;
+  int h27_r_clctc_xtmb_;
+  int h27_r_clct0_invp_;
+  int h27_r_clct1_invp_;
+  int h27_r_clct1_busy_;
+  int h27_perr_cfeb_ff_lsbs_;
+  int h27_perr_gem_or_rpc_or_mini_ff_;
+  int h27_perr_ff_;
+  int h28_r_alct0_valid_;
+  int h28_r_alct0_quality_;
+  int h28_r_alct0_amu_;
+  int h28_r_alct0_key_;
+  int h28_r_alct_preClct_win_;
+  int h29_r_alct1_valid_;
+  int h29_r_alct1_quality_;
+  int h29_r_alct1_amu_;
+  int h29_r_alct1_key_;
+  int h29_drift_delay_;
+  int h29_bcb_read_enable_;
+  int h29_hs_layer_trig_;
+  int h30_r_alct_bxn_;
+  int h30_r_alct_ecc_err_;
+  int h30_cfeb_badbits_found_lsbs_;
+  int h30_cfeb_badbits_blocked_;
+  int h30_alct_cfg_done_;
+  int h30_bx0_match_;
+  int h31_r_mpc0_frame0_ff_lsbs_;
+  int h32_r_mpc0_frame1_ff_lsbs_;
+  int h33_r_mpc1_frame0_ff_lsbs_;
+  int h34_r_mpc1_frame1_ff_lsbs_;
+  int h35_r_mpc0_frame0_ff_msbs_;
+  int h35_r_mpc0_frame1_ff_msbs_;
+  int h35_r_mpc1_frame0_ff_msbs_;
+  int h35_r_mpc1_frame1_ff_msbs_;
+  int h35_mpc_tx_delay_;
+  int h35_r_mpc_accept_;
+  int h35_cfeb_en_lsbs_;
+  int h36_rd_list_rpc_;
+  int h36_r_nrpcs_read_;
+  int h36_rpc_read_enable_;
+  int h36_fifo_tbins_rpc_;
+  int h36_fifo_pretrig_rpc_;
+  int h36_gem_zero_suppress_;
+  int h36_gem_read_enable_;
+  int h36_fifo_tbins_gem_;
+  int h36_fifo_pretrig_gem_;
+  int h37_r_wr_buf_adr_;
+  int h37_r_wr_buf_ready_;
+  int h37_wr_buf_ready_;
+  int h37_buf_q_full_;
+  int h37_buf_q_empty_;
+  int h38_r_buf_fence_dist_;
+  int h38_buf_q_ovf_err_;
+  int h38_buf_q_udf_err_;
+  int h38_buf_q_adr_err_;
+  int h38_buf_stalled_once_;
+  int h39_buf_fence_cnt_;
+  int h39_reverse_hs_csc_;
+  int h39_reverse_hs_me1a_;
+  int h39_reverse_hs_me1b_;
+  int h40_active_feb_mux_msbs_;
+  int h40_r_cfebs_read_msbs_;
+  int h40_perr_cfeb_ff_msbs_;
+  int h40_cfeb_badbits_found_msbs_;
+  int h40_cfeb_en_msbs_;
+  int h40_buf_fence_cnt_is_peak_;
+  int h40_chamber_is_me11_;
+  int h40_r_trig_source_vec_msbs_;
+  int h40_r_tmb_trig_pulse_;
+  int h41_tmb_allow_alct_;
+  int h41_tmb_allow_clct_;
+  int h41_tmb_allow_match_;
+  int h41_tmb_allow_alct_ro_;
+  int h41_tmb_allow_clct_ro_;
+  int h41_tmb_allow_match_ro_;
+  int h41_r_tmb_alct_only_ro_;
+  int h41_r_tmb_clct_only_ro_;
+  int h41_r_tmb_match_ro_;
+  int h41_r_tmb_trig_keep_;
+  int h41_r_tmb_non_trig_keep_;
+  int h41_lyr_thresh_pretrig_;
+  int h41_layer_trig_en_;
+
   int hardware_version_;
   int gem_enabled_;
-};
+  }; // class TMB
 
   } // namespace emu::pc
 } // namespace emu
 
 #endif
 
- 
+
