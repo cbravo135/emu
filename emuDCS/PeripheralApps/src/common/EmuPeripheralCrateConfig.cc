@@ -9717,19 +9717,19 @@ void EmuPeripheralCrateConfig::TMBStatus(xgi::Input * in, xgi::Output * out )
       *out << std::endl;
       *out << std::endl;
       *out << " ->GEM GTX optical input control and monitoring: " << std::endl;
-      *out << "    Input enable [GEMs 0]: \t\t[ ";
+      *out << "    Input enable [GEMs 0-3]: \t\t[ ";
       for (int i=0; i < number_of_gems; ++i){ *out << thisTMB->GetReadGemGtxRxEnable(i) << " "; }
       *out << "]" << std::endl;
-      *out << "    Input reset [GEMs 0]: \t\t[ ";
+      *out << "    Input reset [GEMs 0-3]: \t\t[ ";
       for (int i=0; i < number_of_gems; ++i) { *out << thisTMB->GetReadGemGtxRxReset(i) << " "; }
       *out << "]" << std::endl;
-      *out << "    PRBS test enable [GEMs 0]: \t\t[ ";
+      *out << "    PRBS test enable [GEMs 0-3]: \t\t[ ";
       for (int i=0; i < number_of_gems; ++i){ *out << thisTMB->GetReadGemGtxRxPrbsTestEnable(i) << " "; }
       *out << "]" << std::endl;
-      *out << "    Input ready [GEMs 0]: \t\t[ ";
+      *out << "    Input ready [GEMs 0-3]: \t\t[ ";
       for (int i=0; i < number_of_gems; ++i){ *out << thisTMB->GetReadGemGtxRxReady(i) << " "; }
       *out << "]" << std::endl;
-      *out << "    Link good [GEMs 0]: \t\t[ ";
+      *out << "    Link good [GEMs 0-3]: \t\t[ ";
       for (int i=0; i < number_of_gems; ++i) {
         int read_gtx_rx_link_good_temp = thisTMB->GetReadGemGtxRxLinkGood(i);
         if (read_gtx_rx_link_good_temp == 1)
@@ -9740,10 +9740,10 @@ void EmuPeripheralCrateConfig::TMBStatus(xgi::Input * in, xgi::Output * out )
         *out << cgicc::span();
       }
       *out << "]" << std::endl;
-      *out << "    Link had errors [GEMs 0]: \t\t[ ";
+      *out << "    Link had errors [GEMs 0-3]: \t\t[ ";
       for (int i=0; i < number_of_gems; ++i){ *out << thisTMB->GetReadGemGtxRxLinkHadError(i) << " "; }
       *out << "]" << std::endl;
-      *out << "    Link unstable [GEMs 0]: \t\t[ ";
+      *out << "    Link unstable [GEMs 0-3]: \t\t[ ";
       for (int i=0; i < number_of_gems; ++i) {
         int read_gtx_rx_link_good_temp = thisTMB->GetReadGemGtxRxLinkBad(i);
         if (read_gtx_rx_link_good_temp == 1){
@@ -9755,7 +9755,7 @@ void EmuPeripheralCrateConfig::TMBStatus(xgi::Input * in, xgi::Output * out )
         *out << cgicc::span();
       }
       *out << "]" << std::endl;
-      *out << "    Link error count [GEMs 0]: \t\t[ ";
+      *out << "    Link error count [GEMs 0-3]: \t\t[ ";
       for (int i=0; i < number_of_gems; ++i){ *out << thisTMB->GetReadGemGtxRxErrorCount(i) << " "; }
       *out << "]" << std::endl;
     }//if (thisTMB->GetGemEnabled())
