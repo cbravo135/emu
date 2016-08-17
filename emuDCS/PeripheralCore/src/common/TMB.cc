@@ -3334,7 +3334,9 @@ bool TMB::ReadTMBRawhits_(){
   (*MyOutput_) << "TMB Raw Data Packet Dump" << std::endl; 
   (*MyOutput_) << std::endl; 
   for(int i=0; i<tmb_data_.size(); i++) {
-    (*MyOutput_) << "Address = " << std::dec << std::setw(3) << i << ", data = " << std::hex << std::setw(4) << tmb_data_[i].to_ulong() << std::endl;
+    (*MyOutput_) << " -> Frame = "  << std::setfill(' ') << std::dec << std::setw(3) << i
+                 <<   ", Data = 0x" << std::setfill('0') << std::hex << std::setw(4) << tmb_data_[i].to_ulong()
+                 << std::endl;
   }
   //
   return dataOK;
