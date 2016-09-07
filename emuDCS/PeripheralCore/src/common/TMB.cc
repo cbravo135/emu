@@ -3707,7 +3707,8 @@ void TMB::DecodeTMBRawHitWord_(int address) {
         h19_r_ncfebs_ = ExtractValueFromData(data, h19_r_ncfebs_lo_bit, h19_r_ncfebs_hi_bit);
         h19_r_fifo_tbins_cfeb_ = ExtractValueFromData(data, h19_r_fifo_tbins_cfeb_lo_bit, h19_r_fifo_tbins_cfeb_hi_bit);
         h19_fifo_pretrig_cfeb_ = ExtractValueFromData(data, h19_fifo_pretrig_cfeb_lo_bit, h19_fifo_pretrig_cfeb_hi_bit);
-        h19_scp_auto_ = ExtractValueFromData(data, h19_scp_auto_lo_bit, h19_scp_auto_hi_bit);
+        h19_scp_auto_          = ExtractValueFromData(data, h19_scp_auto_lo_bit, h19_scp_auto_hi_bit);
+        h19_mini_read_enable_  = ExtractValueFromData(data, h19_mini_read_enable_lo_bit, h19_mini_read_enable_hi_bit);
     } else if (address == 20) {
         h20_hit_thresh_pretrig_   = ExtractValueFromData(data , h20_hit_thresh_pretrig_lo_bit   , h20_hit_thresh_pretrig_hi_bit);
         h20_pid_thresh_pretrig_   = ExtractValueFromData(data , h20_pid_thresh_pretrig_lo_bit   , h20_pid_thresh_pretrig_hi_bit);
