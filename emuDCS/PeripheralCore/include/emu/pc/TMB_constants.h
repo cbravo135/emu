@@ -3204,25 +3204,25 @@ const int gem_zero_supress_enable_default = 0;
 // 0X312 ADR_GEM_CFG
 //-----------------------------------------------------------------------------
 //
-const int gemA_rxd_int_delay_vmereg     = gem_cfg_adr;
-const int gemA_rxd_int_delay_bitlo      = 0;
-const int gemA_rxd_int_delay_bithi      = 3;
-const int gemA_rxd_int_delay_default    = 0;
+const int gemA_rxd_int_delay_vmereg          = gem_cfg_adr;
+const int gemA_rxd_int_delay_bitlo           = 0;
+const int gemA_rxd_int_delay_bithi           = 3;
+const int gemA_rxd_int_delay_default         = 0;
 
-const int gemB_rxd_int_delay_vmereg     = gem_cfg_adr;
-const int gemB_rxd_int_delay_bitlo      = 0;
-const int gemB_rxd_int_delay_bithi      = 0;
-const int gemB_rxd_int_delay_default    = 0;
+const int gemB_rxd_int_delay_vmereg          = gem_cfg_adr;
+const int gemB_rxd_int_delay_bitlo           = 0;
+const int gemB_rxd_int_delay_bithi           = 0;
+const int gemB_rxd_int_delay_default         = 0;
 
 const int decouple_gem_rxd_int_delay_vmereg  = gem_cfg_adr;
 const int decouple_gem_rxd_int_delay_bitlo   = 0;
 const int decouple_gem_rxd_int_delay_bithi   = 0;
 const int decouple_gem_rxd_int_delay_default = 0;
 
-const int gem_fiber_exists_vmereg            = gem_cfg_adr;
-const int gem_fiber_exists_bitlo             = 9;
-const int gem_fiber_exists_bithi             = 12;
-const int gem_fiber_exists_default           = 0xf;
+const int gem_readout_mask_vmereg            = gem_cfg_adr;
+const int gem_readout_mask_bitlo             = 9;
+const int gem_readout_mask_bithi             = 12;
+const int gem_readout_mask_default           = 0xf;
 
 //
 //////////////////////////////////////////////
