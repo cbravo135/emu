@@ -2592,6 +2592,9 @@ public:
   inline int  GetDecoupleGemRxdIntDelay ()                               { return decouple_gem_rxd_int_delay_ ;}
   inline void SetDecoupleGemRxdIntDelay (int decouple_gem_rxd_int_delay) { decouple_gem_rxd_int_delay_ = decouple_gem_rxd_int_delay;}
 
+  inline int  GetGemReadoutMask ()                     { return gem_readout_mask_;}
+  inline void SetGemReadoutMask (int gem_readout_mask) { gem_readout_mask_ = gem_readout_mask;}
+
 
   //
   //
@@ -4188,12 +4191,15 @@ private:
   int gem_rxd_int_delay_;
 
   int decouple_gem_rxd_int_delay_;
+
+  int gem_readout_mask_; 
   //
   int read_gemA_rxd_int_delay_;
   int read_gemB_rxd_int_delay_;
   int read_gem_rxd_int_delay_;
 
   int read_decouple_gem_rxd_int_delay_;
+  int read_gem_readout_mask_;
   //
   //*******************************************************************
   // TMB Raw Hits header words

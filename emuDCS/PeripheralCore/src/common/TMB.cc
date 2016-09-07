@@ -6949,9 +6949,10 @@ void TMB::SetTMBRegisterDefaults() {
   // 0X312 ADR_GEM_CFG
   //-----------------------------------------------------------------------------
   
-  gemA_rxd_int_delay_    = gemA_rxd_int_delay_default;
-  gemB_rxd_int_delay_    = gemB_rxd_int_delay_default;
+  gemA_rxd_int_delay_         = gemA_rxd_int_delay_default;
+  gemB_rxd_int_delay_         = gemB_rxd_int_delay_default;
   decouple_gem_rxd_int_delay_ = decouple_gem_rxd_int_delay_default;
+  gem_readout_mask_           = gem_readout_mask_default;
 
   //defaults are pulled from the main parameter fields
   return;
@@ -9118,6 +9119,7 @@ void TMB::PrintTMBRegister(unsigned long int address) {
     (*MyOutput_) << "    TMB gem A rxd_int_delay                           = " << gemA_rxd_int_delay_    << std::endl;
     (*MyOutput_) << "    TMB gem A rxd_int_delay                           = " << gemB_rxd_int_delay_    << std::endl;
     (*MyOutput_) << "    TMB gem rxd_int_delays decoupled                  = " << decouple_gem_rxd_int_delay_ << std::endl;
+    (*MyOutput_) << "    GEM Readout Mask                                  = " << gem_readout_mask_           << std::endl;
     } else {
     //
     (*MyOutput_) << " -> Unable to decode register: PLEASE DEFINE" << std::endl;
@@ -9832,6 +9834,7 @@ int TMB::FillTMBRegister(unsigned long int address) {
     InsertValueIntoDataWord( gemA_rxd_int_delay_         , gemA_rxd_int_delay_bithi         , gemA_rxd_int_delay_bitlo         , &data_word);
     InsertValueIntoDataWord( gemB_rxd_int_delay_         , gemB_rxd_int_delay_bithi         , gemB_rxd_int_delay_bitlo         , &data_word);
     InsertValueIntoDataWord( decouple_gem_rxd_int_delay_ , decouple_gem_rxd_int_delay_bithi , decouple_gem_rxd_int_delay_bitlo , &data_word);
+    InsertValueIntoDataWord( gem_readout_mask_           , gem_readout_mask_bithi           , gem_readout_mask_bitlo           , &data_word);
     //
   } else {
     //
@@ -10512,9 +10515,10 @@ void TMB::CheckTMBConfiguration(int max_number_of_reads) {
         // 0X312 = ADR_CFG_ADR   
         //---------------------------------------------------------------------
 
-        config_ok &= compareValues ("TMB gem A rxd_int_delay"          , read_gemA_rxd_int_delay_    , gemA_rxd_int_delay_    , print_errors); 
-        config_ok &= compareValues ("TMB gem A rxd_int_delay"          , read_gemB_rxd_int_delay_    , gemB_rxd_int_delay_    , print_errors); 
-        config_ok &= compareValues ("TMB gem rxd_int_delays decoupled" , read_decouple_gem_rxd_int_delay_ , decouple_gem_rxd_int_delay_ , print_errors); 
+        config_ok &= compareValues ("TMB gem A rxd_int_delay"          , read_gemA_rxd_int_delay_         , gemA_rxd_int_delay_         , print_errors);
+        config_ok &= compareValues ("TMB gem A rxd_int_delay"          , read_gemB_rxd_int_delay_         , gemB_rxd_int_delay_         , print_errors);
+        config_ok &= compareValues ("TMB gem rxd_int_delays decoupled" , read_decouple_gem_rxd_int_delay_ , decouple_gem_rxd_int_delay_ , print_errors);
+        config_ok &= compareValues ("TMB gem readout mask"             , read_gem_readout_mask_           , gem_readout_mask_           , print_errors);
 
         if (HasGroupedGemRxValues()==1) {
             //--------------------------------------------------------------
