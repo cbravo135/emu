@@ -2521,7 +2521,10 @@ public:
   // 0x308 & 0x308A GEM Phasers
   //-----------------------------------------------------------------------------
 
-  inline void SetGemARxClockDelay(int gemA_rx_clock_delay) { gemA_rx_clock_delay_ = gemA_rx_clock_delay; }
+  inline void SetGemARxClockDelay(int gemA_rx_clock_delay) {
+      gem_rx_clock_delay_  = gemA_rx_clock_delay;
+      gemA_rx_clock_delay_ = gemA_rx_clock_delay;
+  }
   inline void SetGemBRxClockDelay(int gemB_rx_clock_delay) { gemB_rx_clock_delay_ = gemB_rx_clock_delay; }
   inline void SetGemRxClockDelay(int gem_rx_clock_delay) { 
       assert(GetHardwareVersion()==2 && GetGemEnabled());
