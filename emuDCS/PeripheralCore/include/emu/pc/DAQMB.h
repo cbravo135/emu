@@ -768,6 +768,7 @@ public:
   void dcfeb_program_virtex6(CFEB & cfeb, const char *mcsfile, int broadcast=0);
   void dcfeb_program_eprom(CFEB & cfeb, const char *mcsfile, int broadcast=0);
   void dcfeb_configure(CFEB & cfeb);
+  void dcfeb_print_parameters(CFEB & cfeb);
   void dcfeb_test_dummy(CFEB & cfeb, int test);
   unsigned virtex6_readreg(int reg);
   void virtex6_writereg(int reg, unsigned value);
@@ -929,8 +930,10 @@ public:
   unsigned SEM_read_errcnt(CFEB &cfeb);
   void SEM_control(CFEB &cfeb);
   void SEM_rst_doublerrorflag(CFEB &cfeb);
-            
+
   int SVFLoad(int dev, const char *fn, int db, int verify );
+  void dcfeb_program_eprom_Xilinx(CFEB & cfeb, const char *mcsfile, int broadcast=0);
+  int cfeb_load_eprom(int ncfeb, const char  *svffile, int db, int verify );
 
  private:
 
@@ -1063,7 +1066,8 @@ public:
   int hardware_version_;
   int kill_input_mask_;
   int lvdb_mapping_;
-  
+  int cfeb_selected_;
+   
   // VME registers defined in ODMB for direct access
   // Liu May 29, 2013. ODMB firmware version 0.0
   //

@@ -208,6 +208,10 @@ public:
   void write_mcs(char *buf, int nbytes, FILE *outf);
   int read_mcs(char *binbuf, FILE *finp);
 
+  inline int get_flag(int flag) {  return ((special_flags_ >> flag ) & 1); }
+  inline void set_flag(int flag) { special_flags_ |= (1<<flag); } 
+  inline void clear_flag(int flag) { if((special_flags_ >> flag ) & 1) special_flags_ ^= (1<<flag); }
+
 protected:
   //
   int JtagSource_;
@@ -267,6 +271,8 @@ protected:
   FILE *bitfile;
   char *bitstream;
   int bitbufindex;
+  // for special cases
+  int special_flags_;
 };
   } // namespace emu::pc
 } // namespace emu

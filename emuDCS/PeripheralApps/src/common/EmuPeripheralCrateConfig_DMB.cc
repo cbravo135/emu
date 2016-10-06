@@ -1194,6 +1194,34 @@ void EmuPeripheralCrateConfig::CFEBUtils(xgi::Input * in, xgi::Output * out )
   *out << cgicc::form() << FirmwareDir_+"cfeb/me11_dcfeb.mcs" << std::endl;
   *out << cgicc::br() << cgicc::hr() << std::endl;
   //
+  std::string CFEBwritefirmXilinx =
+      toolbox::toString("/%s/DCFEBProgramEpromXilinx",getApplicationDescriptor()->getURN().c_str());
+  *out << cgicc::form().set("action", CFEBwritefirmXilinx) << std::endl;
+  
+  *out << "Choose CFEB: " << std::endl;
+  *out << cgicc::select().set("name", "cfeb") << std::endl;
+  
+  for (unsigned i = 0; i < cfebs.size(); ++i) {
+    sprintf(sbuf,"%d",i);
+    if (i == 0) {
+      *out << cgicc::option()
+	.set("value", sbuf)
+	.set("selected", "");
+    } else {
+      *out << cgicc::option()
+	.set("value", sbuf);
+    }
+    *out << "CFEB " << cfebs[i].number()+1 << cgicc::option() << std::endl;
+  }
+
+  *out << cgicc::select() << std::endl;
+  *out << cgicc::input().set("type","hidden").set("name","dmb").set("value",dmbstring) << std::endl ;          
+  *out << cgicc::input().set("type", "submit")
+    .set("name", "command")
+    .set("value", "Program DCFEB EPROM using Xilinx core (slow)") << std::endl;
+  *out << cgicc::form() << FirmwareDir_+"cfeb/me11_dcfeb.mcs" << std::endl;
+  *out << cgicc::br() << cgicc::hr() << std::endl;
+  //
   std::string CFEBwritefirmsvf =
       toolbox::toString("/%s/DCFEBProgramEpromSVF",getApplicationDescriptor()->getURN().c_str());
   *out << cgicc::form().set("action", CFEBwritefirmsvf) << std::endl;
@@ -1218,8 +1246,8 @@ void EmuPeripheralCrateConfig::CFEBUtils(xgi::Input * in, xgi::Output * out )
   *out << cgicc::input().set("type","hidden").set("name","dmb").set("value",dmbstring) << std::endl ;          
   *out << cgicc::input().set("type", "submit")
     .set("name", "command")
-    .set("value", "Program DCFEB EPROM with SVF file (very slow)") << std::endl;
-  *out << cgicc::form() << FirmwareDir_+"cfeb/me11_dcfeb.svf" << std::endl;
+    .set("value", "Program (D)CFEB EPROM with SVF file (very slow)") << std::endl;
+  *out << cgicc::form() << FirmwareDir_+"cfeb/me11_dcfeb.svf (cfeb_pro.svf for CFEB)" << std::endl;
   *out << cgicc::br() << cgicc::hr() << std::endl;
   
   std::string CFEBwritefirmall =
@@ -1231,6 +1259,10 @@ void EmuPeripheralCrateConfig::CFEBUtils(xgi::Input * in, xgi::Output * out )
     .set("name", "command")
     .set("value", "Broadcast Program EPROM - All DCFEBs") << std::endl;
   *out << cgicc::form() << FirmwareDir_+"cfeb/me11_dcfeb.mcs" << cgicc::br() << cgicc::hr() << std::endl;
+  *out << cgicc::fieldset()<< cgicc::br() << std::endl;
+
+  *out << cgicc::fieldset().set("style","font-size: 11pt; font-family: arial;") << std::endl;
+  *out << cgicc::legend("DCFEB FPGA").set("style","color:blue") << std::endl ;
   
   std::string CFEBprogfpga =
       toolbox::toString("/%s/DCFEBProgramFpga",getApplicationDescriptor()->getURN().c_str());
@@ -1421,18 +1453,18 @@ void EmuPeripheralCrateConfig::ReadDcfebVirtex6Reg(xgi::Input * in, xgi::Output 
      unsigned icfeb=atoi(cgi.getElement("cfeb")->getValue().c_str());
      int reg = atoi(cgi.getElement("reg")->getValue().c_str());
      
-     std::cout << "Reading Virtex 6 register " << reg << " on DCFEB " << (icfeb+1) << " (DMB" << dmb << ")" << std::endl;
-     
      std::vector<CFEB> cfebs = thisDMB->cfebs();
-     if(icfeb < 0 || icfeb >= cfebs.size()) {
+     std::cout << "Reading Virtex 6 register " << reg << " on DCFEB " << cfebs[icfeb].number()+1 << " (DMB" << dmb << ")" << std::endl;
+     
+     if(icfeb < 0 || icfeb >= cfebs.size()) 
+     {
          std::cout << "Invalid CFEB number... returning." << std::endl;
-         return;
      }
-     
-     DcfebVirtex6RegisterRead_ = thisDMB->dcfeb_readreg_virtex6(cfebs[icfeb], reg);
-     
-     std::cout << "Result: " << std::hex << DcfebVirtex6RegisterRead_ << std::dec << std::endl;
-
+     else     
+     {
+         DcfebVirtex6RegisterRead_ = thisDMB->dcfeb_readreg_virtex6(cfebs[icfeb], reg);
+         std::cout << "Result: " << std::hex << DcfebVirtex6RegisterRead_ << std::dec << std::endl;
+     }
      this->CFEBUtils(in,out);                                    
 }
 
@@ -1551,6 +1583,12 @@ void EmuPeripheralCrateConfig::DCFEBProgramFpga(xgi::Input * in, xgi::Output * o
 void EmuPeripheralCrateConfig::DCFEBProgramEprom(xgi::Input * in, xgi::Output * out )
   throw (xgi::exception::Exception)
 {
+    if(!write_dcfeb_prom_allowed_)
+    {
+       std::cout << "Write to DCFEB's PROM disabled!" << std::endl;
+       this->CFEBUtils(in,out);
+       return;
+    }
 
   cgicc::Cgicc cgi(in);
 
@@ -1586,6 +1624,12 @@ void EmuPeripheralCrateConfig::DCFEBProgramEprom(xgi::Input * in, xgi::Output * 
 void EmuPeripheralCrateConfig::DCFEBProgramEpromSVF(xgi::Input * in, xgi::Output * out )
   throw (xgi::exception::Exception)
 {
+    if(!write_dcfeb_prom_allowed_)
+    {
+       std::cout << "Write to DCFEB's PROM disabled!" << std::endl;
+       this->CFEBUtils(in,out);
+       return;
+    }
 
   cgicc::Cgicc cgi(in);
 
@@ -1607,6 +1651,20 @@ void EmuPeripheralCrateConfig::DCFEBProgramEpromSVF(xgi::Input * in, xgi::Output
      std::vector<CFEB> cfebs = thisDMB->cfebs() ;
      if(icfeb<0 || icfeb>cfebs.size()) icfeb=0;
 
+  if(cfebs[icfeb].GetHardwareVersion()<=1)
+  {
+     std::string svffile= FirmwareDir_+ "cfeb/cfeb_pro.svf";
+                
+     std::cout << getLocalDateTime() << " CFEB program EPROM on DMB " << dmb << " CFEB " << cfebs[icfeb].number()+1 << std::endl;
+     std::cout << "Use SVF file: " << svffile << std::endl;
+
+     thisDMB->write_cfeb_selector(cfebs[icfeb].SelectorBit());
+     thisDMB->SVFLoad(5, svffile.c_str(), 0 ,0);
+     
+     std::cout << getLocalDateTime() << " CFEB program EPROM finished." << std::endl;
+  }
+  else
+  { 
      std::string svffile= FirmwareDir_+ "cfeb/me11_dcfeb.svf";
                 
      std::cout << getLocalDateTime() << " DCFEB program EPROM on DMB " << dmb << " CFEB " << cfebs[icfeb].number()+1 << std::endl;
@@ -1616,12 +1674,75 @@ void EmuPeripheralCrateConfig::DCFEBProgramEpromSVF(xgi::Input * in, xgi::Output
      thisDMB->SVFLoad(1, svffile.c_str(), 0 ,0);
      
      std::cout << getLocalDateTime() << " DCFEB program EPROM finished." << std::endl;
+  }
      this->CFEBUtils(in,out);                    
 }
+  
+void EmuPeripheralCrateConfig::DCFEBProgramEpromXilinx(xgi::Input * in, xgi::Output * out )
+  throw (xgi::exception::Exception)
+{
+    if(!write_dcfeb_prom_allowed_)
+    {
+       std::cout << "Write to DCFEB's PROM disabled!" << std::endl;
+       this->CFEBUtils(in,out);
+       return;
+    }
+
+  cgicc::Cgicc cgi(in);
+
+  cgicc::form_iterator name = cgi.getElement("dmb");
+  int dmb=0;
+  if(name != cgi.getElements().end()) {
+    dmb = cgi["dmb"]->getIntegerValue();
+    std::cout << "DMB " << dmb << std::endl;
+    DMB_ = dmb;
+  } else {
+    std::cout << "Not dmb" << std::endl ;
+    dmb = DMB_;
+  }
+  //
+  DAQMB * thisDMB = dmbVector[dmb];
+
+     std::string cfeb_value = cgi.getElement("cfeb")->getValue(); 
+     unsigned icfeb=atoi(cfeb_value.c_str());
+     std::vector<CFEB> cfebs = thisDMB->cfebs() ;
+     if(icfeb<0 || icfeb>cfebs.size()) icfeb=0;
+//
+    std::string svffile1 = XMLDIR+"/virtex6lx130_header.svf";
+    std::string svffile2 = XMLDIR+"/virtex6_trailer.svf";
+    std::string corefile = XMLDIR+"/virtex6lx130_core.mcs";
+    std::string mcsfile = FirmwareDir_+"cfeb/me11_dcfeb.mcs";
+    std::cout << getLocalDateTime() << " Loading firmware to DCFEB's EPROM for DCFEB #" << cfebs[icfeb].number()+1 << std::endl;
+    std::cout << "Using mcs file: " << mcsfile << std::endl;
+    std::cout << "Step #1, loading Xilinx Core..."  << std::endl;    
+    thisDMB->dcfeb_program_virtex6(cfebs[icfeb], corefile.c_str(), -1);  // -1: don't check firmware tag
+    std::cout << "Step #2, erasing EPROM..."  << std::endl;    
+    ::sleep(2);
+    thisDMB->write_cfeb_selector(cfebs[icfeb].SelectorBit());
+    thisDMB->SVFLoad(1, svffile1.c_str(), 0, 1);
+    std::cout << "Step #3, programming EPROM with content from MCS file..."  << std::endl;
+    thisDMB->dcfeb_program_eprom_Xilinx(cfebs[icfeb], mcsfile.c_str());
+    std::cout << "Done!"  << std::endl;  
+    std::cout << "Step #4, finalizing..." << std::endl;
+    thisDMB->write_cfeb_selector(cfebs[icfeb].SelectorBit());
+    thisDMB->SVFLoad(1, svffile2.c_str(), 0, 1);
+    std::cout << getLocalDateTime() << " Finished loading firmware to EPROM." << std::endl;
+  //
+  this->CFEBUtils(in,out);
+  //
+  return;
+}
+
   
 void EmuPeripheralCrateConfig::DCFEBProgramEpromAll(xgi::Input * in, xgi::Output * out )
   throw (xgi::exception::Exception)
 {
+    if(!write_dcfeb_prom_allowed_)
+    {
+       std::cout << "Write to DCFEB's PROM disabled!" << std::endl;
+       this->CFEBUtils(in,out);
+       return;
+    }
 
   cgicc::Cgicc cgi(in);
 
@@ -4170,6 +4291,12 @@ xoap::MessageReference EmuPeripheralCrateConfig::LoadAllCfebPromUserid (xoap::Me
 void EmuPeripheralCrateConfig::ConfigDCFEBs(xgi::Input * in, xgi::Output * out ) 
     throw (xgi::exception::Exception)
 {
+    if(!write_dcfeb_prom_allowed_)
+    {
+       std::cout << "Write to DCFEB's PROM disabled!" << std::endl;
+       this->CFEBUtils(in,out);
+       return;
+    }
   std::cout << "Button: ConfigDCFEBs" << std::endl;
 
   cgicc::Cgicc cgi(in);

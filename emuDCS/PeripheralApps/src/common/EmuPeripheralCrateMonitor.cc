@@ -3439,7 +3439,7 @@ void EmuPeripheralCrateMonitor::DCSOutput(xgi::Input * in, xgi::Output * out )
      if(problem_readings>5)
      {   // too many reading errors, probably VCC problem
          std::cout << " Reading Errors: " << problem_readings << " in Crate: " << crateVector[i]->GetLabel() << std::endl;
-         if(reload_vcc)
+         if(Monitor_On_ && Monitor_Ready_ && slow_on && reload_vcc)
          {
             crateVector[i]->vmeController()->reset();
             ::usleep(1000000);

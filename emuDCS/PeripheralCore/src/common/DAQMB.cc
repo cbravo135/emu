@@ -888,7 +888,9 @@ void DAQMB::configure() {
 // Write DCFEB cofiguration parameters into EPROM
    for(unsigned lfeb=0; lfeb<cfebs_.size();lfeb++)
    {
-         dcfeb_configure(cfebs_[lfeb]);   
+// LIU 2016-09-16, temporarily disabled DCFEB PROM writing. 
+// === This does affect Power-Up-Init process. ===
+//         dcfeb_configure(cfebs_[lfeb]);   
    }
    restoreCFEBIdle();
 }
@@ -2681,6 +2683,7 @@ unsigned int  DAQMB::mbfpgauser()
   else
   {
      odmb_fpga_call(VTX6_USERCODE, 0, (char *)&ibrd);
+     if ((ibrd & 0xFFFF) == 0xDBDB) ibrd >>= 16;   // use the high 16-bits if the low 16-bits are 0xDBDB.
   } 
   return ibrd;
 }
@@ -8342,6 +8345,24 @@ void DAQMB::dcfeb_configure(CFEB & cfeb)
    }
 }
 
+void DAQMB::dcfeb_print_parameters(CFEB & cfeb) 
+{
+   const int DCFEB_PARAMETERS=34;
+   int number = cfeb.number();
+   unsigned short int bufload[34];
+
+   write_cfeb_selector(cfeb.SelectorBit());
+   if(cfeb.GetHardwareVersion() == 2)
+   {
+      dcfeb_readparam(3, DCFEB_PARAMETERS, bufload);
+      std::cout << "Configuration Parameters for DCFEB #" << number+1 << std::endl;
+      for(int i=0; i<DCFEB_PARAMETERS;i++)
+      {
+          std::cout << i << "   " << bufload[i] << std::endl;
+      }
+   }
+}
+
 void DAQMB::dcfeb_test_dummy(CFEB & cfeb, int test)
 {
 // This dummy function can be used in various tests instead of creating a new function which would
@@ -8506,7 +8527,7 @@ void DAQMB::dcfeb_program_virtex6(CFEB & cfeb, const char *mcsfile, int broadcas
    }
    int tag=0;
    memcpy(&tag, bufin+0x600000, 4);
-   if( (tag & 0x00F0FFFF)==0x00B0FEDC) 
+   if(broadcast==-1 ||  (tag & 0x00F0FFFF)==0x00B0FEDC) 
    {
        std::cout << "Firmware tag (DCFEB) verified!" << std::endl;
    }
@@ -8524,8 +8545,7 @@ void DAQMB::dcfeb_program_virtex6(CFEB & cfeb, const char *mcsfile, int broadcas
       bufin[i*2+1]=c;
    }
 
-
-   if(broadcast)
+   if(broadcast>0)
       write_cfeb_selector(0x7F);   // broadcast to all DCFEBs
    else
       write_cfeb_selector(cfeb.SelectorBit());
@@ -8582,7 +8602,7 @@ void DAQMB::dcfeb_program_virtex6(CFEB & cfeb, const char *mcsfile, int broadcas
     comd=VTX6_BYPASS;
     cfeb_do(10, &comd, 0, &tmp, rcvbuf, NOW);
     udelay(10);
-    std::cout << "FPGA configuration done!" << std::endl;             
+    std::cout << "DCFEB FPGA configuration done bits = 0x" << std::hex << read_cfeb_done() << std::dec << std::endl;
     free(bufin);
 }
 
@@ -11003,7 +11023,7 @@ int DAQMB::SVFLoad(int dev, const char *fn, int db, int verify )
 	    send_packages++ ;
             if(!readprom)
             {
-               if ( (send_packages%one_pct)==0 ) 
+               if ( total_packages>=100 && (send_packages%one_pct)==0 ) 
                   std::cout << "Sending " << std::dec << send_packages/one_pct << "%..." << std::endl;
 	       if ( send_packages == total_packages ) std::cout << "Done!" << std::endl;
             }
@@ -11318,6 +11338,136 @@ int DAQMB::SVFLoad(int dev, const char *fn, int db, int verify )
   }
   fclose(dwnfp);
   return errcntr; 
+}
+
+void DAQMB::dcfeb_program_eprom_Xilinx(CFEB & cfeb, const char *mcsfile, int broadcast)
+{
+//
+// program DCFEB's EPROM after loading the Xilinx Core into the FPGA.
+//
+   unsigned short comd, tmp;
+   if(hardware_version_<=1) return;
+   const int FIRMWARE_SIZE=5464972; // in bytes
+   char *bufin, bufcmd[128], c;
+   bufin=(char *)malloc(16*1024*1024);
+   if(bufin==NULL)  return;
+   bzero(bufcmd, 128);
+   FILE *fin=fopen(mcsfile,"r");
+   if(fin==NULL ) 
+   { 
+      free(bufin);  
+      std::cout << "ERROR: Unable to open MCS file :" << mcsfile << std::endl;
+      return; 
+   }
+   int mcssize=read_mcs(bufin, fin);
+   fclose(fin);
+   std::cout << "Read MCS size: " << std::dec << mcssize << " bytes" << std::endl;
+   if(mcssize<FIRMWARE_SIZE)
+   {
+       std::cout << "ERROR: Wrong MCS file. Quit..." << std::endl;
+       free(bufin);
+       return;
+   }
+   int tag=0;
+   memcpy(&tag, bufin+0x600000, 4);
+   if( (tag & 0x00F0FFFF)==0x00B0FEDC) 
+   {
+       std::cout << "Firmware tag (DCFEB) verified!" << std::endl;
+   }
+   else
+   {
+       std::cout << "ERROR: Firmware tag (DCFEB) not found in MCS file. Quit..." << std::endl; 
+       free(bufin);
+       return;
+                  
+   }
+
+/*
+// byte swap
+   for(int i=0; i<FIRMWARE_SIZE/2; i++)
+   {  c=bufin[i*2];
+      bufin[i*2]=bufin[i*2+1];
+      bufin[i*2+1]=c;
+   }
+*/
+     int blocks=FIRMWARE_SIZE/1024;  // firmware size must be in units of 8192-bit units
+     if (FIRMWARE_SIZE%1024)
+     {  
+         for(int i=0; i<1024; i++) bufin[FIRMWARE_SIZE+i]=0xFF;  // pad the last block with 0xFF
+         blocks++;
+     }
+     int p1pct=blocks/100;
+     int j=0, pcnts=0;
+
+    getTheController()->SetUseDelay(true);
+    if(broadcast>0)
+       write_cfeb_selector(0x7F);   // broadcast to all DCFEBs
+    else
+       write_cfeb_selector(cfeb.SelectorBit());
+
+    for(int i=0; i<blocks; i++)
+    {
+       comd=VTX6_USR2; 
+       cfeb_do(10, &comd, 0, &tmp, rcvbuf, NOW);
+       udelay(1000);
+       cfeb_do(0, &comd, 8192, bufin+1024*i, rcvbuf, NOW);
+       udelay(100);
+       comd=VTX6_BYPASS; 
+       cfeb_do(10, &comd, 0, &tmp, rcvbuf, NOW);
+       if(i==0)
+       {
+          comd=VTX6_USR3; 
+          cfeb_do(10, &comd, 0, &tmp, rcvbuf, NOW);
+          udelay(10000);
+          bufcmd[0]=0x0E;
+          cfeb_do(0, &comd, 1024, bufcmd, rcvbuf, NOW);
+          comd=VTX6_BYPASS; 
+          cfeb_do(10, &comd, 0, &tmp, rcvbuf, NOW);
+          udelay(100000);
+       }
+       udelay(150000);
+       comd=VTX6_USR3; 
+       cfeb_do(10, &comd, 0, &tmp, rcvbuf, NOW);
+       udelay(10000);
+       bufcmd[0]=0xA0;
+       cfeb_do(0, &comd, 1024, bufcmd, rcvbuf, NOW);
+       comd=VTX6_BYPASS; 
+       cfeb_do(10, &comd, 0, &tmp, rcvbuf, NOW);
+       comd=VTX6_BYPASS; 
+       cfeb_do(10, &comd, 0, &tmp, rcvbuf, NOW);
+       j++;
+       if(p1pct>0 && j==p1pct)
+       {  pcnts++;
+          if(pcnts<100) std::cout << "Sending " << pcnts <<"%..." << std::endl;
+          j=0;
+       }   
+    }
+    std::cout << "Sending 100%..." << std::endl;
+
+    comd=VTX6_BYPASS;
+    cfeb_do(10, &comd, 0, &tmp, rcvbuf, NOW);
+}
+  
+int DAQMB::cfeb_load_eprom(int ncfeb, const char  *svffile, int db, int verify )
+{
+     // ncfeb = -1 : broadcast to all CFEBs
+     // ncfeb = 0-4: CFEB#1-CFEB#5
+     int i=-2;
+     bool go=false;
+     if(ncfeb==-1)
+     {
+         write_cfeb_selector(0x1F);  // broadcast to all CFEBs
+         go=true;
+     }
+     else
+     {
+         for(unsigned i=0; i<cfebs_.size(); i++)
+         {
+            if( cfebs_[i].number()==ncfeb) { write_cfeb_selector(cfebs_[i].SelectorBit()); go=true; }
+         }
+     }
+     if(go) i=SVFLoad(CFEB_PROM, svffile, db, verify);
+     return i;
 }
 
 } // namespace emu::pc

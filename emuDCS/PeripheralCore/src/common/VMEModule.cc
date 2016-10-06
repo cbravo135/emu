@@ -233,6 +233,7 @@ VMEModule::VMEModule(Crate * theCrate, int newslot):
   theSlot(newslot)
 {
   theCrate_ = theCrate;
+  special_flags_=0;
   //
 #ifdef debugV
   std::cout << "creating VMEModule in crate " << theCrate->CrateID() << std::endl;
@@ -1973,8 +1974,13 @@ void VMEModule::Jtag_Norm(long dev, int reg, const char *snd, int cnt, char *rcv
      cnt8 = 8*((cnt+7)/8);
      for(i=0;i<cnt8;i++)
      {
-       if(i<cnt) bdata |= ((mytmp2[i] & (1<<TDO_))<<(7-TDO_));
-  
+       if(i<cnt)
+       {  if(TDO_<=7)
+             bdata |= ((mytmp2[i] & (1<<TDO_))<<(7-TDO_));
+          else
+             bdata |= (((mytmp2[i]>>8) & (1<<(TDO_-8)))<<(15-TDO_));
+       }
+                                                           
        if(bit==7)
 	 { rcv2[j++]=bdata;  bit=0;  bdata=0; }
        else

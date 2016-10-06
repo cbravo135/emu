@@ -200,6 +200,7 @@ protected:
   unsigned long int CFEBBoardNumber[62][10][7];
 
   bool tmb_fiber_status_read_;
+  bool write_dcfeb_prom_allowed_;
 
   //VCC Utilities
 
@@ -439,6 +440,7 @@ private:
   void DCFEBProgramFpgaAll(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception); 
   void DCFEBProgramEprom(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception); 
   void DCFEBProgramEpromSVF(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception); 
+  void DCFEBProgramEpromXilinx(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception); 
   void DCFEBProgramEpromAll(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception); 
   void ODMBLoadFirmwarePoll(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception); 
   void RestoreCfebJtagIdle(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception); 
@@ -681,6 +683,7 @@ private:
   //
   void DefineFirmwareFilenames();
   std::string GetFormString(const std::string& form_element, xgi::Input* in);
+  void EnableWriteDCFEBPROM(xgi::Input * in, xgi::Output * out ) throw (xgi::exception::Exception);
 
   //
   std::vector<TMBTester> InitTMBTests(Crate *);
